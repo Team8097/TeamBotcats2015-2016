@@ -35,7 +35,6 @@ import android.os.SystemClock;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 /**
@@ -43,17 +42,16 @@ import com.qualcomm.robotcore.util.Range;
  * <p/>
  * Enables control of the robot via the gamepad
  */
-public class TestTeleOp extends OpMode {
+public class AutonomousTeleOp extends OpMode {
 
 
     DcMotor motorRight;
     DcMotor motorLeft;
-    int loop = 0;
 
     /**
      * Constructor
      */
-    public TestTeleOp() {
+    public AutonomousTeleOp() {
 
     }
 
@@ -84,7 +82,6 @@ public class TestTeleOp extends OpMode {
 		 */
         motorRight = hardwareMap.dcMotor.get("motor_2");
         motorLeft = hardwareMap.dcMotor.get("motor_1");
-
     }
 
     /*
@@ -94,58 +91,30 @@ public class TestTeleOp extends OpMode {
      */
     @Override
     public void loop() {
-        loop ++;
-
-		/*
-         * Gamepad 1
-		 *
-		 * Gamepad 1 controls the motors via the left stick, and it controls the
-		 * wrist/claw via the a,b, x, y buttons
-		 */
-
-        // throttle: left_stick_y ranges from -1 to 1, where -1 is full up, and
-        // 1 is full down
-        // direction: left_stick_x ranges from -1 to 1, where -1 is full left
-        // and 1 is full right
-//        float throttle = -gamepad1.left_stick_y;
-//        float direction = gamepad1.left_stick_x;
-//        float right = throttle - direction;
-//        float left = throttle + direction;
-
-        // clip the right/left values so that the values never exceed +/- 1
-//        right = Range.clip(right, -1, 1);
-//        left = Range.clip(left, -1, 1);
-
-        // scale the joystick value to make it easier to control
-        // the robot more precisely at slower speeds.
-//        right = (float) scaleInput(right);
-//        left = (float) scaleInput(left);
-
-        // write the values to the motors
-        motorLeft.setDirection(DcMotor.Direction.REVERSE);
-//        motorRight.setDirection(DcMotor.Direction.FORWARD);
-//        motorRight.setPower(0.5);
+        motorLeft.setDirection(DcMotor.Direction.FORWARD);
+        motorRight.setDirection(DcMotor.Direction.REVERSE);
+        motorRight.setPower(0.5);
         motorLeft.setPower(0.5);
-//        SystemClock.sleep(500);
-//        for (int i = 0; i < 20; i++) {
-//            if (i % 2 == 0) {
-//                motorLeft.setDirection(DcMotor.Direction.FORWARD);
-//                motorRight.setDirection(DcMotor.Direction.FORWARD);
-//                motorRight.setPower(0.5);
-//                motorLeft.setPower(0.5);
-//            } else {
-//                motorLeft.setDirection(DcMotor.Direction.REVERSE);
-//                motorRight.setDirection(DcMotor.Direction.REVERSE);
-//                motorRight.setPower(0.5);
-//                motorLeft.setPower(0.5);
-//            }
-//            SystemClock.sleep(100);
-//        }
-//        motorLeft.setDirection(DcMotor.Direction.FORWARD);
-//        motorRight.setDirection(DcMotor.Direction.REVERSE);
-//        motorRight.setPower(0.5);
-//        motorLeft.setPower(0.5);
-//        SystemClock.sleep(500);
+        SystemClock.sleep(500);
+        for (int i = 0; i < 20; i++) {
+            if (i % 2 == 0) {
+                motorLeft.setDirection(DcMotor.Direction.FORWARD);
+                motorRight.setDirection(DcMotor.Direction.FORWARD);
+                motorRight.setPower(0.5);
+                motorLeft.setPower(0.5);
+            } else {
+                motorLeft.setDirection(DcMotor.Direction.REVERSE);
+                motorRight.setDirection(DcMotor.Direction.REVERSE);
+                motorRight.setPower(0.5);
+                motorLeft.setPower(0.5);
+            }
+            SystemClock.sleep(100);
+        }
+        motorLeft.setDirection(DcMotor.Direction.REVERSE);
+        motorRight.setDirection(DcMotor.Direction.FORWARD);
+        motorRight.setPower(0.5);
+        motorLeft.setPower(0.5);
+        SystemClock.sleep(500);
 
 
         // update the position of the arm.
@@ -160,9 +129,8 @@ public class TestTeleOp extends OpMode {
 		 */
 
         telemetry.addData("Text", "*** Robot Data ***");
-        telemetry.addData("loop", loop);
         telemetry.addData("left pwr", motorLeft.getPower());
-//        telemetry.addData("right pwr", motorRight.getPower());
+        telemetry.addData("right pwr", motorRight.getPower());
 //        telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
 
     }
