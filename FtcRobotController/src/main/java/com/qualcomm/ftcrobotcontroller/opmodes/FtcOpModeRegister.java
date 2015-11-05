@@ -57,6 +57,7 @@ public class FtcOpModeRegister implements OpModeRegister {
 
 
         manager.register("GamepadTeleOp", GamepadTeleOp.class);
+        manager.register("AutonomousTeleOp", AutonomousTeleOp.class);
 
 
 
