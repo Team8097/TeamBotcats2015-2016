@@ -31,6 +31,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import android.os.SystemClock;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -109,15 +111,17 @@ public class DanyloTestTeleOp extends OpMode {
 //        float right = throttle - direction;
 
         // clip the right/left values so that the values never exceed +/- 1
-        right = Range.clip(right, -1, 1);
-        left = Range.clip(left, -1, 1);
+        //right = Range.clip(right, -1, 1);
+        //left = Range.clip(left, -1, 1);
 
         // scale the joystick value to make it easier to control
         // the robot more precisely at slower speeds.
-        right = (float) scaleInput(right);
-        left = (float) scaleInput(left);
+        //right = (float) scaleInput(right);
+        //left = (float) scaleInput(left);
+
 
         // write the values to the motors
+
         motorLeft.setDirection(DcMotor.Direction.REVERSE);
         motorRight.setDirection(DcMotor.Direction.FORWARD);
         motorRight.setPower(0.5);
@@ -135,13 +139,13 @@ public class DanyloTestTeleOp extends OpMode {
                 motorRight.setPower(0.5);
                 motorLeft.setPower(0.5);
             }
-            SystemClock.sleep(100);
+      //      SystemClock.sleep(100);
         }
         motorLeft.setDirection(DcMotor.Direction.FORWARD);
         motorRight.setDirection(DcMotor.Direction.REVERSE);
         motorRight.setPower(0.5);
         motorLeft.setPower(0.5);
-        SystemClock.sleep(500);
+       // SystemClock.sleep(500);
 
 
         // update the position of the arm.
@@ -159,7 +163,7 @@ public class DanyloTestTeleOp extends OpMode {
         telemetry.addData("loop", loop);
         telemetry.addData("left pwr", motorLeft.getPower());
         telemetry.addData("right pwr", motorRight.getPower());
-        telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
+        //telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
 
     }
 
