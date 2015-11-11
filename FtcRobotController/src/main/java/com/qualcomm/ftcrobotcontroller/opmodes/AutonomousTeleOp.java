@@ -93,28 +93,28 @@ public class AutonomousTeleOp extends OpMode {
     public void loop() {
         motorLeft.setDirection(DcMotor.Direction.FORWARD);
         motorRight.setDirection(DcMotor.Direction.REVERSE);
-        motorRight.setPower(0.5);
-        motorLeft.setPower(0.5);
-        SystemClock.sleep(500);
-        for (int i = 0; i < 20; i++) {
-            if (i % 2 == 0) {
-                motorLeft.setDirection(DcMotor.Direction.FORWARD);
-                motorRight.setDirection(DcMotor.Direction.FORWARD);
-                motorRight.setPower(0.5);
-                motorLeft.setPower(0.5);
-            } else {
-                motorLeft.setDirection(DcMotor.Direction.REVERSE);
-                motorRight.setDirection(DcMotor.Direction.REVERSE);
-                motorRight.setPower(0.5);
-                motorLeft.setPower(0.5);
-            }
-            SystemClock.sleep(100);
-        }
+        motorRight.setPower(0.25);
+        motorLeft.setPower(0.25);
+        SystemClock.sleep(1000);
+//        for (int i = 0; i < 20; i++) {
+//            if (i % 2 == 0) {
+//                motorLeft.setDirection(DcMotor.Direction.FORWARD);
+//                motorRight.setDirection(DcMotor.Direction.FORWARD);
+//                motorRight.setPower(0.5);
+//                motorLeft.setPower(0.5);
+//            } else {
+//                motorLeft.setDirection(DcMotor.Direction.REVERSE);
+//                motorRight.setDirection(DcMotor.Direction.REVERSE);
+//                motorRight.setPower(0.5);
+//                motorLeft.setPower(0.5);
+//            }
+//            SystemClock.sleep(100);
+//        }
         motorLeft.setDirection(DcMotor.Direction.REVERSE);
         motorRight.setDirection(DcMotor.Direction.FORWARD);
-        motorRight.setPower(0.5);
-        motorLeft.setPower(0.5);
-        SystemClock.sleep(500);
+        motorRight.setPower(0.25);
+        motorLeft.setPower(0.25);
+        SystemClock.sleep(1000);
 
 
         // update the position of the arm.
