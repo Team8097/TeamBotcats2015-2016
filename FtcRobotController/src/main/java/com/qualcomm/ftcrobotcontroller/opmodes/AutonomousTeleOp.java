@@ -35,6 +35,8 @@ import android.os.SystemClock;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
 
 /**
@@ -45,8 +47,18 @@ import com.qualcomm.robotcore.util.Range;
 public class AutonomousTeleOp extends OpMode {
 
 
+    DcMotor motorFrontRight;
+    DcMotor motorFrontLeft;
+    DcMotor motorBackRight;
+    DcMotor motorBackLeft;
+
     DcMotor motorRight;
     DcMotor motorLeft;
+
+    TouchSensor touchSensor;
+    OpticalDistanceSensor distanceSensor;
+
+    boolean reverse = false;
 
     /**
      * Constructor
@@ -80,8 +92,16 @@ public class AutonomousTeleOp extends OpMode {
 		 *    "servo_1" controls the arm joint of the manipulator.
 		 *    "servo_6" controls the claw joint of the manipulator.
 		 */
-        motorRight = hardwareMap.dcMotor.get("motor_2");
-        motorLeft = hardwareMap.dcMotor.get("motor_1");
+        motorFrontRight = hardwareMap.dcMotor.get("frontRight");
+        motorFrontLeft = hardwareMap.dcMotor.get("frontLeft");
+        motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
+        motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
+        motorBackRight = hardwareMap.dcMotor.get("backRight");
+        motorBackLeft = hardwareMap.dcMotor.get("backLeft");
+        motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
+        motorBackRight.setDirection(DcMotor.Direction.REVERSE);
+//        touchSensor = hardwareMap.touchSensor.get("touch");
+//        distanceSensor = hardwareMap.opticalDistanceSensor.get("distance");
     }
 
     /*
@@ -91,55 +111,44 @@ public class AutonomousTeleOp extends OpMode {
      */
     @Override
     public void loop() {
-        motorLeft.setDirection(DcMotor.Direction.FORWARD);
-        motorRight.setDirection(DcMotor.Direction.REVERSE);
-        motorRight.setPower(0.25);
-        motorLeft.setPower(0.25);
-        SystemClock.sleep(1000);
-//        for (int i = 0; i < 20; i++) {
-//            if (i % 2 == 0) {
-//                motorLeft.setDirection(DcMotor.Direction.FORWARD);
-//                motorRight.setDirection(DcMotor.Direction.FORWARD);
-//                motorRight.setPower(0.5);
-//                motorLeft.setPower(0.5);
-//            } else {
-//                motorLeft.setDirection(DcMotor.Direction.REVERSE);
-//                motorRight.setDirection(DcMotor.Direction.REVERSE);
-//                motorRight.setPower(0.5);
-//                motorLeft.setPower(0.5);
-//            }
-//            SystemClock.sleep(100);
-//        }
-        motorLeft.setDirection(DcMotor.Direction.REVERSE);
-        motorRight.setDirection(DcMotor.Direction.FORWARD);
-        motorRight.setPower(0.25);
-        motorLeft.setPower(0.25);
-        SystemClock.sleep(1000);
-
-
-        // update the position of the arm.
-
-
-
-		/*
-         * Send telemetry data back to driver station. Note that if we are using
-		 * a legacy NXT-compatible motor controller, then the getPower() method
-		 * will return a null value. The legacy NXT-compatible motor controllers
-		 * are currently write only.
-		 */
-
-        telemetry.addData("Text", "*** Robot Data ***");
-        telemetry.addData("left pwr", motorLeft.getPower());
-        telemetry.addData("right pwr", motorRight.getPower());
-//        telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
 
     }
 
-    /*
-     * Code to run when the op mode is first disabled goes here
-     *
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#stop()
-     */
+    private void buttonGo() {
+        if (touchSensor.isPressed()) {
+            motorRight.setPower(0.5);
+            motorLeft.setPower(0.5);
+        } else {
+            motorRight.setPower(0);
+            motorLeft.setPower(0);
+        }
+    }
+
+    private void distanceSensorGo() {
+        if (distanceSensor.getLightDetected() < 0.5) {
+            motorRight.setPower(0.5);
+            motorLeft.setPower(0.5);
+        } else {
+            motorRight.setPower(0);
+            motorLeft.setPower(0);
+        }
+    }
+
+    private void justGoRight() {
+        motorFrontRight.setPower(1);
+        motorFrontLeft.setPower(1);}
+    private void justGoLeft() {
+        motorBackRight.setPower(1);
+        motorBackLeft.setPower(1);
+    }
+
+    private void stopRobot() {
+        motorFrontRight.setPower(0);
+        motorFrontLeft.setPower(0);
+        motorBackRight.setPower(0);
+        motorBackLeft.setPower(0);
+    }
+
     @Override
     public void stop() {
 

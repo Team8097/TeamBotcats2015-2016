@@ -47,10 +47,14 @@ import com.qualcomm.robotcore.util.Range;
 public class GamepadTeleOp extends OpMode {
 
 
-    DcMotor motorRight;
-    DcMotor motorLeft;
+    DcMotor motorFrontRight;
+    DcMotor motorFrontLeft;
+    DcMotor motorBackRight;
+    DcMotor motorBackLeft;
     Servo claw;
     Servo arm;
+
+    boolean reverse = false;
 
     final static double ARM_MIN_RANGE = 0.20;
     final static double ARM_MAX_RANGE = 0.90;
@@ -69,8 +73,6 @@ public class GamepadTeleOp extends OpMode {
     // amount to change the claw servo position by
     double clawDelta = 0.1;
 
-    TouchSensor touchSensor;
-
     /**
      * Constructor
      */
@@ -85,36 +87,23 @@ public class GamepadTeleOp extends OpMode {
      */
     @Override
     public void init() {
-        motorRight = hardwareMap.dcMotor.get("motor_2");
-        motorLeft = hardwareMap.dcMotor.get("motor_1");
-        motorLeft.setDirection(DcMotor.Direction.FORWARD);
-        motorRight.setDirection(DcMotor.Direction.REVERSE);
-        arm = hardwareMap.servo.get("servo_1");
-        claw = hardwareMap.servo.get("servo_6");
-        touchSensor = hardwareMap.touchSensor.get("touch");
+//        arm = hardwareMap.servo.get("servo_1");
+//        claw = hardwareMap.servo.get("servo_6");
 
         // assign the starting position of the wrist and claw
         armPosition = 0.2;
         clawPosition = 0.2;
 
-
-		/*
-         * Use the hardwareMap to get the dc motors and servos by name. Note
-		 * that the names of the devices must match the names used when you
-		 * configured your robot and created the configuration file.
-		 */
-
-		/*
-         * For the demo Tetrix K9 bot we assume the following,
-		 *   There are two motors "motor_1" and "motor_2"
-		 *   "motor_1" is on the right side of the bot.
-		 *   "motor_2" is on the left side of the bot and reversed.
-		 *   
-		 * We also assume that there are two servos "servo_1" and "servo_6"
-		 *    "servo_1" controls the arm joint of the manipulator.
-		 *    "servo_6" controls the claw joint of the manipulator.
-		 */
-
+        motorFrontRight = hardwareMap.dcMotor.get("frontRight");
+        motorFrontLeft = hardwareMap.dcMotor.get("frontLeft");
+        motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
+        motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
+        motorBackRight = hardwareMap.dcMotor.get("backRight");
+        motorBackLeft = hardwareMap.dcMotor.get("backLeft");
+        motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
+        motorBackRight.setDirection(DcMotor.Direction.REVERSE);
+//        touchSensor = hardwareMap.touchSensor.get("touch");
+//        distanceSensor = hardwareMap.opticalDistanceSensor.get("distance");
     }
 
     /*
@@ -124,44 +113,53 @@ public class GamepadTeleOp extends OpMode {
      */
     @Override
     public void loop() {
+        if (gamepad1.x) {
+            if (reverse) {
+                motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
+                motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
+                motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
+                motorBackRight.setDirection(DcMotor.Direction.REVERSE);
+                reverse = false;
 
-		/*
-         * Gamepad 1
-		 *
-		 * Gamepad 1 controls the motors via the left stick, and it controls the
-		 * wrist/claw via the a,b, x, y buttons
-		 */
+            } else {
+                motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
+                motorFrontRight.setDirection(DcMotor.Direction.FORWARD);
+                motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
+                motorBackRight.setDirection(DcMotor.Direction.FORWARD);
+                reverse = true;
+            }
 
-        // throttle: left_stick_y ranges from -1 to 1, where -1 is full up, and
-        // 1 is full down
-        // direction: left_stick_x ranges from -1 to 1, where -1 is full left
-        // and 1 is full right
+        }
+
+
         float throttle = -gamepad1.left_stick_y;
         float direction = gamepad1.left_stick_x;
         float right = throttle - direction;
         float left = throttle + direction;
 
+//        float right = gamepad1.left_stick_y;
+//        float left = gamepad1.right_trigger;
+
         // clip the right/left values so that the values never exceed +/- 1
         right = Range.clip(right, -1, 1);
         left = Range.clip(left, -1, 1);
 
+        right = (float)scaleInput(right);
+        left =  (float)scaleInput(left);
+
         // scale the joystick value to make it easier to control
         // the robot more precisely at slower speeds.
-        right = (float) scaleInput(right);
-        left = (float) scaleInput(left);
+//        right = (float) scaleInput(right);
+//        left = (float) scaleInput(left);
 
         // write the values to the motors
 //        motorLeft.setDirection(DcMotor.Direction.REVERSE);
 //        motorRight.setDirection(DcMotor.Direction.FORWARD);
-        if (touchSensor.isPressed()) {
-            motorRight.setPower(0.5);
-            motorLeft.setPower(0.5);
-        }else{
-            motorRight.setPower(0);
-            motorLeft.setPower(0);
-        }
-//        motorRight.setPower(right);
-//        motorLeft.setPower(left);
+
+        motorFrontRight.setPower(right);
+        motorFrontLeft.setPower(left);
+        motorBackRight.setPower(right);
+        motorBackLeft.setPower(left);
 
 //        SystemClock.sleep(500);
 //        for (int i = 0; i < 20; i++) {
@@ -195,42 +193,45 @@ public class GamepadTeleOp extends OpMode {
 		 * will return a null value. The legacy NXT-compatible motor controllers
 		 * are currently write only.
 		 */
-        if (gamepad1.a) {
-            // if the A button is pushed on gamepad1, increment the position of
-            // the arm servo.
-            armPosition += armDelta;
-        }
-
-        if (gamepad1.y) {
-            // if the Y button is pushed on gamepad1, decrease the position of
-            // the arm servo.
-            armPosition -= armDelta;
-        }
-
-        // update the position of the claw
-        if (gamepad1.x) {
-            clawPosition += clawDelta;
-        }
-
-        if (gamepad1.b) {
-            clawPosition -= clawDelta;
-        }
-
-        // clip the position values so that they never exceed their allowed range.
-        armPosition = Range.clip(armPosition, ARM_MIN_RANGE, ARM_MAX_RANGE);
-        clawPosition = Range.clip(clawPosition, CLAW_MIN_RANGE, CLAW_MAX_RANGE);
-
-        // write position values to the wrist and claw servo
-        arm.setPosition(armPosition);
-        claw.setPosition(clawPosition);
-
-        telemetry.addData("arm", String.format("%.2f", armPosition));
-        telemetry.addData("claw", String.format("%.2f", clawPosition));
-        telemetry.addData("Text", "*** Robot Data ***");
-        telemetry.addData("left pwr", motorLeft.getPower());
-        telemetry.addData("right pwr", motorRight.getPower());
-//        telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
-
+//        if (gamepad1.a) {
+//            // if the A button is pushed on gamepad1, increment the position of
+//            // the arm servo.
+//            armPosition += armDelta;
+//        }
+//
+//        if (gamepad1.y) {
+//            // if the Y button is pushed on gamepad1, decrease the position of
+//            // the arm servo.
+//            armPosition -= armDelta;
+//        }
+//
+//        // update the position of the claw
+//        if (gamepad1.x) {
+//            clawPosition += clawDelta;
+//        }
+//
+//        if (gamepad1.b) {
+//            clawPosition -= clawDelta;
+//        }
+//
+//        // clip the position values so that they never exceed their allowed range.
+//        armPosition = Range.clip(armPosition, ARM_MIN_RANGE, ARM_MAX_RANGE);
+//        clawPosition = Range.clip(clawPosition, CLAW_MIN_RANGE, CLAW_MAX_RANGE);
+//
+//        // write position values to the wrist and claw servo
+//        arm.setPosition(armPosition);
+//        claw.setPosition(clawPosition);
+//
+//        telemetry.addData("arm", String.format("%.2f", armPosition));
+//        telemetry.addData("claw", String.format("%.2f", clawPosition));
+//        telemetry.addData("Text", "*** Robot Data ***");
+//        telemetry.addData("left pwr", motorLeft.getPower());
+//        telemetry.addData("right pwr", motorRight.getPower());
+        telemetry.addData("leftStickY", gamepad1.left_stick_y);
+        telemetry.addData("frontRightMotor", motorFrontRight.getPower());
+        telemetry.addData("frontLeftMotor", motorFrontLeft.getPower());
+        telemetry.addData("backRightMotor", motorBackRight.getPower());
+        telemetry.addData("backLeftMotor", motorBackLeft.getPower());
     }
 
     /*
