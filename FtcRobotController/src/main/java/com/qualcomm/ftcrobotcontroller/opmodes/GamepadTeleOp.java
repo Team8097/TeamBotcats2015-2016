@@ -33,11 +33,15 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import android.os.SystemClock;
 
+import com.android.internal.util.Predicate;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
+
+import java.util.ArrayList;
 
 /**
  * TeleOp Mode
@@ -51,6 +55,8 @@ public class GamepadTeleOp extends OpMode {
     DcMotor motorFrontLeft;
     DcMotor motorBackRight;
     DcMotor motorBackLeft;
+    DcMotor motorWobble;
+    DcMotor motorExtend;
     Servo claw;
     Servo arm;
 
@@ -72,6 +78,8 @@ public class GamepadTeleOp extends OpMode {
 
     // amount to change the claw servo position by
     double clawDelta = 0.1;
+    boolean wobbleUp;
+    boolean wobbleDown;
 
     /**
      * Constructor
@@ -102,6 +110,14 @@ public class GamepadTeleOp extends OpMode {
         motorBackLeft = hardwareMap.dcMotor.get("backLeft");
         motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
         motorBackRight.setDirection(DcMotor.Direction.REVERSE);
+        motorWobble = hardwareMap.dcMotor.get("wobble");
+        motorExtend = hardwareMap.dcMotor.get("extend");
+        //TODO Test to see if encoders start at 0 by default. If not, uncomment the following code
+//        motorWobble.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+//        while(motorWobble.getCurrentPosition() != 0 ){
+//            SystemClock.sleep(1);
+//        }
+        motorWobble.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 //        touchSensor = hardwareMap.touchSensor.get("touch");
 //        distanceSensor = hardwareMap.opticalDistanceSensor.get("distance");
     }
@@ -113,86 +129,57 @@ public class GamepadTeleOp extends OpMode {
      */
     @Override
     public void loop() {
-        if (gamepad1.x) {
-            if (reverse) {
-                motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
-                motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
-                motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
-                motorBackRight.setDirection(DcMotor.Direction.REVERSE);
-                reverse = false;
+//        if (gamepad1.x) {
+//            if (reverse) {
+//                motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
+//                motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
+//                motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
+//                motorBackRight.setDirection(DcMotor.Direction.REVERSE);
+//                reverse = false;
+//
+//            } else {
+//                motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
+//                motorFrontRight.setDirection(DcMotor.Direction.FORWARD);
+//                motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
+//                motorBackRight.setDirection(DcMotor.Direction.FORWARD);
+//                reverse = true;
+//            }
+//
+//        }
 
-            } else {
-                motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
-                motorFrontRight.setDirection(DcMotor.Direction.FORWARD);
-                motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
-                motorBackRight.setDirection(DcMotor.Direction.FORWARD);
-                reverse = true;
-            }
-
+        if (gamepad1.a) {
+            wobbleDown = false;
+            wobbleUp = true;
+        }
+        if (wobbleUp) {
+            turnMotorToPosition(motorWobble, 1000, 0.1);
         }
 
+        if (gamepad1.b) {
+            wobbleUp = false;
+            wobbleDown = true;
+        }
+        if (wobbleDown) {
+            turnMotorToPosition(motorWobble, 0, 0.1);
+        }
 
         float throttle = -gamepad1.left_stick_y;
         float direction = gamepad1.left_stick_x;
         float right = throttle - direction;
         float left = throttle + direction;
 
-//        float right = gamepad1.left_stick_y;
-//        float left = gamepad1.right_trigger;
-
-        // clip the right/left values so that the values never exceed +/- 1
         right = Range.clip(right, -1, 1);
         left = Range.clip(left, -1, 1);
 
-        right = (float)scaleInput(right);
-        left =  (float)scaleInput(left);
-
-        // scale the joystick value to make it easier to control
-        // the robot more precisely at slower speeds.
-//        right = (float) scaleInput(right);
-//        left = (float) scaleInput(left);
-
-        // write the values to the motors
-//        motorLeft.setDirection(DcMotor.Direction.REVERSE);
-//        motorRight.setDirection(DcMotor.Direction.FORWARD);
+        right = (float) scaleInput(right);
+        left = (float) scaleInput(left);
 
         motorFrontRight.setPower(right);
         motorFrontLeft.setPower(left);
         motorBackRight.setPower(right);
         motorBackLeft.setPower(left);
 
-//        SystemClock.sleep(500);
-//        for (int i = 0; i < 20; i++) {
-//            if (i % 2 == 0) {
-//                motorLeft.setDirection(DcMotor.Direction.FORWARD);
-//                motorRight.setDirection(DcMotor.Direction.FORWARD);
-//                motorRight.setPower(0.5);
-//                motorLeft.setPower(0.5);
-//            } else {
-//                motorLeft.setDirection(DcMotor.Direction.REVERSE);
-//                motorRight.setDirection(DcMotor.Direction.REVERSE);
-//                motorRight.setPower(0.5);
-//                motorLeft.setPower(0.5);
-//            }
-//            SystemClock.sleep(100);
-//        }
-//        motorLeft.setDirection(DcMotor.Direction.FORWARD);
-//        motorRight.setDirection(DcMotor.Direction.REVERSE);
-//        motorRight.setPower(0.5);
-//        motorLeft.setPower(0.5);
-//        SystemClock.sleep(500);
-
-
-        // update the position of the arm.
-
-
-
-		/*
-         * Send telemetry data back to driver station. Note that if we are using
-		 * a legacy NXT-compatible motor controller, then the getPower() method
-		 * will return a null value. The legacy NXT-compatible motor controllers
-		 * are currently write only.
-		 */
+//        // update the position of the arm.
 //        if (gamepad1.a) {
 //            // if the A button is pushed on gamepad1, increment the position of
 //            // the arm servo.
@@ -214,7 +201,6 @@ public class GamepadTeleOp extends OpMode {
 //            clawPosition -= clawDelta;
 //        }
 //
-//        // clip the position values so that they never exceed their allowed range.
 //        armPosition = Range.clip(armPosition, ARM_MIN_RANGE, ARM_MAX_RANGE);
 //        clawPosition = Range.clip(clawPosition, CLAW_MIN_RANGE, CLAW_MAX_RANGE);
 //
@@ -222,11 +208,7 @@ public class GamepadTeleOp extends OpMode {
 //        arm.setPosition(armPosition);
 //        claw.setPosition(clawPosition);
 //
-//        telemetry.addData("arm", String.format("%.2f", armPosition));
-//        telemetry.addData("claw", String.format("%.2f", clawPosition));
-//        telemetry.addData("Text", "*** Robot Data ***");
-//        telemetry.addData("left pwr", motorLeft.getPower());
-//        telemetry.addData("right pwr", motorRight.getPower());
+
         telemetry.addData("leftStickY", gamepad1.left_stick_y);
         telemetry.addData("frontRightMotor", motorFrontRight.getPower());
         telemetry.addData("frontLeftMotor", motorFrontLeft.getPower());
@@ -234,14 +216,44 @@ public class GamepadTeleOp extends OpMode {
         telemetry.addData("backLeftMotor", motorBackLeft.getPower());
     }
 
-    /*
-     * Code to run when the op mode is first disabled goes here
-     *
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#stop()
-     */
     @Override
     public void stop() {
+    }
 
+    private boolean turnMotorToPosition(DcMotor motor, int targetPosition, double power) {
+        boolean turning = true;
+        if (targetPosition - motor.getCurrentPosition() > 0) {
+            motor.setDirection(DcMotor.Direction.FORWARD);
+            if (motor.getCurrentPosition() >= targetPosition - 3) {
+                turning = false;
+                telemetry.addData("Position Error", motor.getCurrentPosition() - targetPosition);
+            } else {
+                motor.setPower(power);
+            }
+        } else {
+            motor.setDirection(DcMotor.Direction.REVERSE);
+            if (motor.getCurrentPosition() <= targetPosition + 3) {
+                turning = false;
+                telemetry.addData("Position Error", motor.getCurrentPosition() - targetPosition);
+            } else {
+                motor.setPower(power);
+            }
+        }
+        return turning;
+    }
+
+    private void wobbleUp() {
+        boolean turning = turnMotorToPosition(motorWobble, 1000, 0.1);
+        if (!turning) {
+            wobbleUp = false;
+        }
+    }
+
+    private void wobbleDown() {
+        boolean turning = turnMotorToPosition(motorWobble, 0, 0.1);
+        if (!turning) {
+            wobbleDown = false;
+        }
     }
 
 
