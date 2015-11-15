@@ -29,38 +29,14 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
-import android.os.SystemClock;
-
-import com.android.internal.util.Predicate;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
 
-import java.util.ArrayList;
-
-/**
- * TeleOp Mode
- * <p/>
- * Enables control of the robot via the gamepad
- */
-public class GamepadTeleOp extends OpMode {
-
-
-    DcMotor motorFrontRight;
-    DcMotor motorFrontLeft;
-    DcMotor motorBackRight;
-    DcMotor motorBackLeft;
-    DcMotor motorWobble;
-    DcMotor motorExtend;
-    Servo claw;
-    Servo arm;
-
-    boolean reverse = false;
+public class GamepadOpMode extends BaseOpMode {
 
     final static double ARM_MIN_RANGE = 0.20;
     final static double ARM_MAX_RANGE = 0.90;
@@ -81,18 +57,6 @@ public class GamepadTeleOp extends OpMode {
     boolean wobbleUp;
     boolean wobbleDown;
 
-    /**
-     * Constructor
-     */
-    public GamepadTeleOp() {
-
-    }
-
-    /*
-     * Code to run when the op mode is first enabled goes here
-     *
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
-     */
     @Override
     public void init() {
 //        arm = hardwareMap.servo.get("servo_1");
@@ -136,7 +100,6 @@ public class GamepadTeleOp extends OpMode {
 //                motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
 //                motorBackRight.setDirection(DcMotor.Direction.REVERSE);
 //                reverse = false;
-//
 //            } else {
 //                motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
 //                motorFrontRight.setDirection(DcMotor.Direction.FORWARD);
@@ -144,7 +107,6 @@ public class GamepadTeleOp extends OpMode {
 //                motorBackRight.setDirection(DcMotor.Direction.FORWARD);
 //                reverse = true;
 //            }
-//
 //        }
 
         if (gamepad1.a) {
@@ -152,7 +114,8 @@ public class GamepadTeleOp extends OpMode {
             wobbleUp = true;
         }
         if (wobbleUp) {
-            turnMotorToPosition(motorWobble, 1000, 0.1);
+            //TODO I think the encoders count quarter degrees (1440 per revolution) Need to confirm that with testing.
+            wobbleUp();
         }
 
         if (gamepad1.b) {
@@ -160,7 +123,7 @@ public class GamepadTeleOp extends OpMode {
             wobbleDown = true;
         }
         if (wobbleDown) {
-            turnMotorToPosition(motorWobble, 0, 0.1);
+            wobbleDown();
         }
 
         float throttle = -gamepad1.left_stick_y;
@@ -220,27 +183,7 @@ public class GamepadTeleOp extends OpMode {
     public void stop() {
     }
 
-    private boolean turnMotorToPosition(DcMotor motor, int targetPosition, double power) {
-        boolean turning = true;
-        if (targetPosition - motor.getCurrentPosition() > 0) {
-            motor.setDirection(DcMotor.Direction.FORWARD);
-            if (motor.getCurrentPosition() >= targetPosition - 3) {
-                turning = false;
-                telemetry.addData("Position Error", motor.getCurrentPosition() - targetPosition);
-            } else {
-                motor.setPower(power);
-            }
-        } else {
-            motor.setDirection(DcMotor.Direction.REVERSE);
-            if (motor.getCurrentPosition() <= targetPosition + 3) {
-                turning = false;
-                telemetry.addData("Position Error", motor.getCurrentPosition() - targetPosition);
-            } else {
-                motor.setPower(power);
-            }
-        }
-        return turning;
-    }
+
 
     private void wobbleUp() {
         boolean turning = turnMotorToPosition(motorWobble, 1000, 0.1);
