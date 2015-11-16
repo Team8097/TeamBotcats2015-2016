@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 public abstract class BaseOpMode extends OpMode {
+
     DcMotor motorFrontRight;
     DcMotor motorFrontLeft;
     DcMotor motorBackRight;
@@ -35,6 +36,7 @@ public abstract class BaseOpMode extends OpMode {
         if (targetPosition - motor.getCurrentPosition() > 0) {
             motor.setDirection(DcMotor.Direction.FORWARD);
             if (motor.getCurrentPosition() >= targetPosition - 3) {
+                motor.setPower(0);
                 turning = false;
                 telemetry.addData("Position Error", motor.getCurrentPosition() - targetPosition);
             } else {
@@ -43,6 +45,7 @@ public abstract class BaseOpMode extends OpMode {
         } else {
             motor.setDirection(DcMotor.Direction.REVERSE);
             if (motor.getCurrentPosition() <= targetPosition + 3) {
+                motor.setPower(0);
                 turning = false;
                 telemetry.addData("Position Error", motor.getCurrentPosition() - targetPosition);
             } else {
