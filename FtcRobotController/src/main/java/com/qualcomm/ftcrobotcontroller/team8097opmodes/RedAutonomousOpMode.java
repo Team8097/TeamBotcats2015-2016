@@ -31,7 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
-//If we are on the blue alliance, the mountain in our zone will be on the left.
+//If we are on the red alliance, the mountain in our zone will be on the left.
 public class RedAutonomousOpMode extends AutonomousOpMode {
     @Override
     public void loop() {
