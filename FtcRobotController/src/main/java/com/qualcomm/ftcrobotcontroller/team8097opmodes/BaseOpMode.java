@@ -1,9 +1,12 @@
 package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 public abstract class BaseOpMode extends OpMode {
 
@@ -16,6 +19,10 @@ public abstract class BaseOpMode extends OpMode {
 
     TouchSensor touchSensor;
     OpticalDistanceSensor distanceSensor;
+    ColorSensor colorSensor;
+    LightSensor lightSensor;
+    UltrasonicSensor ultrasonicSensor;
+
 
     protected void go(double leftPower, double rightPower) {
         motorFrontRight.setPower(rightPower);

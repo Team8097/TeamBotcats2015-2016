@@ -31,7 +31,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
+import com.qualcomm.hardware.ModernRoboticsUsbLegacyModule;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.LegacyModule;
 
 public class AutonomousOpMode extends BaseOpMode {
 
@@ -39,21 +41,29 @@ public class AutonomousOpMode extends BaseOpMode {
 
     @Override
     public void init() {
-        motorFrontRight = hardwareMap.dcMotor.get("frontRight");
-        motorFrontLeft = hardwareMap.dcMotor.get("frontLeft");
-        motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
-        motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
-        motorBackRight = hardwareMap.dcMotor.get("backRight");
-        motorBackLeft = hardwareMap.dcMotor.get("backLeft");
-        motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
-        motorBackRight.setDirection(DcMotor.Direction.REVERSE);
-//        touchSensor = hardwareMap.touchSensor.get("touch");
+//        motorFrontRight = hardwareMap.dcMotor.get("frontRight");
+//        motorFrontLeft = hardwareMap.dcMotor.get("frontLeft");
+//        motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
+//        motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
+//        motorBackRight = hardwareMap.dcMotor.get("backRight");
+//        motorBackLeft = hardwareMap.dcMotor.get("backLeft");
+//        motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
+//        motorBackRight.setDirection(DcMotor.Direction.REVERSE);
+        touchSensor = hardwareMap.touchSensor.get("touch");
 //        distanceSensor = hardwareMap.opticalDistanceSensor.get("distance");
+        colorSensor = hardwareMap.colorSensor.get("color");
+        lightSensor = hardwareMap.lightSensor.get("light");
+        ultrasonicSensor = hardwareMap.ultrasonicSensor.get("ultra");
+
     }
 
     @Override
     public void loop() {
-
+        telemetry.addData("touch", touchSensor.isPressed());
+        telemetry.addData("ultra", ultrasonicSensor.getUltrasonicLevel());
+        telemetry.addData("light", lightSensor.getLightDetected());
+        telemetry.addData("blue", colorSensor.blue());
+        telemetry.addData("red", colorSensor.red());
     }
 
 

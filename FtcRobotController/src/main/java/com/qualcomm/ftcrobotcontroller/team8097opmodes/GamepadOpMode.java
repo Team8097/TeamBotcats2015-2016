@@ -43,6 +43,13 @@ public class GamepadOpMode extends BaseOpMode {
     final static double CLAW_MIN_RANGE = 0.20;
     final static double CLAW_MAX_RANGE = 0.7;
 
+    double Threshold = 0.5;
+    double Forward = 0;
+    double Backward = 0;
+    double Right = 0;
+    double Left = 0;
+    double Spin = 0;
+
     // position of the arm servo.
     double armPosition;
 
@@ -67,21 +74,21 @@ public class GamepadOpMode extends BaseOpMode {
         clawPosition = 0.2;
 
         motorFrontRight = hardwareMap.dcMotor.get("frontRight");
-        motorFrontLeft = hardwareMap.dcMotor.get("frontLeft");
-        motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
+//        motorFrontLeft = hardwareMap.dcMotor.get("frontLeft");
+//        motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
         motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
-        motorBackRight = hardwareMap.dcMotor.get("backRight");
-        motorBackLeft = hardwareMap.dcMotor.get("backLeft");
-        motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
-        motorBackRight.setDirection(DcMotor.Direction.REVERSE);
-        motorWobble = hardwareMap.dcMotor.get("wobble");
-        motorExtend = hardwareMap.dcMotor.get("extend");
+//        motorBackRight = hardwareMap.dcMotor.get("backRight");
+//        motorBackLeft = hardwareMap.dcMotor.get("backLeft");
+//        motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
+//        motorBackRight.setDirection(DcMotor.Direction.REVERSE);
+//        motorWobble = hardwareMap.dcMotor.get("wobble");
+//        motorExtend = hardwareMap.dcMotor.get("extend");
         //TODO Test to see if encoders start at 0 by default. If not, uncomment the following code
 //        motorWobble.setMode(DcMotorController.RunMode.RESET_ENCODERS);
 //        while(motorWobble.getCurrentPosition() != 0 ){
 //            SystemClock.sleep(1);
 //        }
-        motorWobble.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+//        motorWobble.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 //        touchSensor = hardwareMap.touchSensor.get("touch");
 //        distanceSensor = hardwareMap.opticalDistanceSensor.get("distance");
     }
@@ -93,22 +100,21 @@ public class GamepadOpMode extends BaseOpMode {
      */
     @Override
     public void loop() {
-//        if (gamepad1.x) {
-//            if (reverse) {
-//                motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
-//                motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
-//                motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
-//                motorBackRight.setDirection(DcMotor.Direction.REVERSE);
-//                reverse = false;
-//            } else {
-//                motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
-//                motorFrontRight.setDirection(DcMotor.Direction.FORWARD);
-//                motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
-//                motorBackRight.setDirection(DcMotor.Direction.FORWARD);
-//                reverse = true;
-//            }
-//        }
+//        control();
+        telemetry.addData("leftStickY", gamepad1.left_stick_y);
+        telemetry.addData("rightStickY", gamepad1.right_stick_y);
+        telemetry.addData("rightStickY", gamepad1.left_trigger);
+        telemetry.addData("rightStickY", gamepad1.right_trigger);
+        telemetry.addData("leftStickY", gamepad1.left_stick_x);
+        telemetry.addData("rightStickY", gamepad1.right_stick_x);
 
+//        telemetry.addData("frontRightMotor", motorFrontRight.getPower());
+//        telemetry.addData("frontLeftMotor", motorFrontLeft.getPower());
+//        telemetry.addData("backRightMotor", motorBackRight.getPower());
+//        telemetry.addData("backLeftMotor", motorBackLeft.getPower());
+    }
+
+    private void wobbleMethod() {
         if (gamepad1.a) {
             wobbleDown = false;
             wobbleUp = true;
@@ -141,48 +147,11 @@ public class GamepadOpMode extends BaseOpMode {
         motorFrontLeft.setPower(left);
         motorBackRight.setPower(right);
         motorBackLeft.setPower(left);
-
-//        // update the position of the arm.
-//        if (gamepad1.a) {
-//            // if the A button is pushed on gamepad1, increment the position of
-//            // the arm servo.
-//            armPosition += armDelta;
-//        }
-//
-//        if (gamepad1.y) {
-//            // if the Y button is pushed on gamepad1, decrease the position of
-//            // the arm servo.
-//            armPosition -= armDelta;
-//        }
-//
-//        // update the position of the claw
-//        if (gamepad1.x) {
-//            clawPosition += clawDelta;
-//        }
-//
-//        if (gamepad1.b) {
-//            clawPosition -= clawDelta;
-//        }
-//
-//        armPosition = Range.clip(armPosition, ARM_MIN_RANGE, ARM_MAX_RANGE);
-//        clawPosition = Range.clip(clawPosition, CLAW_MIN_RANGE, CLAW_MAX_RANGE);
-//
-//        // write position values to the wrist and claw servo
-//        arm.setPosition(armPosition);
-//        claw.setPosition(clawPosition);
-//
-
-        telemetry.addData("leftStickY", gamepad1.left_stick_y);
-        telemetry.addData("frontRightMotor", motorFrontRight.getPower());
-        telemetry.addData("frontLeftMotor", motorFrontLeft.getPower());
-        telemetry.addData("backRightMotor", motorBackRight.getPower());
-        telemetry.addData("backLeftMotor", motorBackLeft.getPower());
     }
 
     @Override
     public void stop() {
     }
-
 
 
     private void wobbleUp() {
@@ -197,6 +166,64 @@ public class GamepadOpMode extends BaseOpMode {
         if (!turning) {
             wobbleDown = false;
         }
+    }
+
+    private void control() {
+        //Redefining variables to enable dual controller control
+        double JoystickOutput1Y = gamepad1.left_stick_y + gamepad2.left_stick_y;
+        double JoystickOutput1X = gamepad1.left_stick_x + gamepad2.left_stick_x;
+        double JoystickOutput2Y = gamepad1.right_stick_y + gamepad2.right_stick_y;
+        double JoystickOutput2X = gamepad1.right_stick_x + gamepad2.right_stick_x;
+
+        if (Math.abs(JoystickOutput1X) < Threshold && Math.abs(JoystickOutput1Y) < Threshold && Math.abs(JoystickOutput2X) < Threshold && Math.abs(JoystickOutput2Y) < Threshold) {
+            motorFrontRight.setPower(0);
+//            motorFrontLeft.setPower(0);
+//            motorBackRight.setPower(0);
+//            motorBackLeft.setPower(0);
+
+
+            Forward = 0;
+            Backward = 0;
+            Right = 0;
+            Left = 0;
+            Spin = 0;
+            //might need to sleep
+        } else {
+            //Forward Movement
+            if ((JoystickOutput1Y) < -Threshold) {
+                Forward = JoystickOutput1Y;
+            }
+
+            //Backward Movement
+            if ((JoystickOutput1Y) > Threshold) {
+                Backward = JoystickOutput1Y;
+            }
+
+            //Right Movement
+            if ((JoystickOutput1X) > Threshold) {
+                Right = JoystickOutput1X;
+            }
+
+            //Left Movement
+            if ((JoystickOutput1X) < -Threshold) {
+                Left = JoystickOutput1X;
+            }
+
+            //Spin Left
+            if ((JoystickOutput2X) < -Threshold) {
+                Spin = JoystickOutput2X;
+            }
+
+            //Spin Right
+            if ((JoystickOutput2X) > Threshold) {
+                Spin = JoystickOutput2X;
+            }
+        }
+
+        motorFrontRight.setPower((-Forward + -Backward + Left + Right + Spin) / 5.0);
+//        motorBackRight.setPower((-Forward + -Backward + -Left + -Right + Spin)/5.0);
+//        motorFrontLeft.setPower((Forward + Backward + Left + Right + Spin)/5.0);
+//        motorBackLeft.setPower((Forward + Backward + -Left + -Right + Spin)/5.0);
     }
 
 
