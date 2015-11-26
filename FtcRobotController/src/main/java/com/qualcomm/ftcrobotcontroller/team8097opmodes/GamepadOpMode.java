@@ -173,12 +173,12 @@ public class GamepadOpMode extends BaseOpMode {
             motorFrontLeft.setPower(-0.5);
             motorBackLeft.setPower(-0.5);
         } else {
-            double JoystickOutputY = gamepad1.left_stick_y;
-            double JoystickOutputX = gamepad1.left_stick_x;
-            motorFrontRight.setPower((JoystickOutputY - JoystickOutputX) / 2.0);
-            motorBackRight.setPower((JoystickOutputY + JoystickOutputX) / 2.0);
-            motorFrontLeft.setPower((-JoystickOutputY - JoystickOutputX) / 2.0);
-            motorBackLeft.setPower((-JoystickOutputY + JoystickOutputX) / 2.0);
+            double joystickInputY = gamepad1.left_stick_y;
+            double joystickInputX = gamepad1.left_stick_x;
+            motorFrontRight.setPower((joystickInputY - joystickInputX) / 2.0);
+            motorBackRight.setPower((joystickInputY + joystickInputX) / 2.0);
+            motorFrontLeft.setPower((-joystickInputY - joystickInputX) / 2.0);
+            motorBackLeft.setPower((-joystickInputY + joystickInputX) / 2.0);
         }
     }
 
