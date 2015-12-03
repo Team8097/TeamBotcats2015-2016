@@ -31,18 +31,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
-import android.os.SystemClock;
-
-import com.qualcomm.hardware.ModernRoboticsUsbLegacyModule;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.LegacyModule;
-
-public class AutonomousOpMode extends BaseOpMode {
+public class SensorTestAutonomousOpMode extends BaseOpMode {
 
     boolean onMountain = false;
-    long startTime;
-    int fullTurnTime = 2400;//0.25 power
-    int halfMeterTime = 0;//0.25 power
 
     @Override
     public void init() {
@@ -57,16 +48,13 @@ public class AutonomousOpMode extends BaseOpMode {
 //        touchSensor = hardwareMap.touchSensor.get("touch");
 //        distanceSensor = hardwareMap.opticalDistanceSensor.get("distance");
 //        colorSensor = hardwareMap.colorSensor.get("color");
-//        lightSensor = hardwareMap.lightSensor.get("light");
-        motorFrontRight = hardwareMap.dcMotor.get("frontRight");
-        motorFrontLeft = hardwareMap.dcMotor.get("frontLeft");
-        motorBackRight = hardwareMap.dcMotor.get("backRight");
-        motorBackLeft = hardwareMap.dcMotor.get("backLeft");
+        lightSensor = hardwareMap.lightSensor.get("light");
 //        frontUltra = hardwareMap.ultrasonicSensor.get("frontUltra");
 //        rightUltra = hardwareMap.ultrasonicSensor.get("rightUltra");
 //        backUltra = hardwareMap.ultrasonicSensor.get("backUltra");
 //        leftUltra = hardwareMap.ultrasonicSensor.get("leftUltra");
-        startTime = System.currentTimeMillis();
+
+
     }
 
     @Override
@@ -76,26 +64,9 @@ public class AutonomousOpMode extends BaseOpMode {
 //        telemetry.addData("rightUltra", rightUltra.getUltrasonicLevel());
 //        telemetry.addData("backUltra", backUltra.getUltrasonicLevel());
 //        telemetry.addData("leftUltra", leftUltra.getUltrasonicLevel());
-//        telemetry.addData("light", lightSensor.getLightDetected());
+        telemetry.addData("light", lightSensor.getLightDetected());
 //        telemetry.addData("blue", colorSensor.blue());
 //        telemetry.addData("red", colorSensor.red());
-//        if (System.currentTimeMillis() - startTime < 2400) {
-//            motorFrontRight.setPower(0.25);
-//            motorBackRight.setPower(0.25);
-//            motorFrontLeft.setPower(0.25);
-//            motorBackLeft.setPower(0.25);
-//        } else{
-//            stopRobot();
-//        }
-        SystemClock.sleep(500);
-            motorFrontRight.setPower(0.25);
-            motorBackRight.setPower(0.25);
-            motorFrontLeft.setPower(-0.25);
-            motorBackLeft.setPower(-0.25);
-        SystemClock.sleep(1500);
-        stopRobot();
-        SystemClock.sleep(100000);
-
     }
 
 

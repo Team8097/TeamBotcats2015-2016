@@ -31,9 +31,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 public class GamepadOpMode extends BaseOpMode {
@@ -162,25 +159,23 @@ public class GamepadOpMode extends BaseOpMode {
     private void control() {
         //Redefining variables to enable dual controller control
         if (gamepad1.dpad_left) {
-            motorFrontRight.setPower(0.5);
-            motorBackRight.setPower(0.5);
-            motorFrontLeft.setPower(0.5);
-            motorBackLeft.setPower(0.5);
+            spinLeft(0.5);
         }
         if (gamepad1.dpad_right) {
-            motorFrontRight.setPower(-0.5);
-            motorBackRight.setPower(-0.5);
-            motorFrontLeft.setPower(-0.5);
-            motorBackLeft.setPower(-0.5);
+            spinRight(-0.5);
         } else {
             double joystickInputY = gamepad1.left_stick_y;
             double joystickInputX = gamepad1.left_stick_x;
+
             motorFrontRight.setPower((joystickInputY - joystickInputX) / 2.0);
             motorBackRight.setPower((joystickInputY + joystickInputX) / 2.0);
             motorFrontLeft.setPower((-joystickInputY - joystickInputX) / 2.0);
             motorBackLeft.setPower((-joystickInputY + joystickInputX) / 2.0);
+
         }
     }
+
+
 
 
     /*

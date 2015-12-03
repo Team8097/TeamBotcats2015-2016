@@ -21,7 +21,10 @@ public abstract class BaseOpMode extends OpMode {
     OpticalDistanceSensor distanceSensor;
     ColorSensor colorSensor;
     LightSensor lightSensor;
-    UltrasonicSensor ultrasonicSensor;
+    UltrasonicSensor frontUltra;
+    UltrasonicSensor rightUltra;
+    UltrasonicSensor backUltra;
+    UltrasonicSensor leftUltra;
 
 
     protected void go(double leftPower, double rightPower) {
@@ -60,5 +63,19 @@ public abstract class BaseOpMode extends OpMode {
             }
         }
         return turning;
+    }
+
+    protected void spinRight(double power) {
+        motorFrontRight.setPower(power);
+        motorBackRight.setPower(power);
+        motorFrontLeft.setPower(power);
+        motorBackLeft.setPower(power);
+    }
+
+    protected void spinLeft(double power) {
+        motorFrontRight.setPower(power);
+        motorBackRight.setPower(power);
+        motorFrontLeft.setPower(power);
+        motorBackLeft.setPower(power);
     }
 }
