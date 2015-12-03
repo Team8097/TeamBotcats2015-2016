@@ -43,6 +43,8 @@ public class AutonomousOpMode extends BaseOpMode {
     long startTime;
     int fullTurnTime = 2400;//0.25 power
     int halfMeterTime = 0;//0.25 power
+    final int initialLoops = 1;
+    int loop = 1;
 
     @Override
     public void init() {
@@ -66,11 +68,14 @@ public class AutonomousOpMode extends BaseOpMode {
 //        rightUltra = hardwareMap.ultrasonicSensor.get("rightUltra");
 //        backUltra = hardwareMap.ultrasonicSensor.get("backUltra");
 //        leftUltra = hardwareMap.ultrasonicSensor.get("leftUltra");
-        startTime = System.currentTimeMillis();
     }
 
     @Override
     public void loop() {
+        if (loop <= initialLoops) {
+            loop++;
+            startTime = System.currentTimeMillis();
+        } else {
 //        telemetry.addData("touch", touchSensor.isPressed());
 //        telemetry.addData("frontUltra", frontUltra.getUltrasonicLevel());
 //        telemetry.addData("rightUltra", rightUltra.getUltrasonicLevel());
@@ -87,15 +92,15 @@ public class AutonomousOpMode extends BaseOpMode {
 //        } else{
 //            stopRobot();
 //        }
-        SystemClock.sleep(500);
-            motorFrontRight.setPower(0.25);
-            motorBackRight.setPower(0.25);
-            motorFrontLeft.setPower(-0.25);
-            motorBackLeft.setPower(-0.25);
-        SystemClock.sleep(1500);
-        stopRobot();
-        SystemClock.sleep(100000);
-
+            if (System.currentTimeMillis() - startTime < 1500) {
+                motorFrontRight.setPower(0.25);
+                motorBackRight.setPower(0.25);
+                motorFrontLeft.setPower(-0.25);
+                motorBackLeft.setPower(-0.25);
+            } else {
+                stopRobot();
+            }
+        }
     }
 
 
