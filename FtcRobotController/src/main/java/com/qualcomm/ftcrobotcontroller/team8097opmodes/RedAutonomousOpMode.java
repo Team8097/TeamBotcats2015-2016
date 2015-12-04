@@ -45,8 +45,10 @@ public class RedAutonomousOpMode extends CompetitionAutonomousOpMode {
                 double degreesToGo = spinLeftDegrees(0.25, 45, startMoveTime);
                 if (degreesToGo == 0) {
                     stopRobot();
-                    stage = STAGE_CHOOSE_BUTTON;
+                    stage++;
                 }
+            } else if (stage == STAGE_DROP_CLIMBERS) {
+
             } else if (stage == STAGE_CHOOSE_BUTTON) {
 
             } else if (stage == STAGE_PRESS_BUTTON) {

@@ -36,8 +36,9 @@ import java.util.ArrayList;
 public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     final static int STAGE_FIND_BEACON = 0;
     final static int STAGE_TURN_TOWARDS_BUTTON = 1;
-    final static int STAGE_CHOOSE_BUTTON = 2;
-    final static int STAGE_PRESS_BUTTON = 3;
+    final static int STAGE_DROP_CLIMBERS = 2;
+    final static int STAGE_CHOOSE_BUTTON = 3;
+    final static int STAGE_PRESS_BUTTON = 4;
     int stage = STAGE_FIND_BEACON;
     ArrayList<Double> distanceToGo = new ArrayList<Double>();
     int distanceToGoIndex = 1;
@@ -57,12 +58,12 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
             distanceToGo.set(distanceToGoIndex, goDistance(0.25, distanceToGo.get(distanceToGoIndex - 1), startMoveTime));
             if (distanceToGo.get(distanceToGoIndex) == 0) {
                 stopRobot();
-                stage = STAGE_TURN_TOWARDS_BUTTON;
+                stage++;
                 startMoveTime = System.currentTimeMillis();
             }
         } else if (distanceToGo.get(distanceToGoIndex) < 30) {
             stopRobot();
-            stage = STAGE_TURN_TOWARDS_BUTTON;
+            stage++;
             startMoveTime = System.currentTimeMillis();
         } else {
             if (!stoppedForObstacle) {
@@ -72,7 +73,7 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
                 startStoppedTime = System.currentTimeMillis();
             }
             if (System.currentTimeMillis() - startStoppedTime > 7000) {
-                stage = STAGE_TURN_TOWARDS_BUTTON;
+                stage++;
                 startMoveTime = System.currentTimeMillis();
             }
             startMoveTime = System.currentTimeMillis();

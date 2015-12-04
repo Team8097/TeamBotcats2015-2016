@@ -39,6 +39,8 @@ public class AutonomousOpMode extends BaseOpMode {
     final int initialLoops = 1;
     int loop = 1;
     long startTime;
+    final static double BLUE = 0;
+    final static double RED = 0;
 
     @Override
     public void init() {
