@@ -64,7 +64,7 @@ public class AutonomousOpMode extends BaseOpMode {
         motorFrontLeft = hardwareMap.dcMotor.get("frontLeft");
         motorBackRight = hardwareMap.dcMotor.get("backRight");
         motorBackLeft = hardwareMap.dcMotor.get("backLeft");
-//        frontUltra = hardwareMap.ultrasonicSensor.get("frontUltra");
+        frontUltra = hardwareMap.ultrasonicSensor.get("frontUltra");
 //        rightUltra = hardwareMap.ultrasonicSensor.get("rightUltra");
 //        backUltra = hardwareMap.ultrasonicSensor.get("backUltra");
 //        leftUltra = hardwareMap.ultrasonicSensor.get("leftUltra");
@@ -92,17 +92,14 @@ public class AutonomousOpMode extends BaseOpMode {
 //        } else{
 //            stopRobot();
 //        }
+            telemetry.addData("frontUltra", frontUltra.getUltrasonicLevel());
             if (System.currentTimeMillis() - startTime < 1500) {
-                motorFrontRight.setPower(0.25);
-                motorBackRight.setPower(0.25);
-                motorFrontLeft.setPower(-0.25);
-                motorBackLeft.setPower(-0.25);
+                goForward(0.25);
             } else {
                 stopRobot();
             }
         }
     }
-
 
     protected boolean seesBaseOfMountain() {
         return false;

@@ -157,25 +157,24 @@ public class GamepadOpMode extends BaseOpMode {
     }
 
     private void control() {
-        //Redefining variables to enable dual controller control
         if (gamepad1.dpad_left) {
-            spinLeft(0.5);
+            spinLeft(0.25);
         }
         if (gamepad1.dpad_right) {
-            spinRight(-0.5);
+            spinRight(0.25);
         } else {
-            double joystickInputY = gamepad1.left_stick_y;
-            double joystickInputX = gamepad1.left_stick_x;
-
-            motorFrontRight.setPower((joystickInputY - joystickInputX) / 2.0);
-            motorBackRight.setPower((joystickInputY + joystickInputX) / 2.0);
-            motorFrontLeft.setPower((-joystickInputY - joystickInputX) / 2.0);
-            motorBackLeft.setPower((-joystickInputY + joystickInputX) / 2.0);
-
+            double joystickInputY = -gamepad1.left_stick_y;
+            double joystickInputX = -gamepad1.left_stick_x;
+            goDirection(joystickInputX, joystickInputY);
         }
     }
 
-
+    protected void goDirection(double x, double y) {
+        motorFrontRight.setPower((y - x) / 2.0);
+        motorBackRight.setPower((y + x) / 2.0);
+        motorFrontLeft.setPower((-y - x) / 2.0);
+        motorBackLeft.setPower((-y + x) / 2.0);
+    }
 
 
     /*

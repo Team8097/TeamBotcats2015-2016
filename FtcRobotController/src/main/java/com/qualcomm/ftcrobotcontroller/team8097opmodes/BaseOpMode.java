@@ -65,11 +65,18 @@ public abstract class BaseOpMode extends OpMode {
         return turning;
     }
 
-    protected void spinRight(double power) {
+    protected void goForward(double power) {
         motorFrontRight.setPower(power);
         motorBackRight.setPower(power);
-        motorFrontLeft.setPower(power);
-        motorBackLeft.setPower(power);
+        motorFrontLeft.setPower(-power);
+        motorBackLeft.setPower(-power);
+    }
+
+    protected void spinRight(double power) {
+        motorFrontRight.setPower(-power);
+        motorBackRight.setPower(-power);
+        motorFrontLeft.setPower(-power);
+        motorBackLeft.setPower(-power);
     }
 
     protected void spinLeft(double power) {
