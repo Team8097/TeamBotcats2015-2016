@@ -31,27 +31,51 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
-//If we are on the red alliance, the beacon repair zone will be on the left.
-public class RedAutonomousOpMode extends CompetitionAutonomousOpMode {
+import java.util.ArrayList;
+
+public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
+    final static int STAGE_FIND_BEACON = 0;
+    final static int STAGE_TURN_TOWARDS_BUTTON = 1;
+    final static int STAGE_CHOOSE_BUTTON = 2;
+    final static int STAGE_PRESS_BUTTON = 3;
+    int stage = STAGE_FIND_BEACON;
+    ArrayList<Double> distanceToGo = new ArrayList<Double>();
+    int distanceToGoIndex = 1;
+    boolean stoppedForObstacle = true;
+    long startMoveTime;
+    long startStoppedTime;
+
     @Override
-    public void loop() {
-        if (loop <= initialLoops) {
-            loop++;
+    public void init() {
+        super.init();
+        distanceToGo.add(100.0);
+    }
+
+    protected void goToBeacon() {
+        if (frontUltra.getUltrasonicLevel() > 10) {
+            stoppedForObstacle = false;
+            distanceToGo.set(distanceToGoIndex, goDistance(0.25, distanceToGo.get(distanceToGoIndex - 1), startMoveTime));
+            if (distanceToGo.get(distanceToGoIndex) == 0) {
+                stopRobot();
+                stage = STAGE_TURN_TOWARDS_BUTTON;
+                startMoveTime = System.currentTimeMillis();
+            }
+        } else if (distanceToGo.get(distanceToGoIndex) < 30) {
+            stopRobot();
+            stage = STAGE_TURN_TOWARDS_BUTTON;
             startMoveTime = System.currentTimeMillis();
         } else {
-            if (stage == STAGE_FIND_BEACON) {
-                goToBeacon();
-            } else if (stage == STAGE_TURN_TOWARDS_BUTTON) {
-                double degreesToGo = spinLeftDegrees(0.25, 45, startMoveTime);
-                if (degreesToGo == 0) {
-                    stopRobot();
-                    stage = STAGE_CHOOSE_BUTTON;
-                }
-            } else if (stage == STAGE_CHOOSE_BUTTON) {
-
-            } else if (stage == STAGE_PRESS_BUTTON) {
-
+            if (!stoppedForObstacle) {
+                stopRobot();
+                stoppedForObstacle = true;
+                distanceToGoIndex++;
+                startStoppedTime = System.currentTimeMillis();
             }
+            if (System.currentTimeMillis() - startStoppedTime > 7000) {
+                stage = STAGE_TURN_TOWARDS_BUTTON;
+                startMoveTime = System.currentTimeMillis();
+            }
+            startMoveTime = System.currentTimeMillis();
         }
     }
 }

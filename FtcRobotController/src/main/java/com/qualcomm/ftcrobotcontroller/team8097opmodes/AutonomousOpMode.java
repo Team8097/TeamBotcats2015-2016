@@ -31,20 +31,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
-import android.os.SystemClock;
-
-import com.qualcomm.hardware.ModernRoboticsUsbLegacyModule;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.LegacyModule;
-
 public class AutonomousOpMode extends BaseOpMode {
 
     boolean onMountain = false;
-    long startTime;
     int fullTurnTime = 2400;//0.25 power
     int halfMeterTime = 0;//0.25 power
     final int initialLoops = 1;
     int loop = 1;
+    long startTime;
 
     @Override
     public void init() {
@@ -84,7 +78,7 @@ public class AutonomousOpMode extends BaseOpMode {
 //        telemetry.addData("light", lightSensor.getLightDetected());
 //        telemetry.addData("blue", colorSensor.blue());
 //        telemetry.addData("red", colorSensor.red());
-//        if (System.currentTimeMillis() - startTime < 2400) {
+//        if (System.currentTimeMillis() - startMoveTime < 2400) {
 //            motorFrontRight.setPower(0.25);
 //            motorBackRight.setPower(0.25);
 //            motorFrontLeft.setPower(0.25);
@@ -101,8 +95,43 @@ public class AutonomousOpMode extends BaseOpMode {
         }
     }
 
-    protected boolean seesBaseOfMountain() {
-        return false;
+    protected double goDistance(double power, double inches, long startTime) {
+        double goTime = inches * MILLIS_PER_INCH;
+        int timeElapsed = (int) (System.currentTimeMillis() - startTime);
+        if (timeElapsed < goTime) {
+            goForward(power);
+            double distanceToGo = (goTime - timeElapsed) / MILLIS_PER_INCH;
+            return distanceToGo;
+        } else {
+            stopRobot();
+            return 0;
+        }
+    }
+
+    protected double spinRightDegrees(double power, double degrees, long startTime) {
+        double goTime = degrees * MILLIS_PER_DEGREE;
+        int timeElapsed = (int) (System.currentTimeMillis() - startTime);
+        if (timeElapsed < goTime) {
+            spinRight(power);
+            double degreesToGo = (goTime - timeElapsed) / MILLIS_PER_DEGREE;
+            return degreesToGo;
+        } else {
+            stopRobot();
+            return 0;
+        }
+    }
+
+    protected double spinLeftDegrees(double power, double degrees, long startTime) {
+        double goTime = degrees * MILLIS_PER_DEGREE;
+        int timeElapsed = (int) (System.currentTimeMillis() - startTime);
+        if (timeElapsed < goTime) {
+            spinLeft(power);
+            double degreesToGo = (goTime - timeElapsed) / MILLIS_PER_DEGREE;
+            return degreesToGo;
+        } else {
+            stopRobot();
+            return 0;
+        }
     }
 
     protected void buttonGo() {

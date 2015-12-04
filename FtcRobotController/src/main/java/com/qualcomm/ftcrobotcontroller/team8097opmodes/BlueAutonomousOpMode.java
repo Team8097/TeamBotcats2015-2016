@@ -31,15 +31,28 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
-//If we are on the blue alliance, the mountain in our zone will be on the right.
-public class BlueAutonomousOpMode extends AutonomousOpMode {
+//If we are on the blue alliance, the beacon repair zone will be on the right.
+public class BlueAutonomousOpMode extends CompetitionAutonomousOpMode {
+
     @Override
     public void loop() {
-        if (!seesBaseOfMountain() && !onMountain) {
-            go(0.7, 0.5);
+        if (loop <= initialLoops) {
+            loop++;
+            startMoveTime = System.currentTimeMillis();
         } else {
-            onMountain = true;
-            go(1, 1);
+            if (stage == STAGE_FIND_BEACON) {
+                goToBeacon();
+            } else if (stage == STAGE_TURN_TOWARDS_BUTTON) {
+                double degreesToGo = spinRightDegrees(0.25, 45, startMoveTime);
+                if (degreesToGo == 0) {
+                    stopRobot();
+                    stage = STAGE_CHOOSE_BUTTON;
+                }
+            } else if (stage == STAGE_CHOOSE_BUTTON) {
+
+            } else if (stage == STAGE_PRESS_BUTTON) {
+
+            }
         }
     }
 }

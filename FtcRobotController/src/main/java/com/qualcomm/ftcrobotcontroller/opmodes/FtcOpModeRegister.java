@@ -32,7 +32,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.ftcrobotcontroller.team8097opmodes.AutonomousOpMode;
+import com.qualcomm.ftcrobotcontroller.team8097opmodes.BlueAutonomousOpMode;
 import com.qualcomm.ftcrobotcontroller.team8097opmodes.GamepadOpMode;
+import com.qualcomm.ftcrobotcontroller.team8097opmodes.RedAutonomousOpMode;
 import com.qualcomm.ftcrobotcontroller.team8097opmodes.SensorTestAutonomousOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
@@ -61,6 +63,8 @@ public class FtcOpModeRegister implements OpModeRegister {
         manager.register("Gamepad", GamepadOpMode.class);
         manager.register("Autonomous", AutonomousOpMode.class);
         manager.register("SensorTest", SensorTestAutonomousOpMode.class);
+        manager.register("RedAutonomous", RedAutonomousOpMode.class);
+        manager.register("BlueAutonomous", BlueAutonomousOpMode.class);
 
 
         //manager.register("AdafruitRGBExample", AdafruitRGBExample.class);

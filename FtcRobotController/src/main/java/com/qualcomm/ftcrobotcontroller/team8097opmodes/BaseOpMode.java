@@ -10,6 +10,9 @@ import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 public abstract class BaseOpMode extends OpMode {
 
+    public final static double MILLIS_PER_INCH = 50;
+    public final static double MILLIS_PER_DEGREE = 5;
+
     DcMotor motorFrontRight;
     DcMotor motorFrontLeft;
     DcMotor motorBackRight;
