@@ -47,10 +47,10 @@ public class GamepadOpMode extends BaseOpMode {
     double Left = 0;
     double Spin = 0;
 
-    // position of the arm servo.
+    // position of the armServo servo.
     double armPosition;
 
-    // amount to change the arm servo position.
+    // amount to change the armServo servo position.
     double armDelta = 0.1;
 
     // position of the claw servo
@@ -63,7 +63,7 @@ public class GamepadOpMode extends BaseOpMode {
 
     @Override
     public void init() {
-//        arm = hardwareMap.servo.get("servo_1");
+//        armServo = hardwareMap.servo.get("servo_1");
 //        claw = hardwareMap.servo.get("servo_6");
 
         // assign the starting position of the wrist and claw

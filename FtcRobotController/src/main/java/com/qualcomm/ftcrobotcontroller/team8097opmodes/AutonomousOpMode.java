@@ -41,6 +41,7 @@ public class AutonomousOpMode extends BaseOpMode {
     long startTime;
     final static double BLUE = 0;
     final static double RED = 0;
+    final static double defaultPower = 0.25;
 
     @Override
     public void init() {
@@ -61,6 +62,7 @@ public class AutonomousOpMode extends BaseOpMode {
         motorBackRight = hardwareMap.dcMotor.get("backRight");
         motorBackLeft = hardwareMap.dcMotor.get("backLeft");
         frontUltra = hardwareMap.ultrasonicSensor.get("frontUltra");
+        armServo = hardwareMap.servo.get("arm");
 //        rightUltra = hardwareMap.ultrasonicSensor.get("rightUltra");
 //        backUltra = hardwareMap.ultrasonicSensor.get("backUltra");
 //        leftUltra = hardwareMap.ultrasonicSensor.get("leftUltra");

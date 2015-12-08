@@ -34,17 +34,22 @@ package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 import java.util.ArrayList;
 
 public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
-    final static int STAGE_FIND_BEACON = 0;
+    final static int STAGE_GO_TO_BEACON = 0;
     final static int STAGE_TURN_TOWARDS_BUTTON = 1;
-    final static int STAGE_DROP_CLIMBERS = 2;
-    final static int STAGE_CHOOSE_BUTTON = 3;
-    final static int STAGE_PRESS_BUTTON = 4;
-    int stage = STAGE_FIND_BEACON;
+    final static int STAGE_ALIGN_WITH_TAPE = 2;
+    final static int STAGE_DROP_CLIMBERS = 3;
+    final static int STAGE_READ_COLOR = 4;
+    final static int STAGE_PRESS_BUTTON = 5;
+    int stage = STAGE_GO_TO_BEACON;
     ArrayList<Double> distanceToGo = new ArrayList<Double>();
     int distanceToGoIndex = 1;
     boolean stoppedForObstacle = true;
     long startMoveTime;
     long startStoppedTime;
+    int colorSensorInputs = 0;
+    double colorSensorRed = 0;
+    double colorSensorBlue = 0;
+    int color;
 
     @Override
     public void init() {
@@ -52,16 +57,39 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
         distanceToGo.add(100.0);
     }
 
+    @Override
+    public void loop() {
+        if (loop <= initialLoops) {
+            loop++;
+            startMoveTime = System.currentTimeMillis();
+        } else {
+            if (stage == STAGE_GO_TO_BEACON) {
+                goToBeacon();
+            } else if (stage == STAGE_TURN_TOWARDS_BUTTON) {
+                turnToButton();
+            } else if (stage == STAGE_ALIGN_WITH_TAPE) {
+                alignWithTape();
+            } else if (stage == STAGE_DROP_CLIMBERS) {
+                dropClimbers();
+            } else if (stage == STAGE_READ_COLOR) {
+                readColorSensor();
+            } else if (stage == STAGE_PRESS_BUTTON) {
+                pressCorrectButton();
+            }
+        }
+    }
+
+
     protected void goToBeacon() {
-        if (frontUltra.getUltrasonicLevel() > 10) {
+        if (frontUltra.getUltrasonicLevel() > 20) {
             stoppedForObstacle = false;
-            distanceToGo.set(distanceToGoIndex, goDistance(0.25, distanceToGo.get(distanceToGoIndex - 1), startMoveTime));
+            distanceToGo.set(distanceToGoIndex, goDistance(defaultPower, distanceToGo.get(distanceToGoIndex - 1), startMoveTime));
             if (distanceToGo.get(distanceToGoIndex) == 0) {
                 stopRobot();
                 stage++;
                 startMoveTime = System.currentTimeMillis();
             }
-        } else if (distanceToGo.get(distanceToGoIndex) < 30) {
+        } else if (distanceToGo.get(distanceToGoIndex) < 40) {
             stopRobot();
             stage++;
             startMoveTime = System.currentTimeMillis();
@@ -78,5 +106,40 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
             }
             startMoveTime = System.currentTimeMillis();
         }
+    }
+
+    protected abstract void turnToButton();
+
+    protected void alignWithTape() {
+
+    }
+
+    protected abstract void pressCorrectButton();
+
+    protected void dropClimbers() {
+        if (1 - armServo.getPosition() > 0.1) {
+            armServo.setPosition(1);
+        } else {
+            armServo.setPosition(0);
+            stage++;
+        }
+    }
+
+    protected void readColorSensor() {
+        if (colorSensorInputs < 10) {
+            colorSensorRed += colorSensor.red();
+            colorSensorBlue += colorSensor.blue();
+            colorSensorInputs++;
+        } else {
+            stage++;
+        }
+    }
+
+    protected void pressRightButton() {
+
+    }
+
+    protected void pressLeftButton() {
+
     }
 }
