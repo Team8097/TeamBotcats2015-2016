@@ -31,45 +31,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
-import com.qualcomm.robotcore.util.Range;
-
 public class MikalOpMode extends BaseOpMode {
-
-    final static double ARM_MIN_RANGE = 0.20;
-    final static double ARM_MAX_RANGE = 0.90;
-    final static double CLAW_MIN_RANGE = 0.20;
-    final static double CLAW_MAX_RANGE = 0.7;
-
-    double Threshold = 0.5;
-    double Forward = 0;
-    double Backward = 0;
-    double Right = 0;
-    double Left = 0;
-    double Spin = 0;
-
-    // position of the arm servo.
-    double armPosition;
-
-    // amount to change the arm servo position.
-    double armDelta = 0.1;
-
-    // position of the claw servo
-    double clawPosition;
-
-    // amount to change the claw servo position by
-    double clawDelta = 0.1;
-    boolean wobbleUp;
-    boolean wobbleDown;
 
     @Override
     public void init() {
-//        arm = hardwareMap.servo.get("servo_1");
-//        claw = hardwareMap.servo.get("servo_6");
-
-        // assign the starting position of the wrist and claw
-        armPosition = 0.2;
-        clawPosition = 0.2;
-
 
         //Dc motors
         motorFrontRight = hardwareMap.dcMotor.get("frontRight");
@@ -91,11 +56,6 @@ public class MikalOpMode extends BaseOpMode {
         rightButtonPresserServo = hardwareMap.servo.get("rightButtonPresserServo");
     }
 
-    /*
-     * This method will be called repeatedly in a loop
-     *
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#run()
-     */
     @Override
     public void loop() {
 
@@ -139,41 +99,6 @@ public class MikalOpMode extends BaseOpMode {
 
     }
 
-    private void wobbleMethod() {
-        if (gamepad1.a) {
-            wobbleDown = false;
-            wobbleUp = true;
-        }
-        if (wobbleUp) {
-            //TODO I think the encoders count quarter degrees (1440 per revolution) Need to confirm that with testing.
-            wobbleUp();
-        }
-
-        if (gamepad1.b) {
-            wobbleUp = false;
-            wobbleDown = true;
-        }
-        if (wobbleDown) {
-            wobbleDown();
-        }
-
-        float throttle = -gamepad1.left_stick_y;
-        float direction = gamepad1.left_stick_x;
-        float right = throttle - direction;
-        float left = throttle + direction;
-
-        right = Range.clip(right, -1, 1);
-        left = Range.clip(left, -1, 1);
-
-        right = (float) scaleInput(right);
-        left = (float) scaleInput(left);
-
-        motorFrontRight.setPower(right);
-        motorFrontLeft.setPower(left);
-        motorBackRight.setPower(right);
-        motorBackLeft.setPower(left);
-    }
-
     @Override
     public void stop() {
     }
@@ -183,8 +108,7 @@ public class MikalOpMode extends BaseOpMode {
 
         //Sensors
 
-        //Legacy
-
+        //Legacy:
         telemetry.addData("Light getlightDected", lightSensor.getLightDetected());
         telemetry.addData("Light getlightDected RAW", lightSensor.getLightDetectedRaw());
         telemetry.addData("Light ", lightSensor);
@@ -202,7 +126,7 @@ public class MikalOpMode extends BaseOpMode {
 
 
 
-        //Gamepad 1
+        //Gamepad 1:
         telemetry.addData("1 Left Stick Y", gamepad1.left_stick_y);
         telemetry.addData("1 Left Stick X", gamepad1.left_stick_x);
         telemetry.addData("1 Right Stick Y", gamepad1.right_stick_y);
@@ -225,7 +149,7 @@ public class MikalOpMode extends BaseOpMode {
         telemetry.addData("1 a",gamepad1.a);
         telemetry.addData("1 b",gamepad1.b);
 
-        //Gamepad 2
+        //Gamepad 2:
         telemetry.addData("2 Left Stick Y", gamepad2.left_stick_y);
         telemetry.addData("2 Left Stick X", gamepad2.left_stick_x);
         telemetry.addData("2 Right Stick Y", gamepad2.right_stick_y);
@@ -250,20 +174,6 @@ public class MikalOpMode extends BaseOpMode {
 
     }
 
-    private void wobbleUp() {
-        boolean turning = turnMotorToPosition(motorWobble, 1000, 0.1);
-        if (!turning) {
-            wobbleUp = false;
-        }
-    }
-
-    private void wobbleDown() {
-        boolean turning = turnMotorToPosition(motorWobble, 0, 0.1);
-        if (!turning) {
-            wobbleDown = false;
-        }
-    }
-
     private void control() {
         if (gamepad1.dpad_left) {
             spinLeft(0.25);
@@ -282,41 +192,6 @@ public class MikalOpMode extends BaseOpMode {
         motorBackRight.setPower((y + x) / 2.0);
         motorFrontLeft.setPower((-y - x) / 2.0);
         motorBackLeft.setPower((-y + x) / 2.0);
-    }
-
-
-    /*
-     * This method scales the joystick input so for low joystick values, the
-     * scaled value is less than linear.  This is to make it easier to drive
-     * the robot more precisely at slower speeds.
-     */
-    double scaleInput(double dVal) {
-        double[] scaleArray = {0.0, 0.05, 0.09, 0.10, 0.12, 0.15, 0.18, 0.24,
-                0.30, 0.36, 0.43, 0.50, 0.60, 0.72, 0.85, 1.00, 1.00};
-
-        // get the corresponding index for the scaleInput array.
-        int index = (int) (dVal * 16.0);
-
-        // index should be positive.
-        if (index < 0) {
-            index = -index;
-        }
-
-        // index cannot exceed size of array minus 1.
-        if (index > 16) {
-            index = 16;
-        }
-
-        // get value from the array.
-        double dScale = 0.0;
-        if (dVal < 0) {
-            dScale = -scaleArray[index];
-        } else {
-            dScale = scaleArray[index];
-        }
-
-        // return scaled value.
-        return dScale;
     }
 
 }
