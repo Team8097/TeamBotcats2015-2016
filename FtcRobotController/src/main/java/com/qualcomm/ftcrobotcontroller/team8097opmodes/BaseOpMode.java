@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
@@ -13,12 +14,17 @@ public abstract class BaseOpMode extends OpMode {
     public final static double MILLIS_PER_INCH = 50;
     public final static double MILLIS_PER_DEGREE = 5;
 
+
+    //Dcmotors
     DcMotor motorFrontRight;
     DcMotor motorFrontLeft;
     DcMotor motorBackRight;
     DcMotor motorBackLeft;
+
+    //we dont need this?
     DcMotor motorWobble;
     DcMotor motorExtend;
+
 
     TouchSensor touchSensor;
     OpticalDistanceSensor distanceSensor;
@@ -28,6 +34,20 @@ public abstract class BaseOpMode extends OpMode {
     UltrasonicSensor rightUltra;
     UltrasonicSensor backUltra;
     UltrasonicSensor leftUltra;
+
+    //legacay
+    UltrasonicSensor ultraUpSensor;
+    UltrasonicSensor ultraDownSensor;
+    UltrasonicSensor ultraLeftSensor;
+    UltrasonicSensor ultraRightSensor;
+
+
+    //Servos
+
+    Servo armServo;
+    Servo leftButtonPresserServo;
+    Servo rightButtonPresserServo;
+
 
 
     protected void go(double leftPower, double rightPower) {

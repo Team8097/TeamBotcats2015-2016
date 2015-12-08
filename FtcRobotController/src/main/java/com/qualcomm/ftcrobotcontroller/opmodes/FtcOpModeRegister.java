@@ -36,6 +36,7 @@ import com.qualcomm.ftcrobotcontroller.team8097opmodes.BlueAutonomousOpMode;
 import com.qualcomm.ftcrobotcontroller.team8097opmodes.GamepadOpMode;
 import com.qualcomm.ftcrobotcontroller.team8097opmodes.RedAutonomousOpMode;
 import com.qualcomm.ftcrobotcontroller.team8097opmodes.SensorTestAutonomousOpMode;
+import com.qualcomm.ftcrobotcontroller.team8097opmodes.MikalOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 
@@ -65,10 +66,12 @@ public class FtcOpModeRegister implements OpModeRegister {
         manager.register("SensorTest", SensorTestAutonomousOpMode.class);
         manager.register("RedAutonomous", RedAutonomousOpMode.class);
         manager.register("BlueAutonomous", BlueAutonomousOpMode.class);
+        manager.register("Mikal Op", MikalOpMode.class);
 
 
-        //manager.register("AdafruitRGBExample", AdafruitRGBExample.class);
+        manager.register("AdafruitRGBExample", AdafruitRGBExample.class);
         //manager.register("ColorSensorDriver", ColorSensorDriver.class);
+        manager.register("HTRGBExample", HTRGBExample.class);
 
         //manager.register("IrSeekerOp", IrSeekerOp.class);
         //manager.register("CompassCalibration", CompassCalibration.class);
