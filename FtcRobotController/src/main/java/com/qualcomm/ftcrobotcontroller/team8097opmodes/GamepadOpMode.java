@@ -102,58 +102,8 @@ public class GamepadOpMode extends BaseOpMode {
         telemetry.addData("backLeftMotor", motorBackLeft.getPower());
     }
 
-    private void wobbleMethod() {
-        if (gamepad1.a) {
-            wobbleDown = false;
-            wobbleUp = true;
-        }
-        if (wobbleUp) {
-            //TODO I think the encoders count quarter degrees (1440 per revolution) Need to confirm that with testing.
-            wobbleUp();
-        }
-
-        if (gamepad1.b) {
-            wobbleUp = false;
-            wobbleDown = true;
-        }
-        if (wobbleDown) {
-            wobbleDown();
-        }
-
-        float throttle = -gamepad1.left_stick_y;
-        float direction = gamepad1.left_stick_x;
-        float right = throttle - direction;
-        float left = throttle + direction;
-
-        right = Range.clip(right, -1, 1);
-        left = Range.clip(left, -1, 1);
-
-        right = (float) scaleInput(right);
-        left = (float) scaleInput(left);
-
-        motorFrontRight.setPower(right);
-        motorFrontLeft.setPower(left);
-        motorBackRight.setPower(right);
-        motorBackLeft.setPower(left);
-    }
-
     @Override
     public void stop() {
-    }
-
-
-    private void wobbleUp() {
-        boolean turning = turnMotorToPosition(motorWobble, 1000, 0.1);
-        if (!turning) {
-            wobbleUp = false;
-        }
-    }
-
-    private void wobbleDown() {
-        boolean turning = turnMotorToPosition(motorWobble, 0, 0.1);
-        if (!turning) {
-            wobbleDown = false;
-        }
     }
 
     private void control() {

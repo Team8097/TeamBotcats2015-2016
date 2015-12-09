@@ -1,5 +1,7 @@
 package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
+import android.os.SystemClock;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -11,8 +13,11 @@ import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 public abstract class BaseOpMode extends OpMode {
 
-    public final static double MILLIS_PER_INCH = 50;
-    public final static double MILLIS_PER_DEGREE = 5;
+    public final static double MILLIS_PER_INCH_DEFAULT = 50;
+    public final static double MILLIS_PER_DEGREE_DEFAULT = 5;
+    public final static double DEFAULT_POWER = 0.25;
+    public final static double RED_THRESHOLD = 0.5;
+    public final static double TAPE_THRESHOLD = 0.5;
 
     DcMotor motorFrontRight;
     DcMotor motorFrontLeft;
@@ -20,11 +25,10 @@ public abstract class BaseOpMode extends OpMode {
     DcMotor motorBackLeft;
     Servo rightServo;
     Servo leftServo;
-
-    TouchSensor touchSensor;
-    OpticalDistanceSensor distanceSensor;
-    ColorSensor colorSensor;
-    LightSensor lightSensor;
+    Servo armServo;
+    LightSensor colorLightSensor;
+    LightSensor frontLightSensor;
+    LightSensor backLightSensor;
     UltrasonicSensor frontUltra;
     UltrasonicSensor rightUltra;
     UltrasonicSensor backUltra;
@@ -43,6 +47,7 @@ public abstract class BaseOpMode extends OpMode {
         motorFrontLeft.setPower(0);
         motorBackRight.setPower(0);
         motorBackLeft.setPower(0);
+        SystemClock.sleep(100);
     }
 
     protected boolean turnMotorToPosition(DcMotor motor, int targetPosition, double power) {
@@ -74,6 +79,27 @@ public abstract class BaseOpMode extends OpMode {
         motorBackRight.setPower(power);
         motorFrontLeft.setPower(-power);
         motorBackLeft.setPower(-power);
+    }
+
+    protected void goBackward(double power) {
+        motorFrontRight.setPower(power);
+        motorBackRight.setPower(power);
+        motorFrontLeft.setPower(-power);
+        motorBackLeft.setPower(-power);
+    }
+
+    protected void goLeft(double power) {
+        motorFrontRight.setPower(power);
+        motorBackRight.setPower(-power);
+        motorFrontLeft.setPower(power);
+        motorBackLeft.setPower(-power);
+    }
+
+    protected void goRight(double power) {
+        motorFrontRight.setPower(-power);
+        motorBackRight.setPower(power);
+        motorFrontLeft.setPower(-power);
+        motorBackLeft.setPower(power);
     }
 
     protected void spinRight(double power) {

@@ -34,14 +34,9 @@ package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 public class AutonomousOpMode extends BaseOpMode {
 
     boolean onMountain = false;
-    int fullTurnTime = 2400;//0.25 power
-    int halfMeterTime = 0;//0.25 power
-    final int initialLoops = 1;
+    final int initialLoops = 10;
     int loop = 1;
     long startTime;
-    final static double BLUE = 0;
-    final static double RED = 0;
-    final static double defaultPower = 0.25;
 
     @Override
     public void init() {
@@ -67,6 +62,10 @@ public class AutonomousOpMode extends BaseOpMode {
         leftUltra = hardwareMap.ultrasonicSensor.get("leftUltra");
         rightServo = hardwareMap.servo.get("rightServo");
         leftServo = hardwareMap.servo.get("leftServo");
+//        armServo = hardwareMap.servo.get("armServo");
+        frontLightSensor = hardwareMap.lightSensor.get("frontLight");
+        backLightSensor = hardwareMap.lightSensor.get("backLight");
+        colorLightSensor = hardwareMap.lightSensor.get("colorLight");
     }
 
     @Override
@@ -100,12 +99,55 @@ public class AutonomousOpMode extends BaseOpMode {
         }
     }
 
-    protected double goDistance(double power, double inches, long startTime) {
-        double goTime = inches * MILLIS_PER_INCH;
+    protected double goDistanceForward(double power, double inches, long startTime) {
+        double millisPerInch = MILLIS_PER_INCH_DEFAULT * (DEFAULT_POWER / power);
+        double goTime = inches * millisPerInch;
         int timeElapsed = (int) (System.currentTimeMillis() - startTime);
         if (timeElapsed < goTime) {
             goForward(power);
-            double distanceToGo = (goTime - timeElapsed) / MILLIS_PER_INCH;
+            double distanceToGo = (goTime - timeElapsed) / millisPerInch;
+            return distanceToGo;
+        } else {
+            stopRobot();
+            return 0;
+        }
+    }
+
+    protected double goDistanceBackward(double power, double inches, long startTime) {
+        double millisPerInch = MILLIS_PER_INCH_DEFAULT * (DEFAULT_POWER / power);
+        double goTime = inches * millisPerInch;
+        int timeElapsed = (int) (System.currentTimeMillis() - startTime);
+        if (timeElapsed < goTime) {
+            goBackward(power);
+            double distanceToGo = (goTime - timeElapsed) / millisPerInch;
+            return distanceToGo;
+        } else {
+            stopRobot();
+            return 0;
+        }
+    }
+
+    protected double goDistanceLeft(double power, double inches, long startTime) {
+        double millisPerInch = MILLIS_PER_INCH_DEFAULT * (DEFAULT_POWER / power);
+        double goTime = inches * millisPerInch;
+        int timeElapsed = (int) (System.currentTimeMillis() - startTime);
+        if (timeElapsed < goTime) {
+            goLeft(power);
+            double distanceToGo = (goTime - timeElapsed) / millisPerInch;
+            return distanceToGo;
+        } else {
+            stopRobot();
+            return 0;
+        }
+    }
+
+    protected double goDistanceRight(double power, double inches, long startTime) {
+        double millisPerInch = MILLIS_PER_INCH_DEFAULT * (DEFAULT_POWER / power);
+        double goTime = inches * millisPerInch;
+        int timeElapsed = (int) (System.currentTimeMillis() - startTime);
+        if (timeElapsed < goTime) {
+            goRight(power);
+            double distanceToGo = (goTime - timeElapsed) / millisPerInch;
             return distanceToGo;
         } else {
             stopRobot();
@@ -114,11 +156,12 @@ public class AutonomousOpMode extends BaseOpMode {
     }
 
     protected double spinRightDegrees(double power, double degrees, long startTime) {
-        double goTime = degrees * MILLIS_PER_DEGREE;
+        double millisPerDegree = MILLIS_PER_DEGREE_DEFAULT * (DEFAULT_POWER / power);
+        double goTime = degrees * millisPerDegree;
         int timeElapsed = (int) (System.currentTimeMillis() - startTime);
         if (timeElapsed < goTime) {
             spinRight(power);
-            double degreesToGo = (goTime - timeElapsed) / MILLIS_PER_DEGREE;
+            double degreesToGo = (goTime - timeElapsed) / millisPerDegree;
             return degreesToGo;
         } else {
             stopRobot();
@@ -127,35 +170,16 @@ public class AutonomousOpMode extends BaseOpMode {
     }
 
     protected double spinLeftDegrees(double power, double degrees, long startTime) {
-        double goTime = degrees * MILLIS_PER_DEGREE;
+        double millisPerDegree = MILLIS_PER_DEGREE_DEFAULT * (DEFAULT_POWER / power);
+        double goTime = degrees * millisPerDegree;
         int timeElapsed = (int) (System.currentTimeMillis() - startTime);
         if (timeElapsed < goTime) {
             spinLeft(power);
-            double degreesToGo = (goTime - timeElapsed) / MILLIS_PER_DEGREE;
+            double degreesToGo = (goTime - timeElapsed) / millisPerDegree;
             return degreesToGo;
         } else {
             stopRobot();
             return 0;
-        }
-    }
-
-    protected void buttonGo() {
-        if (touchSensor.isPressed()) {
-            motorFrontRight.setPower(0.5);
-            motorFrontLeft.setPower(0.5);
-        } else {
-            motorFrontRight.setPower(0);
-            motorFrontLeft.setPower(0);
-        }
-    }
-
-    protected void distanceSensorGo() {
-        if (distanceSensor.getLightDetected() < 0.5) {
-            motorFrontRight.setPower(0.5);
-            motorFrontLeft.setPower(0.5);
-        } else {
-            motorFrontRight.setPower(0);
-            motorFrontLeft.setPower(0);
         }
     }
 }

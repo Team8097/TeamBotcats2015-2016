@@ -33,11 +33,11 @@ package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
 //If we are on the blue alliance, the beacon repair zone will be on the right.
 public class BlueAutonomousOpMode extends CompetitionAutonomousOpMode {
-    boolean blue;
 
     @Override
     protected void pressCorrectButton() {
-        if (colorSensorBlue > colorSensorRed) {
+        if (redLightDetected < RED_THRESHOLD) {
+            telemetry.addData("Red on left. pressing right button (blue)", "");
             pressRightButton();
         } else {
             pressLeftButton();
@@ -46,11 +46,9 @@ public class BlueAutonomousOpMode extends CompetitionAutonomousOpMode {
 
     @Override
     protected void turnToButton() {
-        double degreesToGo = spinRightDegrees(defaultPower, 45, startMoveTime);
+        double degreesToGo = spinRightDegrees(DEFAULT_POWER, 45, startMoveTime);
         if (degreesToGo == 0) {
-            stopRobot();
-            stage++;
-            startMoveTime = System.currentTimeMillis();
+            endStage();
         }
     }
 }

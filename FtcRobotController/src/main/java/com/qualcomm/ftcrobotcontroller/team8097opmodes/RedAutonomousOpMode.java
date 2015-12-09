@@ -36,7 +36,8 @@ public class RedAutonomousOpMode extends CompetitionAutonomousOpMode {
 
     @Override
     protected void pressCorrectButton() {
-        if (colorSensorRed > colorSensorBlue) {
+        if (redLightDetected > RED_THRESHOLD) {
+            telemetry.addData("Red on right. pressing right button (red)", "");
             pressRightButton();
         } else {
             pressLeftButton();
@@ -45,11 +46,9 @@ public class RedAutonomousOpMode extends CompetitionAutonomousOpMode {
 
     @Override
     protected void turnToButton() {
-        double degreesToGo = spinLeftDegrees(defaultPower, 45, startMoveTime);
+        double degreesToGo = spinLeftDegrees(DEFAULT_POWER, 45, startMoveTime);
         if (degreesToGo == 0) {
-            stopRobot();
-            stage++;
-            startMoveTime = System.currentTimeMillis();
+            endStage();
         }
     }
 }
