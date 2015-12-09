@@ -117,10 +117,10 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     protected abstract void pressCorrectButton();
 
     protected void dropClimbers() {
-        if (1 - armServo.getPosition() > 0.1) {
-            armServo.setPosition(1);
+        if (1 - rightServo.getPosition() > 0.1) {
+            rightServo.setPosition(1);
         } else {
-            armServo.setPosition(0);
+            rightServo.setPosition(0);
             stage++;
         }
     }
@@ -136,10 +136,10 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     }
 
     protected void pressRightButton() {
-
+        rightServo.setPosition(1);
     }
 
     protected void pressLeftButton() {
-
+        leftServo.setPosition(1);
     }
 }

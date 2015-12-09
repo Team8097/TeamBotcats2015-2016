@@ -18,7 +18,8 @@ public abstract class BaseOpMode extends OpMode {
     DcMotor motorFrontLeft;
     DcMotor motorBackRight;
     DcMotor motorBackLeft;
-    Servo armServo;
+    Servo rightServo;
+    Servo leftServo;
 
     TouchSensor touchSensor;
     OpticalDistanceSensor distanceSensor;

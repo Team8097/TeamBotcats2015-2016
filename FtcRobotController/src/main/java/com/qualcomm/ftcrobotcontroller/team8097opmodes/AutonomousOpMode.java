@@ -62,10 +62,11 @@ public class AutonomousOpMode extends BaseOpMode {
         motorBackRight = hardwareMap.dcMotor.get("backRight");
         motorBackLeft = hardwareMap.dcMotor.get("backLeft");
         frontUltra = hardwareMap.ultrasonicSensor.get("frontUltra");
-        armServo = hardwareMap.servo.get("arm");
-//        rightUltra = hardwareMap.ultrasonicSensor.get("rightUltra");
-//        backUltra = hardwareMap.ultrasonicSensor.get("backUltra");
-//        leftUltra = hardwareMap.ultrasonicSensor.get("leftUltra");
+        rightUltra = hardwareMap.ultrasonicSensor.get("rightUltra");
+        backUltra = hardwareMap.ultrasonicSensor.get("backUltra");
+        leftUltra = hardwareMap.ultrasonicSensor.get("leftUltra");
+        rightServo = hardwareMap.servo.get("rightServo");
+        leftServo = hardwareMap.servo.get("leftServo");
     }
 
     @Override
