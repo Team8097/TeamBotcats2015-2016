@@ -114,7 +114,7 @@ public class TeleOpOpMode extends BaseOpMode {
             spinRight(0.25);
         } else {
             double joystickInputY = -gamepad1.left_stick_y;
-            double joystickInputX = -gamepad1.left_stick_x;
+            double joystickInputX = gamepad1.left_stick_x;
             goDirection(joystickInputX, joystickInputY);
         }
     }

@@ -32,7 +32,20 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
 //If we are on the red alliance, the beacon repair zone will be on the left.
-public class RedAutonomousOpMode extends CompetitionAutonomousOpMode {
+public class DiagRedAutonomousOpMode extends CompetitionAutonomousOpMode {
+
+    @Override
+    protected void goToBeacon() {
+        if (frontUltra.getUltrasonicLevel() > 20) {
+            seesInFront = 0;
+            goDiagRight(DEFAULT_POWER);
+        } else if (seesInFront < 3) {
+            seesInFront++;
+            goDiagRight(DEFAULT_POWER);
+        } else {
+            endStage();
+        }
+    }
 
     @Override
     protected void moveCorrectButtonFlap() {
@@ -47,10 +60,7 @@ public class RedAutonomousOpMode extends CompetitionAutonomousOpMode {
 
     @Override
     protected void turnToButton() {
-        double degreesToGo = spinLeftDegrees(DEFAULT_POWER, 45, startMoveTime);
-        if (degreesToGo == 0) {
-            endStage();
-        }
+        endStage();
     }
 
     @Override

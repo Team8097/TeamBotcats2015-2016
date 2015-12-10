@@ -13,11 +13,13 @@ import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 public abstract class BaseOpMode extends OpMode {
 
-    public final static double MILLIS_PER_INCH_DEFAULT = 37.736;
-    public final static double MILLIS_PER_DEGREE_DEFAULT = 5;
-    public final static double DEFAULT_POWER = 0.25;
-    public final static double RED_THRESHOLD = 0.5;
+    public final static double INCHES_PER_CENT = 0.39;
+    public final static double DEFAULT_POWER = 0.125;
+    public final static double MILLIS_PER_INCH_DEFAULT = 37.736 * (0.25 / DEFAULT_POWER);
+    public final static double MILLIS_PER_DEGREE_DEFAULT = 5 * (0.25 / DEFAULT_POWER);
+    public final static double BLUE_THRESHOLD = 0.45;
     public final static double TAPE_THRESHOLD = 0.5;
+    public final static double HITTING_WALL_DISTANCE = 5;
 
     DcMotor motorFrontRight;
     DcMotor motorFrontLeft;
@@ -95,11 +97,21 @@ public abstract class BaseOpMode extends OpMode {
         motorBackLeft.setPower(-power);
     }
 
+    protected void goDiagLeft(double power) {
+        motorFrontRight.setPower(power);
+        motorBackLeft.setPower(-power);
+    }
+
     protected void goRight(double power) {
         motorFrontRight.setPower(-power);
         motorBackRight.setPower(power);
         motorFrontLeft.setPower(-power);
         motorBackLeft.setPower(power);
+    }
+
+    protected void goDiagRight(double power) {
+        motorFrontLeft.setPower(-power);
+        motorBackRight.setPower(power);
     }
 
     protected void spinRight(double power) {

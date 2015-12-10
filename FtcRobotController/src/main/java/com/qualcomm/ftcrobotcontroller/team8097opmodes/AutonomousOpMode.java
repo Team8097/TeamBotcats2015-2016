@@ -37,6 +37,11 @@ public class AutonomousOpMode extends BaseOpMode {
     final int initialLoops = 10;
     int loop = 1;
     long startTime;
+    final double leftServoInitPos = 0.35;
+    final double leftServoFinalPos = 0.5;
+    final double rightServoInitPos = 0.5;
+    final double rightServoFinalPos = 0.35;
+
 
     @Override
     public void init() {

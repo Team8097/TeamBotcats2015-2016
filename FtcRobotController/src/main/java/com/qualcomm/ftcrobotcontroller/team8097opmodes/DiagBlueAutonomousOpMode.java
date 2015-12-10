@@ -31,35 +31,44 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
-//If we are on the red alliance, the beacon repair zone will be on the left.
-public class RedAutonomousOpMode extends CompetitionAutonomousOpMode {
+//If we are on the blue alliance, the beacon repair zone will be on the right.
+public class DiagBlueAutonomousOpMode extends CompetitionAutonomousOpMode {
+
+    @Override
+    protected void goToBeacon() {
+        if (frontUltra.getUltrasonicLevel() > 20) {
+            seesInFront = 0;
+            goDiagRight(DEFAULT_POWER);
+        } else if (seesInFront < 3) {
+            seesInFront++;
+            goDiagRight(DEFAULT_POWER);
+        } else {
+            endStage();
+        }
+    }
 
     @Override
     protected void moveCorrectButtonFlap() {
-        if (blueLightDetected > BLUE_THRESHOLD) {
-            telemetry.addData("Red on right. pressing right button (red)", "");
+        if (blueLightDetected < BLUE_THRESHOLD) {
+            telemetry.addData("Blue on right. pressing right button (blue)", "");
             moveRightFlap();
         } else {
-            telemetry.addData("Blue on right. pressing left button (red)", "");
+            telemetry.addData("Red on right. pressing left button (blue)", "");
             moveLeftFlap();
         }
     }
 
     @Override
     protected void turnToButton() {
-        double degreesToGo = spinLeftDegrees(DEFAULT_POWER, 45, startMoveTime);
-        if (degreesToGo == 0) {
-            endStage();
-        }
+        endStage();
     }
 
-    @Override
     protected void lookForTape() {
         if (frontLightSensor.getLightDetected() > TAPE_THRESHOLD || backLightSensor.getLightDetected() > TAPE_THRESHOLD) {
-            telemetry.addData("Found tape on the left", "");
+            telemetry.addData("Found tape on the right", "");
             endStage();
         } else {
-            goLeft(DEFAULT_POWER / 2.0);
+            goRight(DEFAULT_POWER / 2.0);
         }
     }
 }

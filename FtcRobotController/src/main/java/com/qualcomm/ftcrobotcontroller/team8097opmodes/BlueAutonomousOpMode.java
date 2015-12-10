@@ -36,7 +36,7 @@ public class BlueAutonomousOpMode extends CompetitionAutonomousOpMode {
 
     @Override
     protected void moveCorrectButtonFlap() {
-        if (redLightDetected < RED_THRESHOLD) {
+        if (blueLightDetected < BLUE_THRESHOLD) {
             telemetry.addData("Blue on right. pressing right button (blue)", "");
             moveRightFlap();
         } else {
@@ -50,6 +50,15 @@ public class BlueAutonomousOpMode extends CompetitionAutonomousOpMode {
         double degreesToGo = spinRightDegrees(DEFAULT_POWER, 45, startMoveTime);
         if (degreesToGo == 0) {
             endStage();
+        }
+    }
+
+    protected void lookForTape() {
+        if (frontLightSensor.getLightDetected() > TAPE_THRESHOLD || backLightSensor.getLightDetected() > TAPE_THRESHOLD) {
+            telemetry.addData("Found tape on the right", "");
+            endStage();
+        } else {
+            goRight(DEFAULT_POWER / 2.0);
         }
     }
 }
