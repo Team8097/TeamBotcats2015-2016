@@ -48,7 +48,9 @@ public class SensorTestAutonomousOpMode extends BaseOpMode {
 //        touchSensor = hardwareMap.touchSensor.get("touch");
 //        distanceSensor = hardwareMap.opticalDistanceSensor.get("distance");
 //        colorSensor = hardwareMap.colorSensor.get("color");
-        lightSensor = hardwareMap.lightSensor.get("light");
+//        lightSensor = hardwareMap.lightSensor.get("light");
+        colorLightSensor = hardwareMap.lightSensor.get("colorLight");
+
 //        frontUltra = hardwareMap.ultrasonicSensor.get("frontUltra");
 //        rightUltra = hardwareMap.ultrasonicSensor.get("rightUltra");
 //        backUltra = hardwareMap.ultrasonicSensor.get("backUltra");
@@ -59,38 +61,16 @@ public class SensorTestAutonomousOpMode extends BaseOpMode {
 
     @Override
     public void loop() {
+        colorLightSensor.enableLed(true);
+        telemetry.addData("Light", colorLightSensor.getLightDetected());
 //        telemetry.addData("touch", touchSensor.isPressed());
 //        telemetry.addData("frontUltra", frontUltra.getUltrasonicLevel());
 //        telemetry.addData("rightUltra", rightUltra.getUltrasonicLevel());
 //        telemetry.addData("backUltra", backUltra.getUltrasonicLevel());
 //        telemetry.addData("leftUltra", leftUltra.getUltrasonicLevel());
-        telemetry.addData("light", lightSensor.getLightDetected());
+//        telemetry.addData("light", lightSensor.getLightDetected());
 //        telemetry.addData("blue", colorSensor.blue());
 //        telemetry.addData("red", colorSensor.red());
     }
 
-
-    protected boolean seesBaseOfMountain() {
-        return false;
-    }
-
-    protected void buttonGo() {
-        if (touchSensor.isPressed()) {
-            motorFrontRight.setPower(0.5);
-            motorFrontLeft.setPower(0.5);
-        } else {
-            motorFrontRight.setPower(0);
-            motorFrontLeft.setPower(0);
-        }
-    }
-
-    protected void distanceSensorGo() {
-        if (distanceSensor.getLightDetected() < 0.5) {
-            motorFrontRight.setPower(0.5);
-            motorFrontLeft.setPower(0.5);
-        } else {
-            motorFrontRight.setPower(0);
-            motorFrontLeft.setPower(0);
-        }
-    }
 }

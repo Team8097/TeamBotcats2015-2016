@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 public abstract class BaseOpMode extends OpMode {
 
-    public final static double MILLIS_PER_INCH_DEFAULT = 50;
+    public final static double MILLIS_PER_INCH_DEFAULT = 37.736;
     public final static double MILLIS_PER_DEGREE_DEFAULT = 5;
     public final static double DEFAULT_POWER = 0.25;
     public final static double RED_THRESHOLD = 0.5;

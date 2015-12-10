@@ -33,7 +33,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.ftcrobotcontroller.team8097opmodes.AutonomousOpMode;
 import com.qualcomm.ftcrobotcontroller.team8097opmodes.BlueAutonomousOpMode;
-import com.qualcomm.ftcrobotcontroller.team8097opmodes.GamepadOpMode;
+import com.qualcomm.ftcrobotcontroller.team8097opmodes.TeleOpOpMode;
 import com.qualcomm.ftcrobotcontroller.team8097opmodes.RedAutonomousOpMode;
 import com.qualcomm.ftcrobotcontroller.team8097opmodes.SensorTestAutonomousOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
@@ -60,7 +60,7 @@ public class FtcOpModeRegister implements OpModeRegister {
      * If two or more op modes are registered with the same name, the app will display an error.
      */
 
-        manager.register("Gamepad", GamepadOpMode.class);
+        manager.register("TeleOp", TeleOpOpMode.class);
         manager.register("Autonomous", AutonomousOpMode.class);
         manager.register("SensorTest", SensorTestAutonomousOpMode.class);
         manager.register("RedAutonomous", RedAutonomousOpMode.class);

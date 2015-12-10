@@ -35,12 +35,13 @@ package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 public class BlueAutonomousOpMode extends CompetitionAutonomousOpMode {
 
     @Override
-    protected void pressCorrectButton() {
+    protected void moveCorrectButtonFlap() {
         if (redLightDetected < RED_THRESHOLD) {
-            telemetry.addData("Red on left. pressing right button (blue)", "");
-            pressRightButton();
+            telemetry.addData("Blue on right. pressing right button (blue)", "");
+            moveRightFlap();
         } else {
-            pressLeftButton();
+            telemetry.addData("Red on right. pressing left button (blue)", "");
+            moveLeftFlap();
         }
     }
 

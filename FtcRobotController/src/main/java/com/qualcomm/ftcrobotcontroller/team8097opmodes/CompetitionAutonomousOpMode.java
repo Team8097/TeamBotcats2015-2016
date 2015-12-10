@@ -44,7 +44,8 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     final static int STAGE_LOOK_FOR_TAPE_LEFT = 5;
     final static int STAGE_DROP_CLIMBERS = 6;
     final static int STAGE_READ_COLOR = 7;
-    final static int STAGE_PRESS_BUTTON = 8;
+    final static int STAGE_MOVE_BUTTON_FLAP = 8;
+    final static int STAGE_PRESS_BUTTON = 9;
     int stage = STAGE_GO_TO_BEACON;
     ArrayList<Double> distanceToGo = new ArrayList<Double>();
     int distanceToGoIndex = 1;
@@ -58,10 +59,7 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     @Override
     public void init() {
         super.init();
-        armServo.scaleRange(0, 1);
-        rightServo.scaleRange(0, 1);
-        leftServo.scaleRange(0, 1);
-        distanceToGo.add(100.0);
+        distanceToGo.add(99.5);
     }
 
     @Override
@@ -69,8 +67,8 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
         if (loop <= initialLoops) {
             loop++;
             armServo.setPosition(0);
-            rightServo.setPosition(0);
-            leftServo.setPosition(0);
+            rightServo.setPosition(0.5);
+            leftServo.setPosition(0.5);
             startMoveTime = System.currentTimeMillis();
         } else {
             if (stage == STAGE_GO_TO_BEACON) {
@@ -80,7 +78,8 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
             } else if (stage == STAGE_RAM_WALL) {
                 ramWall();
             } else if (stage == STAGE_BACK_UP) {
-                backUp();
+//                backUp();
+                endStage();
             } else if (stage == STAGE_LOOK_FOR_TAPE_RIGHT) {
                 lookForTapeRight();
             } else if (stage == STAGE_LOOK_FOR_TAPE_LEFT) {
@@ -89,8 +88,10 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
                 dropClimbers();
             } else if (stage == STAGE_READ_COLOR) {
                 readColorSensor();
+            } else if (stage == STAGE_MOVE_BUTTON_FLAP) {
+                moveCorrectButtonFlap();
             } else if (stage == STAGE_PRESS_BUTTON) {
-                pressCorrectButton();
+                pressButton();
             }
         }
     }
@@ -119,7 +120,7 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
             telemetry.addData(message, "DROP_CLIMBERS");
         } else if (stage == STAGE_READ_COLOR) {
             telemetry.addData(message, "READ_COLOR");
-        } else if (stage == STAGE_PRESS_BUTTON) {
+        } else if (stage == STAGE_MOVE_BUTTON_FLAP) {
             telemetry.addData(message, "PRESS_BUTTON");
         }
     }
@@ -191,14 +192,15 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
         }
     }
 
-    protected abstract void pressCorrectButton();
+    protected abstract void moveCorrectButtonFlap();
 
     protected void dropClimbers() {
-        armServo.setPosition(1);
-        SystemClock.sleep(1000);
-        armServo.setPosition(0);
-        SystemClock.sleep(1000);
-        endStage();
+        if (System.currentTimeMillis() - startMoveTime < 1000) {
+            armServo.setPosition(1);
+        } else {
+            armServo.setPosition(0);
+            endStage();
+        }
     }
 
     protected void readColorSensor() {
@@ -211,18 +213,25 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
         }
     }
 
-    protected void pressRightButton() {
-        rightServo.setPosition(1);
-        SystemClock.sleep(1000);
-        double distanceToGo = goDistanceForward(DEFAULT_POWER, 20, startMoveTime);
-        if (distanceToGo == 0) {
+    protected void moveRightFlap() {
+        if (System.currentTimeMillis() - startMoveTime < 1000) {
+            rightServo.setPosition(0.35);
+            leftServo.setPosition(0.5);
+        } else {
             endStage();
         }
     }
 
-    protected void pressLeftButton() {
-        leftServo.setPosition(1);
-        SystemClock.sleep(1000);
+    protected void moveLeftFlap() {
+        if (System.currentTimeMillis() - startMoveTime < 1000) {
+            leftServo.setPosition(0.65);
+            rightServo.setPosition(0.5);
+        } else {
+            endStage();
+        }
+    }
+
+    protected void pressButton() {
         double distanceToGo = goDistanceForward(DEFAULT_POWER, 20, startMoveTime);
         if (distanceToGo == 0) {
             endStage();

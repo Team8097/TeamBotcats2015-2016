@@ -33,7 +33,7 @@ package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
 import com.qualcomm.robotcore.util.Range;
 
-public class GamepadOpMode extends BaseOpMode {
+public class TeleOpOpMode extends BaseOpMode {
 
     final static double ARM_MIN_RANGE = 0.20;
     final static double ARM_MAX_RANGE = 0.90;

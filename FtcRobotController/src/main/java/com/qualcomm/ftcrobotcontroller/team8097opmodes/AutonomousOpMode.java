@@ -90,9 +90,9 @@ public class AutonomousOpMode extends BaseOpMode {
 //        } else{
 //            stopRobot();
 //        }
-            telemetry.addData("frontUltra", frontUltra.getUltrasonicLevel());
-            if (System.currentTimeMillis() - startTime < 1500) {
-                goForward(0.25);
+            if (System.currentTimeMillis() - startTime < 1000) {
+                leftServo.setPosition(0.65);
+                rightServo.setPosition(0.5);
             } else {
                 stopRobot();
             }
