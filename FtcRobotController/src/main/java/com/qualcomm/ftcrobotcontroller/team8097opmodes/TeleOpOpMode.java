@@ -31,89 +31,51 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
-import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
+//Opmode for TeleOp. Allows for remote control of movement in any direction as well as spinning in place.
+//Also allows for movement of the arm to drop climbers in case autonomous fails.
 public class TeleOpOpMode extends BaseOpMode {
-
-    final static double ARM_MIN_RANGE = 0.20;
-    final static double ARM_MAX_RANGE = 0.90;
-    final static double CLAW_MIN_RANGE = 0.20;
-    final static double CLAW_MAX_RANGE = 0.7;
-
-    double Threshold = 0.5;
-    double Forward = 0;
-    double Backward = 0;
-    double Right = 0;
-    double Left = 0;
-    double Spin = 0;
-
-    // position of the rightServo servo.
-    double armPosition;
-
-    // amount to change the rightServo servo position.
-    double armDelta = 0.1;
-
-    // position of the claw servo
-    double clawPosition;
-
-    // amount to change the claw servo position by
-    double clawDelta = 0.1;
-    boolean wobbleUp;
-    boolean wobbleDown;
+    Gamepad gamepad = gamepad1;
 
     @Override
     public void init() {
-//        rightServo = hardwareMap.servo.get("servo_1");
-//        claw = hardwareMap.servo.get("servo_6");
-
-        // assign the starting position of the wrist and claw
-        armPosition = 0.2;
-        clawPosition = 0.2;
-
         motorFrontRight = hardwareMap.dcMotor.get("frontRight");
         motorFrontLeft = hardwareMap.dcMotor.get("frontLeft");
         motorBackRight = hardwareMap.dcMotor.get("backRight");
         motorBackLeft = hardwareMap.dcMotor.get("backLeft");
-//        motorWobble = hardwareMap.dcMotor.get("wobble");
-//        motorExtend = hardwareMap.dcMotor.get("extend");
-        //TODO Test to see if encoders start at 0 by default. If not, uncomment the following code
-//        motorWobble.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-//        while(motorWobble.getCurrentPosition() != 0 ){
-//            SystemClock.sleep(1);
-//        }
-//        motorWobble.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-//        touchSensor = hardwareMap.touchSensor.get("touch");
-//        distanceSensor = hardwareMap.opticalDistanceSensor.get("distance");
+        armServo = hardwareMap.servo.get("armServo");
     }
 
-    /*
-     * This method will be called repeatedly in a loop
-     *
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#run()
-     */
     @Override
     public void loop() {
         control();
-        telemetry.addData("leftStickY", gamepad1.left_stick_y);
-        telemetry.addData("leftStickY", gamepad1.left_stick_x);
+        telemetry.addData("leftStickY", gamepad.left_stick_y);
+        telemetry.addData("leftStickY", gamepad.left_stick_x);
         telemetry.addData("frontRightMotor", motorFrontRight.getPower());
         telemetry.addData("frontLeftMotor", motorFrontLeft.getPower());
         telemetry.addData("backRightMotor", motorBackRight.getPower());
         telemetry.addData("backLeftMotor", motorBackLeft.getPower());
     }
 
-    @Override
-    public void stop() {
-    }
-
     private void control() {
-        if (gamepad1.dpad_left) {
+        if (gamepad1.a || gamepad2.a) {
+            armServo.setPosition(armServoFinalPos);
+        } else if (gamepad1.b || gamepad2.b) {
+            armServo.setPosition(armServoInitPos);
+        }
+        if (Math.abs(gamepad1.left_stick_y) > Math.abs(gamepad2.left_stick_y)) {
+            gamepad = gamepad1;
+        } else if (Math.abs(gamepad2.left_stick_y) > Math.abs(gamepad1.left_stick_y)) {
+            gamepad = gamepad2;
+        }
+        if (gamepad.dpad_left) {
             spinLeft(0.125);
-        } else if (gamepad1.dpad_right) {
+        } else if (gamepad.dpad_right) {
             spinRight(0.125);
         } else {
-            double joystickInputY = -gamepad1.left_stick_y;
-            double joystickInputX = gamepad1.left_stick_x;
+            double joystickInputY = -gamepad.left_stick_y;
+            double joystickInputX = gamepad.left_stick_x;
             goDirection(joystickInputX, joystickInputY);
         }
     }
@@ -124,40 +86,4 @@ public class TeleOpOpMode extends BaseOpMode {
         motorFrontLeft.setPower((-y - x) / 3.0);
         motorBackLeft.setPower((-y + x) / 3.0);
     }
-
-
-    /*
-     * This method scales the joystick input so for low joystick values, the
-     * scaled value is less than linear.  This is to make it easier to drive
-     * the robot more precisely at slower speeds.
-     */
-    double scaleInput(double dVal) {
-        double[] scaleArray = {0.0, 0.05, 0.09, 0.10, 0.12, 0.15, 0.18, 0.24,
-                0.30, 0.36, 0.43, 0.50, 0.60, 0.72, 0.85, 1.00, 1.00};
-
-        // get the corresponding index for the scaleInput array.
-        int index = (int) (dVal * 16.0);
-
-        // index should be positive.
-        if (index < 0) {
-            index = -index;
-        }
-
-        // index cannot exceed size of array minus 1.
-        if (index > 16) {
-            index = 16;
-        }
-
-        // get value from the array.
-        double dScale = 0.0;
-        if (dVal < 0) {
-            dScale = -scaleArray[index];
-        } else {
-            dScale = scaleArray[index];
-        }
-
-        // return scaled value.
-        return dScale;
-    }
-
 }

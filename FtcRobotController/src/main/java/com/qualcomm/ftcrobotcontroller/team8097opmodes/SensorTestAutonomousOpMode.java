@@ -31,33 +31,18 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
+//used for testing sensors
 public class SensorTestAutonomousOpMode extends BaseOpMode {
-
-    boolean onMountain = false;
 
     @Override
     public void init() {
-//        motorFrontRight = hardwareMap.dcMotor.get("frontRight");
-//        motorFrontLeft = hardwareMap.dcMotor.get("frontLeft");
-//        motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
-//        motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
-//        motorBackRight = hardwareMap.dcMotor.get("backRight");
-//        motorBackLeft = hardwareMap.dcMotor.get("backLeft");
-//        motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
-//        motorBackRight.setDirection(DcMotor.Direction.REVERSE);
-//        touchSensor = hardwareMap.touchSensor.get("touch");
-//        distanceSensor = hardwareMap.opticalDistanceSensor.get("distance");
-//        colorSensor = hardwareMap.colorSensor.get("color");
         frontLightSensor = hardwareMap.lightSensor.get("frontLight");
         backLightSensor = hardwareMap.lightSensor.get("backLight");
         colorLightSensor = hardwareMap.lightSensor.get("colorLight");
-
         frontUltra = hardwareMap.ultrasonicSensor.get("frontUltra");
-//        rightUltra = hardwareMap.ultrasonicSensor.get("rightUltra");
-//        backUltra = hardwareMap.ultrasonicSensor.get("backUltra");
-//        leftUltra = hardwareMap.ultrasonicSensor.get("leftUltra");
-
-
+        rightUltra = hardwareMap.ultrasonicSensor.get("rightUltra");
+        backUltra = hardwareMap.ultrasonicSensor.get("backUltra");
+        leftUltra = hardwareMap.ultrasonicSensor.get("leftUltra");
     }
 
     @Override
@@ -68,15 +53,10 @@ public class SensorTestAutonomousOpMode extends BaseOpMode {
         telemetry.addData("Front Light", frontLightSensor.getLightDetected());
         backLightSensor.enableLed(true);
         telemetry.addData("Back Light", backLightSensor.getLightDetected());
-        telemetry.addData("Front Ultra", frontUltra.getUltrasonicLevel());
-//        telemetry.addData("touch", touchSensor.isPressed());
-//        telemetry.addData("frontUltra", frontUltra.getUltrasonicLevel());
-//        telemetry.addData("rightUltra", rightUltra.getUltrasonicLevel());
-//        telemetry.addData("backUltra", backUltra.getUltrasonicLevel());
-//        telemetry.addData("leftUltra", leftUltra.getUltrasonicLevel());
-//        telemetry.addData("light", lightSensor.getLightDetected());
-//        telemetry.addData("blue", colorSensor.blue());
-//        telemetry.addData("red", colorSensor.red());
+        telemetry.addData("frontUltra", frontUltra.getUltrasonicLevel());
+        telemetry.addData("rightUltra", rightUltra.getUltrasonicLevel());
+        telemetry.addData("backUltra", backUltra.getUltrasonicLevel());
+        telemetry.addData("leftUltra", leftUltra.getUltrasonicLevel());
     }
 
 }

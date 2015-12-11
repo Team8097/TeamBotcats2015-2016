@@ -31,32 +31,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
+//Base class for autonomous. It is used for testing movement autonomously,
+//and includes methods for moving a certain distance or spinning a certain angle.
 public class AutonomousOpMode extends BaseOpMode {
-
-    boolean onMountain = false;
     final int initialLoops = 10;
     int loop = 1;
     long startTime;
-    final double leftServoInitPos = 0.35;
-    final double leftServoFinalPos = 0.5;
-    final double rightServoInitPos = 0.5;
-    final double rightServoFinalPos = 0.35;
-
 
     @Override
     public void init() {
-//        motorFrontRight = hardwareMap.dcMotor.get("frontRight");
-//        motorFrontLeft = hardwareMap.dcMotor.get("frontLeft");
-//        motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
-//        motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
-//        motorBackRight = hardwareMap.dcMotor.get("backRight");
-//        motorBackLeft = hardwareMap.dcMotor.get("backLeft");
-//        motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
-//        motorBackRight.setDirection(DcMotor.Direction.REVERSE);
-//        touchSensor = hardwareMap.touchSensor.get("touch");
-//        distanceSensor = hardwareMap.opticalDistanceSensor.get("distance");
-//        colorSensor = hardwareMap.colorSensor.get("color");
-//        lightSensor = hardwareMap.lightSensor.get("light");
         motorFrontRight = hardwareMap.dcMotor.get("frontRight");
         motorFrontLeft = hardwareMap.dcMotor.get("frontLeft");
         motorBackRight = hardwareMap.dcMotor.get("backRight");
@@ -79,22 +62,6 @@ public class AutonomousOpMode extends BaseOpMode {
             loop++;
             startTime = System.currentTimeMillis();
         } else {
-//        telemetry.addData("touch", touchSensor.isPressed());
-//        telemetry.addData("frontUltra", frontUltra.getUltrasonicLevel());
-//        telemetry.addData("rightUltra", rightUltra.getUltrasonicLevel());
-//        telemetry.addData("backUltra", backUltra.getUltrasonicLevel());
-//        telemetry.addData("leftUltra", leftUltra.getUltrasonicLevel());
-//        telemetry.addData("light", lightSensor.getLightDetected());
-//        telemetry.addData("blue", colorSensor.blue());
-//        telemetry.addData("red", colorSensor.red());
-//        if (System.currentTimeMillis() - startMoveTime < 2400) {
-//            motorFrontRight.setPower(0.25);
-//            motorBackRight.setPower(0.25);
-//            motorFrontLeft.setPower(0.25);
-//            motorBackLeft.setPower(0.25);
-//        } else{
-//            stopRobot();
-//        }
             if (System.currentTimeMillis() - startTime < 1000) {
                 leftServo.setPosition(0.65);
                 rightServo.setPosition(0.5);

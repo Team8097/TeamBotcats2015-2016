@@ -1,25 +1,19 @@
 package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
-import android.os.SystemClock;
-
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.LightSensor;
-import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
+// This is the base class for all our opmodes,
+// and includes methods for basic movement and variables for all sensors, motors, etc.
 public abstract class BaseOpMode extends OpMode {
-
-    public final static double INCHES_PER_CENT = 0.39;
     public final static double DEFAULT_POWER = 0.2;
     public final static double MILLIS_PER_INCH_DEFAULT = 37.736 * (0.25 / DEFAULT_POWER);
     public final static double MILLIS_PER_DEGREE_DEFAULT = 5 * (0.25 / DEFAULT_POWER);
     public final static double BLUE_THRESHOLD = 0.6;
     public final static double TAPE_THRESHOLD = 0.43;
-    public final static double HITTING_WALL_DISTANCE = 5;
 
     DcMotor motorFrontRight;
     DcMotor motorFrontLeft;
@@ -36,6 +30,12 @@ public abstract class BaseOpMode extends OpMode {
     UltrasonicSensor backUltra;
     UltrasonicSensor leftUltra;
 
+    final double leftServoInitPos = 0.35;
+    final double leftServoFinalPos = 0.5;
+    final double rightServoInitPos = 0.5;
+    final double rightServoFinalPos = 0.35;
+    final double armServoInitPos = 1;
+    final double armServoFinalPos = 0;
 
     protected void go(double leftPower, double rightPower) {
         motorFrontRight.setPower(rightPower);

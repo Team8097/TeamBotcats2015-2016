@@ -31,8 +31,36 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
-//If we are on the blue alliance, the beacon repair zone will be on the right.
+//If we are on the blue alliance, the beacon repair zone will be on the right, and we will want to press the blue button.
 public class BlueAutonomousOpMode extends CompetitionAutonomousOpMode {
+
+    @Override
+    protected void goToOtherWall() {
+        if (frontUltra.getUltrasonicLevel() > 30) {
+            seesInFront = 0;
+            stoppedForObstacle = false;
+            distanceToGo[distanceToGoIndex] = goDistanceDiagLeft(DEFAULT_POWER, distanceToGo[distanceToGoIndex - 1], startMoveTime);
+        } else if (seesInFront < 20) {
+            seesInFront++;
+            telemetry.addData("seesInFront", seesInFront);
+            stoppedForObstacle = false;
+            distanceToGo[distanceToGoIndex] = goDistanceDiagLeft(DEFAULT_POWER, distanceToGo[distanceToGoIndex - 1], startMoveTime);
+        } else if (distanceToGo[distanceToGoIndex] < 36) {
+            endStage();
+        } else {
+            if (!stoppedForObstacle) {
+                stopRobot();
+                stoppedForObstacle = true;
+                distanceToGoIndex++;
+                startStoppedTime = System.currentTimeMillis();
+            }
+            if (System.currentTimeMillis() - startStoppedTime > 5000) {
+                dropClimbers = false;//There is something wrong, so better save dropping climbers for TeleOp to be safe
+                endStage();
+            }
+            startMoveTime = System.currentTimeMillis();
+        }
+    }
 
     @Override
     protected void moveCorrectButtonFlap() {
@@ -45,25 +73,59 @@ public class BlueAutonomousOpMode extends CompetitionAutonomousOpMode {
         }
     }
 
-    @Override
-    protected void turnToButton() {
-        double degreesToGo = spinRightDegrees(DEFAULT_POWER, 45, startMoveTime);
-        if (degreesToGo == 0) {
-            endStage();
-        }
-    }
-
     protected void lookForTape() {
         if (frontLightSensor.getLightDetected() > TAPE_THRESHOLD || backLightSensor.getLightDetected() > TAPE_THRESHOLD) {
-            telemetry.addData("Found tape on the right", "");
-            endStage();
+            if (seesTape < 2) {
+                seesTape++;
+                telemetry.addData("seesTape", seesTape);
+                goRight(DEFAULT_POWER / 2.0);
+            } else {
+                if (frontLightSensor.getLightDetected() > TAPE_THRESHOLD) {
+                    frontTape = true;
+                }
+                if (backLightSensor.getLightDetected() > TAPE_THRESHOLD) {
+                    backTape = true;
+                }
+                telemetry.addData("Found tape on the right", "");
+                seesTape = 0;
+                endStage();
+            }
         } else {
+            seesTape = 0;
             goRight(DEFAULT_POWER / 2.0);
         }
     }
 
     @Override
     protected void alignWithTape() {
-
+        if (!frontTape) {
+            if (frontLightSensor.getLightDetected() > TAPE_THRESHOLD) {
+                if (seesTape < 2) {
+                    seesTape++;
+                    telemetry.addData("seesTape (front)", seesTape);
+                    frontWheelsRight(DEFAULT_POWER / 2.0);
+                } else {
+                    telemetry.addData("Found tape on the right (front)", "");
+                    endStage();
+                }
+            } else {
+                seesTape = 0;
+                frontWheelsRight(DEFAULT_POWER / 2.0);
+            }
+        } else if (!backTape) {
+            if (backLightSensor.getLightDetected() > TAPE_THRESHOLD) {
+                if (seesTape < 2) {
+                    seesTape++;
+                    telemetry.addData("seesTape (back)", seesTape);
+                    backWheelsRight(DEFAULT_POWER / 2.0);
+                } else {
+                    telemetry.addData("Found tape on the right (back)", "");
+                    endStage();
+                }
+            } else {
+                seesTape = 0;
+                backWheelsRight(DEFAULT_POWER / 2.0);
+            }
+        }
     }
 }
