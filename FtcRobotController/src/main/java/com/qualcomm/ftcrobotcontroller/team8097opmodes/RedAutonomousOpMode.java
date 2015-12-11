@@ -48,8 +48,8 @@ public class RedAutonomousOpMode extends CompetitionAutonomousOpMode {
         } else if (distanceToGo[distanceToGoIndex] < 36) {
             endStage();
         } else {
+            stopRobot();
             if (!stoppedForObstacle) {
-                stopRobot();
                 stoppedForObstacle = true;
                 distanceToGoIndex++;
                 startStoppedTime = System.currentTimeMillis();
@@ -104,29 +104,31 @@ public class RedAutonomousOpMode extends CompetitionAutonomousOpMode {
                 if (seesTape < 2) {
                     seesTape++;
                     telemetry.addData("seesTape (front)", seesTape);
-                    frontWheelsLeft(DEFAULT_POWER / 2.0);
+                    frontWheelsLeft(DEFAULT_POWER);
                 } else {
                     telemetry.addData("Found tape on the left (front)", "");
                     endStage();
                 }
             } else {
                 seesTape = 0;
-                frontWheelsLeft(DEFAULT_POWER / 2.0);
+                frontWheelsLeft(DEFAULT_POWER);
             }
         } else if (!backTape) {
             if (backLightSensor.getLightDetected() > TAPE_THRESHOLD) {
                 if (seesTape < 2) {
                     seesTape++;
                     telemetry.addData("seesTape (back)", seesTape);
-                    backWheelsLeft(DEFAULT_POWER / 2.0);
+                    backWheelsLeft(DEFAULT_POWER);
                 } else {
                     telemetry.addData("Found tape on the left (back)", "");
                     endStage();
                 }
             } else {
                 seesTape = 0;
-                backWheelsLeft(DEFAULT_POWER / 2.0);
+                backWheelsLeft(DEFAULT_POWER);
             }
+        } else {
+            endStage();
         }
     }
 }
