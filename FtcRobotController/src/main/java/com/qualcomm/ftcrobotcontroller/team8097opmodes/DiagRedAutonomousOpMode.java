@@ -94,12 +94,52 @@ public class DiagRedAutonomousOpMode extends CompetitionAutonomousOpMode {
                 telemetry.addData("seesTape", seesTape);
                 goLeft(DEFAULT_POWER / 2.0);
             } else {
+                if (frontLightSensor.getLightDetected() > TAPE_THRESHOLD) {
+                    frontTape = true;
+                }
+                if (backLightSensor.getLightDetected() > TAPE_THRESHOLD) {
+                    backTape = true;
+                }
                 telemetry.addData("Found tape on the left", "");
+                seesTape = 0;
                 endStage();
             }
         } else {
             seesTape = 0;
             goLeft(DEFAULT_POWER / 2.0);
+        }
+    }
+
+    @Override
+    protected void alignWithTape() {
+        if (!frontTape) {
+            if (frontLightSensor.getLightDetected() > TAPE_THRESHOLD) {
+                if (seesTape < 2) {
+                    seesTape++;
+                    telemetry.addData("seesTape (front)", seesTape);
+                    frontWheelsLeft(DEFAULT_POWER / 2.0);
+                } else {
+                    telemetry.addData("Found tape on the left (front)", "");
+                    endStage();
+                }
+            } else {
+                seesTape = 0;
+                frontWheelsLeft(DEFAULT_POWER / 2.0);
+            }
+        } else if (!backTape) {
+            if (backLightSensor.getLightDetected() > TAPE_THRESHOLD) {
+                if (seesTape < 2) {
+                    seesTape++;
+                    telemetry.addData("seesTape (back)", seesTape);
+                    backWheelsLeft(DEFAULT_POWER / 2.0);
+                } else {
+                    telemetry.addData("Found tape on the left (back)", "");
+                    endStage();
+                }
+            } else {
+                seesTape = 0;
+                backWheelsLeft(DEFAULT_POWER / 2.0);
+            }
         }
     }
 }

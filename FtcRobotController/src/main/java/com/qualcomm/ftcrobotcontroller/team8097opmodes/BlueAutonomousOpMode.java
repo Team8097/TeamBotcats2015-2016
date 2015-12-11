@@ -61,4 +61,9 @@ public class BlueAutonomousOpMode extends CompetitionAutonomousOpMode {
             goRight(DEFAULT_POWER / 2.0);
         }
     }
+
+    @Override
+    protected void alignWithTape() {
+
+    }
 }

@@ -42,12 +42,13 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     final static int STAGE_RAM_WALL = 3;
     final static int STAGE_BACK_UP = 4;
     final static int STAGE_LOOK_FOR_TAPE = 5;
-    final static int STAGE_RAM_WALL_AGAIN = 6;
-    final static int STAGE_DROP_CLIMBERS = 7;
-    final static int STAGE_LIFT_ARM = 7;
-    final static int STAGE_READ_COLOR = 8;
-    final static int STAGE_MOVE_BUTTON_FLAP = 9;
-    final static int STAGE_PRESS_BUTTON = 10;
+    final static int STAGE_ALIGN_WITH_TAPE = 6;
+    final static int STAGE_RAM_WALL_AGAIN = 7;
+    final static int STAGE_DROP_CLIMBERS = 8;
+    final static int STAGE_LIFT_ARM = 9;
+    final static int STAGE_READ_COLOR = 10;
+    final static int STAGE_MOVE_BUTTON_FLAP = 11;
+    final static int STAGE_PRESS_BUTTON = 12;
     int stage = 0;
     ArrayList<Double> distanceToGo = new ArrayList<Double>();
     int distanceToGoIndex = 1;
@@ -58,7 +59,8 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     double blueLightDetected = 0;
     int seesInFront = 0;
     int seesTape = 0;
-    double frontUltraDistance = -1;
+    boolean frontTape = false;
+    boolean backTape = false;
 
     @Override
     public void init() {
@@ -87,6 +89,8 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
                 backUp();
             } else if (stage == STAGE_LOOK_FOR_TAPE) {
                 lookForTape();
+            } else if (stage == STAGE_ALIGN_WITH_TAPE) {
+                alignWithTape();
             } else if (stage == STAGE_RAM_WALL_AGAIN) {
                 ramWall();
             } else if (stage == STAGE_DROP_CLIMBERS) {
@@ -179,7 +183,7 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     protected abstract void turnToButton();
 
     protected void ramWall() {
-        double distanceToGo = goDistanceForward(DEFAULT_POWER/2.0, 40 * INCHES_PER_CENT, startMoveTime);
+        double distanceToGo = goDistanceForward(DEFAULT_POWER / 2.0, 40 * INCHES_PER_CENT, startMoveTime);
         if (distanceToGo == 0) {
             endStage();
         }
@@ -196,13 +200,15 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     }
 
     protected void backUp() {
-        double distanceToGo = goDistanceBackward(DEFAULT_POWER, 10, startMoveTime);
+        double distanceToGo = goDistanceBackward(DEFAULT_POWER, 5, startMoveTime);
         if (distanceToGo == 0) {
             endStage();
         }
     }
 
     protected abstract void lookForTape();
+
+    protected abstract void alignWithTape();
 
     protected abstract void moveCorrectButtonFlap();
 

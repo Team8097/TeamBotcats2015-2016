@@ -62,4 +62,9 @@ public class RedAutonomousOpMode extends CompetitionAutonomousOpMode {
             goLeft(DEFAULT_POWER / 2.0);
         }
     }
+
+    @Override
+    protected void alignWithTape() {
+
+    }
 }
