@@ -36,15 +36,38 @@ public class DiagBlueAutonomousOpMode extends CompetitionAutonomousOpMode {
 
     @Override
     protected void goToBeacon() {
-        if (frontUltra.getUltrasonicLevel() > 20) {
+        if (frontUltra.getUltrasonicLevel() > 30) {
             seesInFront = 0;
-            goDiagRight(DEFAULT_POWER);
-        } else if (seesInFront < 3) {
+            stoppedForObstacle = false;
+            distanceToGo.set(distanceToGoIndex, goDistanceDiagLeft(DEFAULT_POWER, distanceToGo.get(distanceToGoIndex - 1), startMoveTime));
+        } else if (seesInFront < 20) {
             seesInFront++;
-            goDiagRight(DEFAULT_POWER);
-        } else {
+            telemetry.addData("seesInFront", seesInFront);
+            stoppedForObstacle = false;
+            distanceToGo.set(distanceToGoIndex, goDistanceDiagLeft(DEFAULT_POWER, distanceToGo.get(distanceToGoIndex - 1), startMoveTime));
+        } else if (distanceToGo.get(distanceToGoIndex) < 36) {
             endStage();
+        } else {
+            if (!stoppedForObstacle) {
+                stopRobot();
+                stoppedForObstacle = true;
+                distanceToGoIndex++;
+                startStoppedTime = System.currentTimeMillis();
+            }
+            if (System.currentTimeMillis() - startStoppedTime > 5000) {
+                endStage();
+            }
+            startMoveTime = System.currentTimeMillis();
         }
+//        if (frontUltra.getUltrasonicLevel() > 20) {
+//            seesInFront = 0;
+//            goDiagRight(DEFAULT_POWER);
+//        } else if (seesInFront < 3) {
+//            seesInFront++;
+//            goDiagRight(DEFAULT_POWER);
+//        } else {
+//            endStage();
+//        }
     }
 
     @Override
@@ -65,9 +88,16 @@ public class DiagBlueAutonomousOpMode extends CompetitionAutonomousOpMode {
 
     protected void lookForTape() {
         if (frontLightSensor.getLightDetected() > TAPE_THRESHOLD || backLightSensor.getLightDetected() > TAPE_THRESHOLD) {
-            telemetry.addData("Found tape on the right", "");
-            endStage();
+            if (seesTape < 2) {
+                seesTape++;
+                telemetry.addData("seesTape", seesTape);
+                goRight(DEFAULT_POWER / 2.0);
+            } else {
+                telemetry.addData("Found tape on the right", "");
+                endStage();
+            }
         } else {
+            seesTape = 0;
             goRight(DEFAULT_POWER / 2.0);
         }
     }

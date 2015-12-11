@@ -67,7 +67,7 @@ public class AutonomousOpMode extends BaseOpMode {
         leftUltra = hardwareMap.ultrasonicSensor.get("leftUltra");
         rightServo = hardwareMap.servo.get("rightServo");
         leftServo = hardwareMap.servo.get("leftServo");
-//        armServo = hardwareMap.servo.get("armServo");
+        armServo = hardwareMap.servo.get("armServo");
         frontLightSensor = hardwareMap.lightSensor.get("frontLight");
         backLightSensor = hardwareMap.lightSensor.get("backLight");
         colorLightSensor = hardwareMap.lightSensor.get("colorLight");
@@ -108,12 +108,11 @@ public class AutonomousOpMode extends BaseOpMode {
         double millisPerInch = MILLIS_PER_INCH_DEFAULT * (DEFAULT_POWER / power);
         double goTime = inches * millisPerInch;
         int timeElapsed = (int) (System.currentTimeMillis() - startTime);
+        goForward(power);
         if (timeElapsed < goTime) {
-            goForward(power);
             double distanceToGo = (goTime - timeElapsed) / millisPerInch;
             return distanceToGo;
         } else {
-            stopRobot();
             return 0;
         }
     }
@@ -122,12 +121,11 @@ public class AutonomousOpMode extends BaseOpMode {
         double millisPerInch = MILLIS_PER_INCH_DEFAULT * (DEFAULT_POWER / power);
         double goTime = inches * millisPerInch;
         int timeElapsed = (int) (System.currentTimeMillis() - startTime);
+        goBackward(power);
         if (timeElapsed < goTime) {
-            goBackward(power);
             double distanceToGo = (goTime - timeElapsed) / millisPerInch;
             return distanceToGo;
         } else {
-            stopRobot();
             return 0;
         }
     }
@@ -136,12 +134,24 @@ public class AutonomousOpMode extends BaseOpMode {
         double millisPerInch = MILLIS_PER_INCH_DEFAULT * (DEFAULT_POWER / power);
         double goTime = inches * millisPerInch;
         int timeElapsed = (int) (System.currentTimeMillis() - startTime);
+        goLeft(power);
         if (timeElapsed < goTime) {
-            goLeft(power);
             double distanceToGo = (goTime - timeElapsed) / millisPerInch;
             return distanceToGo;
         } else {
-            stopRobot();
+            return 0;
+        }
+    }
+
+    protected double goDistanceDiagLeft(double power, double inches, long startTime) {
+        double millisPerInch = MILLIS_PER_INCH_DEFAULT * (DEFAULT_POWER / power);
+        double goTime = inches * millisPerInch;
+        int timeElapsed = (int) (System.currentTimeMillis() - startTime);
+        goDiagLeft(power);
+        if (timeElapsed < goTime) {
+            double distanceToGo = (goTime - timeElapsed) / millisPerInch;
+            return distanceToGo;
+        } else {
             return 0;
         }
     }
@@ -150,12 +160,24 @@ public class AutonomousOpMode extends BaseOpMode {
         double millisPerInch = MILLIS_PER_INCH_DEFAULT * (DEFAULT_POWER / power);
         double goTime = inches * millisPerInch;
         int timeElapsed = (int) (System.currentTimeMillis() - startTime);
+        goRight(power);
         if (timeElapsed < goTime) {
-            goRight(power);
             double distanceToGo = (goTime - timeElapsed) / millisPerInch;
             return distanceToGo;
         } else {
-            stopRobot();
+            return 0;
+        }
+    }
+
+    protected double goDistanceDiagRight(double power, double inches, long startTime) {
+        double millisPerInch = MILLIS_PER_INCH_DEFAULT * (DEFAULT_POWER / power);
+        double goTime = inches * millisPerInch;
+        int timeElapsed = (int) (System.currentTimeMillis() - startTime);
+        goDiagRight(power);
+        if (timeElapsed < goTime) {
+            double distanceToGo = (goTime - timeElapsed) / millisPerInch;
+            return distanceToGo;
+        } else {
             return 0;
         }
     }

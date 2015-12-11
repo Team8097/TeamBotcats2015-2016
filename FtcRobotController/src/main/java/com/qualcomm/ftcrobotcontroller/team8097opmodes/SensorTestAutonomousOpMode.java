@@ -52,7 +52,7 @@ public class SensorTestAutonomousOpMode extends BaseOpMode {
         backLightSensor = hardwareMap.lightSensor.get("backLight");
         colorLightSensor = hardwareMap.lightSensor.get("colorLight");
 
-//        frontUltra = hardwareMap.ultrasonicSensor.get("frontUltra");
+        frontUltra = hardwareMap.ultrasonicSensor.get("frontUltra");
 //        rightUltra = hardwareMap.ultrasonicSensor.get("rightUltra");
 //        backUltra = hardwareMap.ultrasonicSensor.get("backUltra");
 //        leftUltra = hardwareMap.ultrasonicSensor.get("leftUltra");
@@ -68,6 +68,7 @@ public class SensorTestAutonomousOpMode extends BaseOpMode {
         telemetry.addData("Front Light", frontLightSensor.getLightDetected());
         backLightSensor.enableLed(true);
         telemetry.addData("Back Light", backLightSensor.getLightDetected());
+        telemetry.addData("Front Ultra", frontUltra.getUltrasonicLevel());
 //        telemetry.addData("touch", touchSensor.isPressed());
 //        telemetry.addData("frontUltra", frontUltra.getUltrasonicLevel());
 //        telemetry.addData("rightUltra", rightUltra.getUltrasonicLevel());

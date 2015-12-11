@@ -36,7 +36,7 @@ import android.os.SystemClock;
 import java.util.ArrayList;
 
 public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
-    final static int STAGE_INIT_SERVOS = 1;
+    final static int STAGE_INIT_SERVOS = 0;
     final static int STAGE_GO_TO_BEACON = 1;
     final static int STAGE_TURN_TOWARDS_BUTTON = 2;
     final static int STAGE_RAM_WALL = 3;
@@ -44,10 +44,11 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     final static int STAGE_LOOK_FOR_TAPE = 5;
     final static int STAGE_RAM_WALL_AGAIN = 6;
     final static int STAGE_DROP_CLIMBERS = 7;
+    final static int STAGE_LIFT_ARM = 7;
     final static int STAGE_READ_COLOR = 8;
     final static int STAGE_MOVE_BUTTON_FLAP = 9;
     final static int STAGE_PRESS_BUTTON = 10;
-    int stage = STAGE_GO_TO_BEACON;
+    int stage = 0;
     ArrayList<Double> distanceToGo = new ArrayList<Double>();
     int distanceToGoIndex = 1;
     boolean stoppedForObstacle = true;
@@ -56,13 +57,15 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     int colorSensorInputs = 0;
     double blueLightDetected = 0;
     int seesInFront = 0;
+    int seesTape = 0;
     double frontUltraDistance = -1;
 
     @Override
     public void init() {
         super.init();
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 100; i++)
             distanceToGo.add(120.0);
+        distanceToGo.add(120.0);
     }
 
     @Override
@@ -70,8 +73,11 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
         if (loop <= initialLoops) {
             loop++;
             startMoveTime = System.currentTimeMillis();
+
         } else {
-            if (stage == STAGE_GO_TO_BEACON) {
+            if (stage == STAGE_INIT_SERVOS) {
+                initServos();
+            } else if (stage == STAGE_GO_TO_BEACON) {
                 goToBeacon();
             } else if (stage == STAGE_TURN_TOWARDS_BUTTON) {
                 turnToButton();
@@ -84,8 +90,9 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
             } else if (stage == STAGE_RAM_WALL_AGAIN) {
                 ramWall();
             } else if (stage == STAGE_DROP_CLIMBERS) {
-                //dropClimbers();
-                endStage();
+                dropClimbers();
+            } else if (stage == STAGE_LIFT_ARM) {
+                liftArm();
             } else if (stage == STAGE_READ_COLOR) {
                 readColorSensor();
             } else if (stage == STAGE_MOVE_BUTTON_FLAP) {
@@ -98,8 +105,9 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     }
 
     protected void endStage() {
-//        printStage("Just finished stage");
+        printStage("Just finished stage");
         stopRobot();
+//        SystemClock.sleep(1000);
         stage++;
         startMoveTime = System.currentTimeMillis();
     }
@@ -128,7 +136,9 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
         if (System.currentTimeMillis() - startMoveTime < 1000) {
             leftServo.setPosition(leftServoInitPos);
             rightServo.setPosition(rightServoInitPos);
-//            armServo.setPosition(0);
+            frontLightSensor.enableLed(true);
+            backLightSensor.enableLed(true);
+            armServo.setPosition(1);
         } else {
             endStage();
         }
@@ -169,10 +179,7 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     protected abstract void turnToButton();
 
     protected void ramWall() {
-        if (frontUltraDistance == -1) {
-            frontUltraDistance = frontUltra.getUltrasonicLevel();
-        }
-        double distanceToGo = goDistanceForward(DEFAULT_POWER, frontUltraDistance * INCHES_PER_CENT + 4, startMoveTime);
+        double distanceToGo = goDistanceForward(DEFAULT_POWER/2.0, 40 * INCHES_PER_CENT, startMoveTime);
         if (distanceToGo == 0) {
             endStage();
         }
@@ -200,10 +207,17 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     protected abstract void moveCorrectButtonFlap();
 
     protected void dropClimbers() {
-        if (System.currentTimeMillis() - startMoveTime < 1000) {
+        if (System.currentTimeMillis() - startMoveTime < 500) {
+            armServo.setPosition(0);
+        } else {
+            endStage();
+        }
+    }
+
+    protected void liftArm() {
+        if (System.currentTimeMillis() - startMoveTime < 500) {
             armServo.setPosition(1);
         } else {
-            armServo.setPosition(0);
             endStage();
         }
     }

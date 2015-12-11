@@ -108,10 +108,9 @@ public class TeleOpOpMode extends BaseOpMode {
 
     private void control() {
         if (gamepad1.dpad_left) {
-            spinLeft(0.25);
-        }
-        if (gamepad1.dpad_right) {
-            spinRight(0.25);
+            spinLeft(0.125);
+        } else if (gamepad1.dpad_right) {
+            spinRight(0.125);
         } else {
             double joystickInputY = -gamepad1.left_stick_y;
             double joystickInputX = gamepad1.left_stick_x;
@@ -120,10 +119,10 @@ public class TeleOpOpMode extends BaseOpMode {
     }
 
     protected void goDirection(double x, double y) {
-        motorFrontRight.setPower((y - x) / 2.0);
-        motorBackRight.setPower((y + x) / 2.0);
-        motorFrontLeft.setPower((-y - x) / 2.0);
-        motorBackLeft.setPower((-y + x) / 2.0);
+        motorFrontRight.setPower((y - x) / 3.0);
+        motorBackRight.setPower((y + x) / 3.0);
+        motorFrontLeft.setPower((-y - x) / 3.0);
+        motorBackLeft.setPower((-y + x) / 3.0);
     }
 
 
