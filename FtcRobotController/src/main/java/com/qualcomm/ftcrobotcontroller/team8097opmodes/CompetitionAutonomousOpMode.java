@@ -96,7 +96,8 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
             } else if (stage == STAGE_READ_COLOR) {
                 readColorSensor();//an average of 10 readings or is recorded from the light sensor facing the buttons
             } else if (stage == STAGE_PRESS_BUTTON) {
-                moveCorrectButtonFlap();//based on the light detected in the previous stage, the robot presses the correct button
+                moveCorrectButtonFlap();//based on the light detected in the previous stage,
+                                        // the robot presses the correct button
             }
         }
     }

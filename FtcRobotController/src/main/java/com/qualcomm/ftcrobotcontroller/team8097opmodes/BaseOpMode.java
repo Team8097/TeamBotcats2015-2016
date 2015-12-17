@@ -1,6 +1,7 @@
 package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -23,6 +24,8 @@ public abstract class BaseOpMode extends OpMode {
     Servo leftServo;
     Servo armServo;
     LightSensor colorLightSensor;
+    ColorSensor colorSensor;
+
     LightSensor frontLightSensor;
     LightSensor backLightSensor;
     UltrasonicSensor frontUltra;
