@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.LightSensor;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
@@ -22,12 +23,15 @@ public abstract class BaseOpMode extends OpMode {
     DcMotor motorBackLeft;
     Servo rightServo;
     Servo leftServo;
+    Servo rightSweepServo;
+    Servo leftSweepServo;
     Servo armServo;
     LightSensor colorLightSensor;
     ColorSensor colorSensor;
 
     LightSensor frontLightSensor;
     LightSensor backLightSensor;
+    OpticalDistanceSensor frontOds;
     UltrasonicSensor frontUltra;
     UltrasonicSensor rightUltra;
     UltrasonicSensor backUltra;

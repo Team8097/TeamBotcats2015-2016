@@ -45,6 +45,7 @@ public class AutonomousOpMode extends BaseOpMode {
         motorFrontLeft = hardwareMap.dcMotor.get("frontLeft");
         motorBackRight = hardwareMap.dcMotor.get("backRight");
         motorBackLeft = hardwareMap.dcMotor.get("backLeft");
+        frontOds = hardwareMap.opticalDistanceSensor.get("frontOds");
         frontUltra = hardwareMap.ultrasonicSensor.get("frontUltra");
         rightUltra = hardwareMap.ultrasonicSensor.get("rightUltra");
         backUltra = hardwareMap.ultrasonicSensor.get("backUltra");
@@ -52,6 +53,8 @@ public class AutonomousOpMode extends BaseOpMode {
         rightServo = hardwareMap.servo.get("rightServo");
         leftServo = hardwareMap.servo.get("leftServo");
         armServo = hardwareMap.servo.get("armServo");
+//        rightSweepServo = hardwareMap.servo.get("rightSweep");
+        leftSweepServo = hardwareMap.servo.get("leftSweep");
         frontLightSensor = hardwareMap.lightSensor.get("frontLight");
         backLightSensor = hardwareMap.lightSensor.get("backLight");
         colorLightSensor = hardwareMap.lightSensor.get("colorLight");
@@ -64,8 +67,7 @@ public class AutonomousOpMode extends BaseOpMode {
             startTime = System.currentTimeMillis();
         } else {
             if (System.currentTimeMillis() - startTime < 1000) {
-                leftServo.setPosition(0.65);
-                rightServo.setPosition(0.5);
+                leftSweepServo.setPosition(0);
             } else {
                 stopRobot();
             }
