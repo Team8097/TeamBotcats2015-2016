@@ -75,16 +75,16 @@ public class RedAutonomousOpMode extends CompetitionAutonomousOpMode {
 
     @Override
     protected void lookForTape() {
-        if (frontLightSensor.getLightDetected() > TAPE_THRESHOLD || backLightSensor.getLightDetected() > TAPE_THRESHOLD) {
+        if (frontLightSensor.getLightDetected() > tapeThreshold || backLightSensor.getLightDetected() > tapeThreshold) {
             if (seesTape < 2) {
                 seesTape++;
                 telemetry.addData("seesTape", seesTape);
                 goLeft(DEFAULT_POWER / 2.0);
             } else {
-                if (frontLightSensor.getLightDetected() > TAPE_THRESHOLD) {
+                if (frontLightSensor.getLightDetected() > tapeThreshold) {
                     frontTape = true;
                 }
-                if (backLightSensor.getLightDetected() > TAPE_THRESHOLD) {
+                if (backLightSensor.getLightDetected() > tapeThreshold) {
                     backTape = true;
                 }
                 telemetry.addData("Found tape on the left", "");
@@ -100,7 +100,7 @@ public class RedAutonomousOpMode extends CompetitionAutonomousOpMode {
     @Override
     protected void alignWithTape() {
         if (!frontTape) {
-            if (frontLightSensor.getLightDetected() > TAPE_THRESHOLD) {
+            if (frontLightSensor.getLightDetected() > tapeThreshold) {
                 if (seesTape < 2) {
                     seesTape++;
                     telemetry.addData("seesTape (front)", seesTape);
@@ -114,7 +114,7 @@ public class RedAutonomousOpMode extends CompetitionAutonomousOpMode {
                 frontWheelsLeft(DEFAULT_POWER);
             }
         } else if (!backTape) {
-            if (backLightSensor.getLightDetected() > TAPE_THRESHOLD) {
+            if (backLightSensor.getLightDetected() > tapeThreshold) {
                 if (seesTape < 2) {
                     seesTape++;
                     telemetry.addData("seesTape (back)", seesTape);

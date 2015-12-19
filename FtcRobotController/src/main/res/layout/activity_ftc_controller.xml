@@ -57,6 +57,24 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             android:adjustViewBounds="true"
             android:src="@mipmap/botcat" />
 
+        <Button
+            android:id="@+id/calibrateGroundButt"
+            android:onClick="calibrateGround"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Calibrate Ground"
+            android:clickable="false"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/calibrateTapeButt"
+            android:onClick="calibrateTape"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Calibrate Tape"
+            android:clickable="false"
+            android:textColor="@color/white" />
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -70,29 +88,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:visibility="gone">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Status: "
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout

@@ -33,6 +33,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.ftcrobotcontroller.team8097opmodes.AutonomousOpMode;
 import com.qualcomm.ftcrobotcontroller.team8097opmodes.BlueAutonomousOpMode;
+import com.qualcomm.ftcrobotcontroller.team8097opmodes.CalibrateOpMode;
 import com.qualcomm.ftcrobotcontroller.team8097opmodes.RedAutonomousOpMode;
 import com.qualcomm.ftcrobotcontroller.team8097opmodes.TeleOpOpMode;
 import com.qualcomm.ftcrobotcontroller.team8097opmodes.SensorTestAutonomousOpMode;
@@ -63,10 +64,9 @@ public class FtcOpModeRegister implements OpModeRegister {
         manager.register("TeleOp", TeleOpOpMode.class);
         manager.register("Autonomous", AutonomousOpMode.class);
         manager.register("SensorTest", SensorTestAutonomousOpMode.class);
-//        manager.register("RedAutonomous", RedAutonomousOpMode.class);
-//        manager.register("BlueAutonomous", BlueAutonomousOpMode.class);
-        manager.register("DiagRedAutonomous", RedAutonomousOpMode.class);
-        manager.register("DiagBlueAutonomous", BlueAutonomousOpMode.class);
+        manager.register("Calibrate", CalibrateOpMode.class);
+        manager.register("RedAutonomous", RedAutonomousOpMode.class);
+        manager.register("BlueAutonomous", BlueAutonomousOpMode.class);
 
 
         //manager.register("AdafruitRGBExample", AdafruitRGBExample.class);

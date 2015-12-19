@@ -31,6 +31,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
+import com.qualcomm.ftcrobotcontroller.FtcRobotControllerActivity;
+
 /*
  * Base class for opmodes used for autonomous.
  * Includes most of the functionality for autonomous that does not depend on alliance color.
@@ -62,11 +64,17 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     int seesTape = 0;
     boolean frontTape = false;
     boolean backTape = false;
+    double tapeThreshold;
 
     @Override
     public void init() {
         super.init();
         distanceToGo[0] = 120;
+        tapeThreshold = (FtcRobotControllerActivity.calibrationSP.getFloat("tapeValue", -2) + FtcRobotControllerActivity.calibrationSP.getFloat("groundValue", -2)) / 2.0;
+        if (tapeThreshold < 0) {
+            tapeThreshold = 0.43;
+        }
+
     }
 
     @Override
@@ -97,7 +105,7 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
                 readColorSensor();//an average of 10 readings or is recorded from the light sensor facing the buttons
             } else if (stage == STAGE_PRESS_BUTTON) {
                 moveCorrectButtonFlap();//based on the light detected in the previous stage,
-                                        // the robot presses the correct button
+                // the robot presses the correct button
             }
         }
     }

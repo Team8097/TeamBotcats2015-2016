@@ -15,7 +15,6 @@ public abstract class BaseOpMode extends OpMode {
     public final static double MILLIS_PER_INCH_DEFAULT = 37.736 * (0.25 / DEFAULT_POWER);
     public final static double MILLIS_PER_DEGREE_DEFAULT = 5 * (0.25 / DEFAULT_POWER);
     public final static double BLUE_THRESHOLD = 0.6;
-    public final static double TAPE_THRESHOLD = 0.43;
 
     DcMotor motorFrontRight;
     DcMotor motorFrontLeft;
