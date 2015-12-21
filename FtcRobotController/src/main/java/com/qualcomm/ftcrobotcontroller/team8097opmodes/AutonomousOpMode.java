@@ -53,11 +53,11 @@ public class AutonomousOpMode extends BaseOpMode {
         rightServo = hardwareMap.servo.get("rightServo");
         leftServo = hardwareMap.servo.get("leftServo");
         armServo = hardwareMap.servo.get("armServo");
-//        rightSweepServo = hardwareMap.servo.get("rightSweep");
+        rightSweepServo = hardwareMap.servo.get("rightSweep");
         leftSweepServo = hardwareMap.servo.get("leftSweep");
         frontLightSensor = hardwareMap.lightSensor.get("frontLight");
         backLightSensor = hardwareMap.lightSensor.get("backLight");
-        colorLightSensor = hardwareMap.lightSensor.get("colorLight");
+        rightColorSensor = hardwareMap.lightSensor.get("rightColor");leftColorSensor = hardwareMap.lightSensor.get("leftColor");
     }
 
     @Override

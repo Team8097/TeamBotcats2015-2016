@@ -38,7 +38,8 @@ public class SensorTestAutonomousOpMode extends BaseOpMode {
     public void init() {
         frontLightSensor = hardwareMap.lightSensor.get("frontLight");
         backLightSensor = hardwareMap.lightSensor.get("backLight");
-        colorLightSensor = hardwareMap.lightSensor.get("colorLight");
+        rightColorSensor = hardwareMap.lightSensor.get("rightColor");
+        leftColorSensor = hardwareMap.lightSensor.get("leftColor");
         frontOds = hardwareMap.opticalDistanceSensor.get("frontOds");
         frontUltra = hardwareMap.ultrasonicSensor.get("frontUltra");
         rightUltra = hardwareMap.ultrasonicSensor.get("rightUltra");
@@ -48,8 +49,10 @@ public class SensorTestAutonomousOpMode extends BaseOpMode {
 
     @Override
     public void loop() {
-        colorLightSensor.enableLed(false);
-        telemetry.addData("Color Light", colorLightSensor.getLightDetected());
+        rightColorSensor.enableLed(false);
+        telemetry.addData("Right Color", rightColorSensor.getLightDetected());
+        rightColorSensor.enableLed(false);
+        telemetry.addData("Left Color", leftColorSensor.getLightDetected());
         frontLightSensor.enableLed(true);
         telemetry.addData("Front Light", frontLightSensor.getLightDetected());
         backLightSensor.enableLed(true);

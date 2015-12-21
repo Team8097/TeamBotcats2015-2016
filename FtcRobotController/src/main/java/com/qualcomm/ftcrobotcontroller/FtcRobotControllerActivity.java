@@ -212,8 +212,8 @@ public class FtcRobotControllerActivity extends Activity {
         calibrateGroundButt = (Button) findViewById(R.id.calibrateGroundButt);
         calibrateTapeButt = (Button) findViewById(R.id.calibrateTapeButt);
         calibrationSP = getSharedPreferences(CALIBRATE_SP, MODE_PRIVATE);
-        calibrateTapeButt.setText("Calibrate Tape\n" + calibrationSP.getFloat("tapeValue", -2));
-        calibrateGroundButt.setText("Calibrate Ground\n" + calibrationSP.getFloat("groundValue", -2));
+        calibrateTapeButt.setText("Calibrate Tape\nF: " + calibrationSP.getFloat("frontTapeValue", -2) + "  B: " + calibrationSP.getFloat("backTapeValue", -2));
+        calibrateGroundButt.setText("Calibrate Ground\nF: " + calibrationSP.getFloat("frontGroundValue", -2) + "  B: " + calibrationSP.getFloat("backGroundValue", -2));
     }
 
     @Override
@@ -408,7 +408,7 @@ public class FtcRobotControllerActivity extends Activity {
         CalibrateOpMode.calibrateGround = true;
     }
 
-    public final static Handler setButtonsVisible = new Handler() {
+    public final static Handler setButtonsClickable = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             calibrateGroundButt.setClickable(true);
@@ -416,7 +416,7 @@ public class FtcRobotControllerActivity extends Activity {
         }
     };
 
-    public final static Handler setButtonsInvisible = new Handler() {
+    public final static Handler setButtonsUnclickable = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             calibrateGroundButt.setClickable(false);
@@ -427,14 +427,18 @@ public class FtcRobotControllerActivity extends Activity {
     public final static Handler setGroundText = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            calibrateGroundButt.setText("Calibrate Ground\n" + (Float) msg.obj);
+            float front = (float) (msg.arg1 / 100.0);
+            float back = (float) (msg.arg2 / 100.0);
+            calibrateGroundButt.setText("Calibrate Ground\nF: " + front + "  B: " + back);
         }
     };
 
     public final static Handler setTapeText = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            calibrateTapeButt.setText("Calibrate Tape\n" + (Float) msg.obj);
+            float front = (float) (msg.arg1 / 100.0);
+            float back = (float) (msg.arg2 / 100.0);
+            calibrateTapeButt.setText("Calibrate Tape\nF: " + front + "  B: " + back);
         }
     };
 }

@@ -41,18 +41,20 @@ import com.qualcomm.ftcrobotcontroller.FtcRobotControllerActivity;
  */
 public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     final static int STAGE_INIT_SERVOS = 0;
-    final static int STAGE_GO_TO_OTHER_WALL = 1;
-    final static int STAGE_RAM_WALL = 2;
-    final static int STAGE_BACK_UP = 3;
-    final static int STAGE_LOOK_FOR_TAPE = 4;
-    final static int STAGE_ALIGN_WITH_TAPE = 5;
-    final static int STAGE_RAM_WALL_AGAIN = 6;
-    final static int STAGE_DROP_CLIMBERS = 7;
-    final static int STAGE_LIFT_ARM = 8;
-    final static int STAGE_READ_COLOR = 9;
-    final static int STAGE_PRESS_BUTTON = 10;
+    final static int STAGE_MAKE_TRIANGLE = 1;
+    final static int STAGE_GO_TO_OTHER_WALL = 2;
+    final static int STAGE_RAM_WALL = 3;
+    final static int STAGE_BACK_UP = 4;
+    final static int STAGE_LOOK_FOR_TAPE = 5;
+    final static int STAGE_ALIGN_WITH_TAPE = 6;
+    final static int STAGE_RAM_WALL_AGAIN = 7;
+    final static int STAGE_DROP_CLIMBERS = 8;
+    final static int STAGE_LIFT_ARM = 9;
+    final static int STAGE_READ_COLOR = 10;
+    final static int STAGE_PRESS_BUTTON = 11;
     boolean dropClimbers = true;
     int stage = 0;
+    int triangleSweepStage = 0;
     double[] distanceToGo = new double[100];
     int distanceToGoIndex = 1;
     boolean stoppedForObstacle = true;
@@ -64,15 +66,20 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     int seesTape = 0;
     boolean frontTape = false;
     boolean backTape = false;
-    double tapeThreshold;
+    double frontTapeThreshold;
+    double backTapeThreshold;
 
     @Override
     public void init() {
         super.init();
         distanceToGo[0] = 120;
-        tapeThreshold = (FtcRobotControllerActivity.calibrationSP.getFloat("tapeValue", -2) + FtcRobotControllerActivity.calibrationSP.getFloat("groundValue", -2)) / 2.0;
-        if (tapeThreshold < 0) {
-            tapeThreshold = 0.43;
+        frontTapeThreshold = (FtcRobotControllerActivity.calibrationSP.getFloat("frontTapeValue", -2) + FtcRobotControllerActivity.calibrationSP.getFloat("frontGroundValue", -2)) / 2.0;
+        if (frontTapeThreshold < 0) {
+            frontTapeThreshold = 0.43;
+        }
+        backTapeThreshold = (FtcRobotControllerActivity.calibrationSP.getFloat("backTapeValue", -2) + FtcRobotControllerActivity.calibrationSP.getFloat("backGroundValue", -2)) / 2.0;
+        if (backTapeThreshold < 0) {
+            backTapeThreshold = 0.43;
         }
 
     }
@@ -85,6 +92,8 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
         } else {
             if (stage == STAGE_INIT_SERVOS) {
                 initServos();//Sets servos to start positions, as well as enables LEDs for light sensors
+            } else if (stage == STAGE_MAKE_TRIANGLE) {
+                sweepTriangle();
             } else if (stage == STAGE_GO_TO_OTHER_WALL) {
                 goToOtherWall();//The robot goes to the opposite wall in the alliance zone
             } else if (stage == STAGE_RAM_WALL) {
@@ -117,13 +126,46 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     }
 
     protected void initServos() {
-        if (System.currentTimeMillis() - startMoveTime < 1000) {
+        if (System.currentTimeMillis() - startMoveTime < 300) {
             leftServo.setPosition(leftServoInitPos);
             rightServo.setPosition(rightServoInitPos);
             armServo.setPosition(armServoInitPos);
+            leftSweepServo.setPosition(leftSweepIn);
+            rightSweepServo.setPosition(rightSweepIn);
             frontLightSensor.enableLed(true);
             backLightSensor.enableLed(true);
         } else {
+            endStage();
+        }
+    }
+
+    protected void sweepTriangle() {
+        final int rightOut = 0;
+        final int leftTriangle = 1;
+        final int rightTriangle = 2;
+        if (triangleSweepStage == rightOut) {
+            if (System.currentTimeMillis() - startMoveTime < 300) {
+                rightSweepServo.setPosition(rightSweepOut);
+            } else {
+                triangleSweepStage++;
+                startMoveTime = System.currentTimeMillis();
+            }
+        } else if (triangleSweepStage == leftTriangle) {
+            if (System.currentTimeMillis() - startMoveTime < 300) {
+                leftSweepServo.setPosition(leftSweepTriangle);
+            } else {
+                triangleSweepStage++;
+                startMoveTime = System.currentTimeMillis();
+            }
+        } else if (triangleSweepStage == rightTriangle) {
+            if (System.currentTimeMillis() - startMoveTime < 300) {
+                rightSweepServo.setPosition(rightSweepTriangle);
+            } else {
+                triangleSweepStage++;
+                startMoveTime = System.currentTimeMillis();
+            }
+        } else {
+            triangleSweepStage = 0;
             endStage();
         }
     }
@@ -172,7 +214,7 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
 
     protected void readColorSensor() {
         if (colorSensorInputs < 10) {
-            blueLightDetected += colorLightSensor.getLightDetected();
+            blueLightDetected += rightColorSensor.getLightDetected();
             colorSensorInputs++;
         } else {
             blueLightDetected /= 10.0;

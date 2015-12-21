@@ -16,6 +16,13 @@ public abstract class BaseOpMode extends OpMode {
     public final static double MILLIS_PER_DEGREE_DEFAULT = 5 * (0.25 / DEFAULT_POWER);
     public final static double BLUE_THRESHOLD = 0.6;
 
+    double rightSweepTriangle = 0.524;
+    double leftSweepTriangle = 0.534;
+    double rightSweepIn = 0.832;
+    double leftSweepIn = 0.206;
+    double rightSweepOut = 0.038;
+    double leftSweepOut = 0.992;
+
     DcMotor motorFrontRight;
     DcMotor motorFrontLeft;
     DcMotor motorBackRight;
@@ -25,8 +32,8 @@ public abstract class BaseOpMode extends OpMode {
     Servo rightSweepServo;
     Servo leftSweepServo;
     Servo armServo;
-    LightSensor colorLightSensor;
-    ColorSensor colorSensor;
+    LightSensor rightColorSensor;
+    LightSensor leftColorSensor;
 
     LightSensor frontLightSensor;
     LightSensor backLightSensor;
