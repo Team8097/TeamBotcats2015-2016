@@ -1,5 +1,6 @@
 package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
+import com.qualcomm.ftcrobotcontroller.FtcRobotControllerActivity;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -8,12 +9,19 @@ import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 // This is the base class for all our opmodes,
 // and includes methods for basic movement and variables for all sensors, motors, etc.
 public abstract class BaseOpMode extends OpMode {
     public final static double DEFAULT_POWER = 0.2;
     public final static double MILLIS_PER_INCH_DEFAULT = 37.736 * (0.25 / DEFAULT_POWER);
     public final static double MILLIS_PER_DEGREE_DEFAULT = 5 * (0.25 / DEFAULT_POWER);
+    public final static int LEFT_ULTRA_TRIANGLE = 5;
+    public final static int RIGHT_ULTRA_TRIANGLE = 5;
     public final static double BLUE_THRESHOLD = 0.6;
 
     double rightSweepTriangle = 0.524;
@@ -38,9 +46,9 @@ public abstract class BaseOpMode extends OpMode {
     LightSensor frontLightSensor;
     LightSensor backLightSensor;
     OpticalDistanceSensor frontOds;
-    UltrasonicSensor frontUltra;
+    UltrasonicSensor frontLeftUltra;
     UltrasonicSensor rightUltra;
-    UltrasonicSensor backUltra;
+    UltrasonicSensor frontRightUltra;
     UltrasonicSensor leftUltra;
 
     final double leftServoInitPos = 0.35;
@@ -49,6 +57,8 @@ public abstract class BaseOpMode extends OpMode {
     final double rightServoFinalPos = 0.35;
     final double armServoInitPos = 1;
     final double armServoFinalPos = 0;
+
+    protected HashMap<String, String> telemetryData = new HashMap<String, String>();
 
     protected void go(double leftPower, double rightPower) {
         motorFrontRight.setPower(rightPower);
@@ -112,6 +122,8 @@ public abstract class BaseOpMode extends OpMode {
     protected void goDiagLeft(double power) {
         motorFrontRight.setPower(power);
         motorBackLeft.setPower(-power);
+        motorFrontLeft.setPower(0);
+        motorBackRight.setPower(0);
     }
 
     protected void goRight(double power) {
@@ -124,6 +136,8 @@ public abstract class BaseOpMode extends OpMode {
     protected void goDiagRight(double power) {
         motorFrontLeft.setPower(-power);
         motorBackRight.setPower(power);
+        motorFrontRight.setPower(0);
+        motorBackLeft.setPower(0);
     }
 
     protected void spinRight(double power) {
@@ -143,20 +157,52 @@ public abstract class BaseOpMode extends OpMode {
     protected void frontWheelsRight(double power) {
         motorFrontRight.setPower(-power);
         motorFrontLeft.setPower(-power);
+        motorBackRight.setPower(0);
+        motorBackLeft.setPower(0);
     }
 
     protected void frontWheelsLeft(double power) {
         motorFrontRight.setPower(power);
         motorFrontLeft.setPower(power);
+        motorBackRight.setPower(0);
+        motorBackLeft.setPower(0);
     }
 
     protected void backWheelsRight(double power) {
         motorBackRight.setPower(power);
         motorBackLeft.setPower(power);
+        motorFrontRight.setPower(0);
+        motorFrontLeft.setPower(0);
     }
 
     protected void backWheelsLeft(double power) {
         motorBackRight.setPower(-power);
         motorBackLeft.setPower(-power);
+        motorFrontRight.setPower(0);
+        motorFrontLeft.setPower(0);
+    }
+
+    protected void leftWheelsForward(double power) {
+        motorFrontRight.setPower(0);
+        motorBackRight.setPower(0);
+        motorFrontLeft.setPower(-power);
+        motorBackLeft.setPower(-power);
+    }
+
+    protected void rightWheelsForward(double power) {
+        motorFrontRight.setPower(power);
+        motorBackRight.setPower(power);
+        motorFrontLeft.setPower(0);
+        motorBackLeft.setPower(0);
+    }
+
+    protected void logData(String label, String value) {
+        telemetry.addData(label, value);
+        telemetryData.put(label, value);
+        String data = "";
+        for (String key : telemetryData.keySet()) {
+            data += key + ": " + telemetryData.get(key) + "" + "\n";
+        }
+        FtcRobotControllerActivity.logData.obtainMessage(0, data).sendToTarget();
     }
 }

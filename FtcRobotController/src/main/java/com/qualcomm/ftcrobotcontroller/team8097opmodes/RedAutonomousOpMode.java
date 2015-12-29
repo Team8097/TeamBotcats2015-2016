@@ -35,36 +35,13 @@ package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 public class RedAutonomousOpMode extends CompetitionAutonomousOpMode {
 
     @Override
-    protected void goToOtherWall() {
-        if (frontUltra.getUltrasonicLevel() > 30) {
-            seesInFront = 0;
-            stoppedForObstacle = false;
-            distanceToGo[distanceToGoIndex] = goDistanceDiagRight(DEFAULT_POWER, distanceToGo[distanceToGoIndex - 1], startMoveTime);
-        } else if (seesInFront < 20) {
-            seesInFront++;
-            telemetry.addData("seesInFront", seesInFront);
-            stoppedForObstacle = false;
-            distanceToGo[distanceToGoIndex] = goDistanceDiagRight(DEFAULT_POWER, distanceToGo[distanceToGoIndex - 1], startMoveTime);
-        } else if (distanceToGo[distanceToGoIndex] < 36) {
-            endStage();
-        } else {
-            stopRobot();
-            if (!stoppedForObstacle) {
-                stoppedForObstacle = true;
-                distanceToGoIndex++;
-                startStoppedTime = System.currentTimeMillis();
-            }
-            if (System.currentTimeMillis() - startStoppedTime > 5000) {
-                dropClimbers = false;//There is something wrong, so better save dropping climbers for TeleOp to be safe
-                endStage();
-            }
-            startMoveTime = System.currentTimeMillis();
-        }
+    protected double goDirectionOfOtherWall(double power, double inches, long startTime) {
+        return goDistanceDiagRight(power, inches, startTime);
     }
 
     @Override
     protected void moveCorrectButtonFlap() {
-        if (blueLightDetected > BLUE_THRESHOLD) {
+        if (rightLightDetected > leftLightDetected) {
             telemetry.addData("Red on right. pressing right button (red)", "");
             moveRightFlap();
         } else {

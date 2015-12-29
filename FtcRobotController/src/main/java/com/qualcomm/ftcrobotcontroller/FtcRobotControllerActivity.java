@@ -99,6 +99,7 @@ public class FtcRobotControllerActivity extends Activity {
     protected TextView textDeviceName;
     protected TextView textWifiDirectStatus;
     protected TextView textRobotStatus;
+    protected static TextView textDataLog;
     protected TextView[] textGamepad = new TextView[NUM_GAMEPADS];
     protected TextView textOpMode;
     protected TextView textErrorMessage;
@@ -162,6 +163,7 @@ public class FtcRobotControllerActivity extends Activity {
         textDeviceName = (TextView) findViewById(R.id.textDeviceName);
         textWifiDirectStatus = (TextView) findViewById(R.id.textWifiDirectStatus);
         textRobotStatus = (TextView) findViewById(R.id.textRobotStatus);
+        textDataLog = (TextView) findViewById(R.id.textDataLog);
         textOpMode = (TextView) findViewById(R.id.textOpMode);
         textErrorMessage = (TextView) findViewById(R.id.textErrorMessage);
         textGamepad[0] = (TextView) findViewById(R.id.textGamepad1);
@@ -212,8 +214,8 @@ public class FtcRobotControllerActivity extends Activity {
         calibrateGroundButt = (Button) findViewById(R.id.calibrateGroundButt);
         calibrateTapeButt = (Button) findViewById(R.id.calibrateTapeButt);
         calibrationSP = getSharedPreferences(CALIBRATE_SP, MODE_PRIVATE);
-        calibrateTapeButt.setText("Calibrate Tape\nF: " + calibrationSP.getFloat("frontTapeValue", -2) + "  B: " + calibrationSP.getFloat("backTapeValue", -2));
-        calibrateGroundButt.setText("Calibrate Ground\nF: " + calibrationSP.getFloat("frontGroundValue", -2) + "  B: " + calibrationSP.getFloat("backGroundValue", -2));
+        calibrateTapeButt.setText("Calibrate Tape\nF: " + (float) ((int) (calibrationSP.getFloat("frontTapeValue", -2) * 100) / 100.0) + "  B: " + (float) ((int) (calibrationSP.getFloat("backTapeValue", -2) * 100) / 100.0));
+        calibrateGroundButt.setText("Calibrate Ground\nF: " + (float) ((int) (calibrationSP.getFloat("frontGroundValue", -2) * 100) / 100.0) + "  B: " + (float) ((int) (calibrationSP.getFloat("backGroundValue", -2) * 100) / 100.0));
     }
 
     @Override
@@ -439,6 +441,13 @@ public class FtcRobotControllerActivity extends Activity {
             float front = (float) (msg.arg1 / 100.0);
             float back = (float) (msg.arg2 / 100.0);
             calibrateTapeButt.setText("Calibrate Tape\nF: " + front + "  B: " + back);
+        }
+    };
+
+    public final static Handler logData = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            textDataLog.setText((String) msg.obj);
         }
     };
 }

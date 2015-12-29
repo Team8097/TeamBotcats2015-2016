@@ -46,10 +46,10 @@ public class AutonomousOpMode extends BaseOpMode {
         motorBackRight = hardwareMap.dcMotor.get("backRight");
         motorBackLeft = hardwareMap.dcMotor.get("backLeft");
         frontOds = hardwareMap.opticalDistanceSensor.get("frontOds");
-        frontUltra = hardwareMap.ultrasonicSensor.get("frontUltra");
-        rightUltra = hardwareMap.ultrasonicSensor.get("rightUltra");
-        backUltra = hardwareMap.ultrasonicSensor.get("backUltra");
-        leftUltra = hardwareMap.ultrasonicSensor.get("leftUltra");
+        frontLeftUltra = hardwareMap.ultrasonicSensor.get("frontLeftUltra");
+//        rightUltra = hardwareMap.ultrasonicSensor.get("rightUltra");
+        frontRightUltra = hardwareMap.ultrasonicSensor.get("frontRightUltra");
+//        leftUltra = hardwareMap.ultrasonicSensor.get("leftUltra");
         rightServo = hardwareMap.servo.get("rightServo");
         leftServo = hardwareMap.servo.get("leftServo");
         armServo = hardwareMap.servo.get("armServo");
@@ -57,7 +57,8 @@ public class AutonomousOpMode extends BaseOpMode {
         leftSweepServo = hardwareMap.servo.get("leftSweep");
         frontLightSensor = hardwareMap.lightSensor.get("frontLight");
         backLightSensor = hardwareMap.lightSensor.get("backLight");
-        rightColorSensor = hardwareMap.lightSensor.get("rightColor");leftColorSensor = hardwareMap.lightSensor.get("leftColor");
+        rightColorSensor = hardwareMap.lightSensor.get("rightColor");
+        leftColorSensor = hardwareMap.lightSensor.get("leftColor");
     }
 
     @Override

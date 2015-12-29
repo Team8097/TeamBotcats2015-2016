@@ -32,7 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
 //used for testing sensors
-public class SensorTestAutonomousOpMode extends BaseOpMode {
+public class SensorTestOpMode extends BaseOpMode {
 
     @Override
     public void init() {
@@ -40,28 +40,27 @@ public class SensorTestAutonomousOpMode extends BaseOpMode {
         backLightSensor = hardwareMap.lightSensor.get("backLight");
         rightColorSensor = hardwareMap.lightSensor.get("rightColor");
         leftColorSensor = hardwareMap.lightSensor.get("leftColor");
-        frontOds = hardwareMap.opticalDistanceSensor.get("frontOds");
-        frontUltra = hardwareMap.ultrasonicSensor.get("frontUltra");
+//        frontOds = hardwareMap.opticalDistanceSensor.get("frontOds");
+        frontLeftUltra = hardwareMap.ultrasonicSensor.get("frontLeftUltra");
         rightUltra = hardwareMap.ultrasonicSensor.get("rightUltra");
-        backUltra = hardwareMap.ultrasonicSensor.get("backUltra");
+        frontRightUltra = hardwareMap.ultrasonicSensor.get("frontRightUltra");
         leftUltra = hardwareMap.ultrasonicSensor.get("leftUltra");
     }
 
     @Override
     public void loop() {
         rightColorSensor.enableLed(false);
-        telemetry.addData("Right Color", rightColorSensor.getLightDetected());
-        rightColorSensor.enableLed(false);
-        telemetry.addData("Left Color", leftColorSensor.getLightDetected());
-        frontLightSensor.enableLed(true);
-        telemetry.addData("Front Light", frontLightSensor.getLightDetected());
-        backLightSensor.enableLed(true);
-        telemetry.addData("Back Light", backLightSensor.getLightDetected());
-        telemetry.addData("frontUltra", frontUltra.getUltrasonicLevel());
-        telemetry.addData("rightUltra", rightUltra.getUltrasonicLevel());
-        telemetry.addData("backUltra", backUltra.getUltrasonicLevel());
-        telemetry.addData("leftUltra", leftUltra.getUltrasonicLevel());
-        telemetry.addData("frontOds", frontOds.getLightDetected());
+        logData("Right Color", String.valueOf(rightColorSensor.getLightDetected()));
+        leftColorSensor.enableLed(false);
+        logData("Left Color", String.valueOf(leftColorSensor.getLightDetected()));
+//        frontLightSensor.enableLed(true);
+//        telemetry.addData("Front Light", frontLightSensor.getLightDetected());
+//        backLightSensor.enableLed(true);
+//        telemetry.addData("Back Light", backLightSensor.getLightDetected());
+//        telemetry.addData("frontLeftUltra", frontLeftUltra.getUltrasonicLevel());
+//        telemetry.addData("rightUltra", rightUltra.getUltrasonicLevel());
+//        telemetry.addData("frontRightUltra", frontRightUltra.getUltrasonicLevel());
+//        telemetry.addData("leftUltra", leftUltra.getUltrasonicLevel());
+//        telemetry.addData("frontOds", frontOds.getLightDetected());
     }
-
 }

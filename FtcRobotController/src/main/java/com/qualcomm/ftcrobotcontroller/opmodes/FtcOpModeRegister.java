@@ -58,7 +58,7 @@ public class FtcOpModeRegister implements OpModeRegister {
 
         manager.register("TeleOp", TeleOpOpMode.class);
         manager.register("Autonomous", AutonomousOpMode.class);
-        manager.register("SensorTest", SensorTestAutonomousOpMode.class);
+        manager.register("SensorTest", SensorTestOpMode.class);
         manager.register("Calibrate", CalibrateOpMode.class);
         manager.register("RedAutonomous", RedAutonomousOpMode.class);
         manager.register("BlueAutonomous", BlueAutonomousOpMode.class);
