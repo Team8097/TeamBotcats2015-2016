@@ -57,7 +57,7 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     final static int STAGE_PRESS_BUTTON = 14;
     boolean dropClimbers = true;
     int stage = 0;
-    int triangleSweepStage = 0;
+    int sweepStage = 0;
     double[] distanceToGo = new double[100];
     int distanceToGoIndex = 1;
     boolean stoppedForObstacle = true;
@@ -154,29 +154,29 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
         final int rightOut = 0;
         final int leftTriangle = 1;
         final int rightTriangle = 2;
-        if (triangleSweepStage == rightOut) {
+        if (sweepStage == rightOut) {
             if (System.currentTimeMillis() - startMoveTime < 300) {
                 rightSweepServo.setPosition(rightSweepOut);
             } else {
-                triangleSweepStage++;
+                sweepStage++;
                 startMoveTime = System.currentTimeMillis();
             }
-        } else if (triangleSweepStage == leftTriangle) {
+        } else if (sweepStage == leftTriangle) {
             if (System.currentTimeMillis() - startMoveTime < 300) {
                 leftSweepServo.setPosition(leftSweepTriangle);
             } else {
-                triangleSweepStage++;
+                sweepStage++;
                 startMoveTime = System.currentTimeMillis();
             }
-        } else if (triangleSweepStage == rightTriangle) {
+        } else if (sweepStage == rightTriangle) {
             if (System.currentTimeMillis() - startMoveTime < 300) {
                 rightSweepServo.setPosition(rightSweepTriangle);
             } else {
-                triangleSweepStage++;
+                sweepStage++;
                 startMoveTime = System.currentTimeMillis();
             }
         } else {
-            triangleSweepStage = 0;
+            sweepStage = 0;
             endStage();
         }
     }
@@ -252,22 +252,22 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     protected void closeSweepers() {
         final int leftIn = 0;
         final int rightIn = 1;
-        if (triangleSweepStage == leftIn) {
+        if (sweepStage == leftIn) {
             if (System.currentTimeMillis() - startMoveTime < 300) {
                 leftSweepServo.setPosition(leftSweepIn);
             } else {
-                triangleSweepStage++;
+                sweepStage++;
                 startMoveTime = System.currentTimeMillis();
             }
-        } else if (triangleSweepStage == rightIn) {
+        } else if (sweepStage == rightIn) {
             if (System.currentTimeMillis() - startMoveTime < 300) {
                 rightSweepServo.setPosition(rightSweepIn);
             } else {
-                triangleSweepStage++;
+                sweepStage++;
                 startMoveTime = System.currentTimeMillis();
             }
         } else {
-            triangleSweepStage = 0;
+            sweepStage = 0;
             endStage();
         }
     }
