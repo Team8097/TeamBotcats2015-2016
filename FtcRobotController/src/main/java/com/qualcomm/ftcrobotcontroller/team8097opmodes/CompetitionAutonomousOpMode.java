@@ -217,35 +217,35 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     protected abstract double goDirectionOfOtherWall(double power, double inches, long startTime);
 
     protected void alignWithWall() {
-//        if (frontLeftUltra.getUltrasonicLevel() <= LEFT_ULTRA_TRIANGLE && seesWallLeft < 5) {
-//            seesWallLeft++;
-//            if (seesWallLeft == 5) {
-//                wallInFrontLeft = false;
-//            }
-//        } else {
-//            seesWallLeft = 0;
-//        }
-//        if (frontRightUltra.getUltrasonicLevel() <= RIGHT_ULTRA_TRIANGLE && seesWallRight < 5) {
-//            seesWallRight++;
-//            if (seesWallRight == 5) {
-//                wallInFrontRight = false;
-//            }
-//        } else {
-//            seesWallRight = 0;
-//        }
-//        if (wallInFrontLeft && wallInFrontRight) {
-//            goForward(DEFAULT_POWER / 2.0);
-//        } else if (wallInFrontRight) {
-//            rightWheelsForward(DEFAULT_POWER / 2.0);
-//        } else if (wallInFrontLeft) {
-//            leftWheelsForward(DEFAULT_POWER / 2.0);
-//        } else {
-//            endStage();
-//        }
-//        logData("seesWallLeft", String.valueOf(seesWallLeft));
-//        logData("seesWallRight", String.valueOf(seesWallRight));
-//        logData("frontLeftUltra", String.valueOf(frontLeftUltra.getUltrasonicLevel()));
-//        logData("frontRightUltra", String.valueOf(frontRightUltra.getUltrasonicLevel()));
+        if (frontLeftUltra.getUltrasonicLevel() <= LEFT_ULTRA_TRIANGLE && seesWallLeft < 5) {
+            seesWallLeft++;
+            if (seesWallLeft == 5) {
+                wallInFrontLeft = false;
+            }
+        } else {
+            seesWallLeft = 0;
+        }
+        if (frontRightUltra.getUltrasonicLevel() <= RIGHT_ULTRA_TRIANGLE && seesWallRight < 5) {
+            seesWallRight++;
+            if (seesWallRight == 5) {
+                wallInFrontRight = false;
+            }
+        } else {
+            seesWallRight = 0;
+        }
+        if (wallInFrontLeft && wallInFrontRight) {
+            goForward(DEFAULT_POWER / 2.0);
+        } else if (wallInFrontRight) {
+            rightWheelsForward(DEFAULT_POWER / 2.0);
+        } else if (wallInFrontLeft) {
+            leftWheelsForward(DEFAULT_POWER / 2.0);
+        } else {
+            endStage();
+        }
+        logData("seesWallLeft", String.valueOf(seesWallLeft));
+        logData("seesWallRight", String.valueOf(seesWallRight));
+        logData("frontLeftUltra", String.valueOf(frontLeftUltra.getUltrasonicLevel()));
+        logData("frontRightUltra", String.valueOf(frontRightUltra.getUltrasonicLevel()));
     }
 
     protected void openSweepers() {
