@@ -42,9 +42,9 @@ public class SensorTestOpMode extends BaseOpMode {
         leftColorSensor = hardwareMap.lightSensor.get("leftColor");
 //        frontOds = hardwareMap.opticalDistanceSensor.get("frontOds");
         frontLeftUltra = hardwareMap.ultrasonicSensor.get("frontLeftUltra");
-        rightUltra = hardwareMap.ultrasonicSensor.get("rightUltra");
+//        rightUltra = hardwareMap.ultrasonicSensor.get("rightUltra");
         frontRightUltra = hardwareMap.ultrasonicSensor.get("frontRightUltra");
-        leftUltra = hardwareMap.ultrasonicSensor.get("leftUltra");
+//        leftUltra = hardwareMap.ultrasonicSensor.get("leftUltra");
     }
 
     @Override

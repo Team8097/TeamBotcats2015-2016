@@ -44,9 +44,9 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     final static int STAGE_MAKE_TRIANGLE = 1;
     final static int STAGE_GO_TO_OTHER_WALL = 2;
     final static int STAGE_ALIGN_WITH_WALL = 3;
-    final static int STAGE_BACK_UP = 4;
-    final static int STAGE_LOOK_FOR_TAPE = 5;
-    final static int STAGE_ALIGN_WITH_TAPE = 6;
+    final static int STAGE_LOOK_FOR_TAPE = 4;
+    final static int STAGE_ALIGN_WITH_TAPE = 5;
+    final static int STAGE_BACK_UP = 6;
     final static int STAGE_ALIGN_WITH_WALL_2 = 7;
     final static int STAGE_OPEN_SWEEPERS = 8;
     final static int STAGE_CLOSE_SWEEPERS = 9;
@@ -68,6 +68,8 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     double leftLightDetected = 0;
     int seesWallLeft = 0;
     int seesWallRight = 0;
+    boolean wallInFrontRight = true;
+    boolean wallInFrontLeft = true;
     int seesTape = 0;
     boolean frontTape = false;
     boolean backTape = false;
@@ -103,12 +105,12 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
                 goToOtherWall();//The robot goes to the opposite wall in the alliance zone
             } else if (stage == STAGE_ALIGN_WITH_WALL) {
                 alignWithWall();
-            } else if (stage == STAGE_BACK_UP) {
-                backUp();
             } else if (stage == STAGE_LOOK_FOR_TAPE) {
                 lookForTape();//The robot moves to the side until it sees tape
             } else if (stage == STAGE_ALIGN_WITH_TAPE) {
                 alignWithTape();//The robot turns its front or back wheels until both light sensors see tape
+            } else if (stage == STAGE_BACK_UP) {
+                backUp();
             } else if (stage == STAGE_ALIGN_WITH_WALL_2) {
                 alignWithWall();
             } else if (stage == STAGE_OPEN_SWEEPERS) {
@@ -215,29 +217,35 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     protected abstract double goDirectionOfOtherWall(double power, double inches, long startTime);
 
     protected void alignWithWall() {
-        boolean right = true;
-        boolean left = true;
-        if (frontLeftUltra.getUltrasonicLevel() < LEFT_ULTRA_TRIANGLE && seesWallLeft < 20) {
-            seesWallLeft++;
-            if (seesWallLeft == 20) {
-                left = false;
-            }
-        }
-        if (frontRightUltra.getUltrasonicLevel() < RIGHT_ULTRA_TRIANGLE && seesWallRight < 20) {
-            seesWallRight++;
-            if (seesWallRight == 20) {
-                right = false;
-            }
-        }
-        if (left && right) {
-            goForward(DEFAULT_POWER / 2.0);
-        } else if (right) {
-            rightWheelsForward(DEFAULT_POWER / 2.0);
-        } else if (left) {
-            leftWheelsForward(DEFAULT_POWER / 2.0);
-        } else {
-            endStage();
-        }
+//        if (frontLeftUltra.getUltrasonicLevel() <= LEFT_ULTRA_TRIANGLE && seesWallLeft < 5) {
+//            seesWallLeft++;
+//            if (seesWallLeft == 5) {
+//                wallInFrontLeft = false;
+//            }
+//        } else {
+//            seesWallLeft = 0;
+//        }
+//        if (frontRightUltra.getUltrasonicLevel() <= RIGHT_ULTRA_TRIANGLE && seesWallRight < 5) {
+//            seesWallRight++;
+//            if (seesWallRight == 5) {
+//                wallInFrontRight = false;
+//            }
+//        } else {
+//            seesWallRight = 0;
+//        }
+//        if (wallInFrontLeft && wallInFrontRight) {
+//            goForward(DEFAULT_POWER / 2.0);
+//        } else if (wallInFrontRight) {
+//            rightWheelsForward(DEFAULT_POWER / 2.0);
+//        } else if (wallInFrontLeft) {
+//            leftWheelsForward(DEFAULT_POWER / 2.0);
+//        } else {
+//            endStage();
+//        }
+//        logData("seesWallLeft", String.valueOf(seesWallLeft));
+//        logData("seesWallRight", String.valueOf(seesWallRight));
+//        logData("frontLeftUltra", String.valueOf(frontLeftUltra.getUltrasonicLevel()));
+//        logData("frontRightUltra", String.valueOf(frontRightUltra.getUltrasonicLevel()));
     }
 
     protected void openSweepers() {

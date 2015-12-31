@@ -20,8 +20,8 @@ public abstract class BaseOpMode extends OpMode {
     public final static double DEFAULT_POWER = 0.2;
     public final static double MILLIS_PER_INCH_DEFAULT = 37.736 * (0.25 / DEFAULT_POWER);
     public final static double MILLIS_PER_DEGREE_DEFAULT = 5 * (0.25 / DEFAULT_POWER);
-    public final static int LEFT_ULTRA_TRIANGLE = 5;
-    public final static int RIGHT_ULTRA_TRIANGLE = 5;
+    public final static int LEFT_ULTRA_TRIANGLE = 14;
+    public final static int RIGHT_ULTRA_TRIANGLE = 14;
     public final static double BLUE_THRESHOLD = 0.6;
 
     double rightSweepTriangle = 0.524;
