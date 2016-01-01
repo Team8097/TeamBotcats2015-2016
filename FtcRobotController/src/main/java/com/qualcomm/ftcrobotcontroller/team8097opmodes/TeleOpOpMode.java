@@ -36,7 +36,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 //Opmode for TeleOp. Allows for remote control of movement in any direction as well as spinning in place.
 //Also allows for movement of the arm to drop climbers in case autonomous fails.
 public class TeleOpOpMode extends BaseOpMode {
-    Gamepad gamepad = gamepad1;
+    Gamepad activeGamepad = gamepad1;
     int sweepStage = 0;
     static final int POS_IN = 0;
     static final int POS_TRIANGLE = 1;
@@ -57,12 +57,12 @@ public class TeleOpOpMode extends BaseOpMode {
     @Override
     public void loop() {
         control();
-        telemetry.addData("leftStickY", gamepad.left_stick_y);
-        telemetry.addData("leftStickX", gamepad.left_stick_x);
-        telemetry.addData("frontRightMotor", motorFrontRight.getPower());
-        telemetry.addData("frontLeftMotor", motorFrontLeft.getPower());
-        telemetry.addData("backRightMotor", motorBackRight.getPower());
-        telemetry.addData("backLeftMotor", motorBackLeft.getPower());
+//        telemetry.addData("leftStickY", activeGamepad.left_stick_y);
+//        telemetry.addData("leftStickX", activeGamepad.left_stick_x);
+//        telemetry.addData("frontRightMotor", motorFrontRight.getPower());
+//        telemetry.addData("frontLeftMotor", motorFrontLeft.getPower());
+//        telemetry.addData("backRightMotor", motorBackRight.getPower());
+//        telemetry.addData("backLeftMotor", motorBackLeft.getPower());
     }
 
     private void control() {
@@ -79,17 +79,17 @@ public class TeleOpOpMode extends BaseOpMode {
             moveSweeper(currentSweeperPos, goalSweeperPos);
         }
         if (Math.abs(gamepad1.left_stick_y) > Math.abs(gamepad2.left_stick_y)) {
-            gamepad = gamepad1;
+            activeGamepad = gamepad1;
         } else if (Math.abs(gamepad2.left_stick_y) > Math.abs(gamepad1.left_stick_y)) {
-            gamepad = gamepad2;
+            activeGamepad = gamepad2;
         }
-        if (gamepad.dpad_left) {
+        if (activeGamepad.dpad_left) {
             spinLeft(0.125);
-        } else if (gamepad.dpad_right) {
+        } else if (activeGamepad.dpad_right) {
             spinRight(0.125);
         } else {
-            double joystickInputY = -gamepad.left_stick_y;
-            double joystickInputX = gamepad.left_stick_x;
+            double joystickInputY = -activeGamepad.left_stick_y;
+            double joystickInputX = activeGamepad.left_stick_x;
             goDirection(joystickInputX, joystickInputY);
         }
 
