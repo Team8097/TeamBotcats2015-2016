@@ -59,7 +59,7 @@ public abstract class BaseOpMode extends OpMode {
     final double armServoInitPos = 1;
     final double armServoFinalPos = 0;
 
-    protected HashMap<String, String> telemetryData = new HashMap<String, String>();
+    private HashMap<String, String> telemetryData = new HashMap<String, String>();
 
     protected void go(double leftPower, double rightPower) {
         motorFrontRight.setPower(rightPower);

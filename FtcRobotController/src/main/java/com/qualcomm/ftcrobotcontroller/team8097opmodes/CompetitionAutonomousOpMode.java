@@ -75,6 +75,8 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     double frontTapeThreshold;
     double backTapeThreshold;
 
+    boolean stoppedEarly = false; //for debugging
+
     @Override
     public void init() {
         super.init();
@@ -129,6 +131,7 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
                 // the robot presses the correct button
             }
         }
+        logData("stoppedEarly", String.valueOf(stoppedEarly));
     }
 
     protected void endStage() {
@@ -198,6 +201,7 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
             seesWallRight = 0;
             endStage();
         } else {
+            stoppedEarly = true;
             stopRobot();
             if (!stoppedForObstacle) {
                 stoppedForObstacle = true;

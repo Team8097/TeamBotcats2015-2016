@@ -37,6 +37,13 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 //Also allows for movement of the arm to drop climbers in case autonomous fails.
 public class TeleOpOpMode extends BaseOpMode {
     Gamepad gamepad = gamepad1;
+    int sweepStage = 0;
+    static final int POS_IN = 0;
+    static final int POS_TRIANGLE = 1;
+    static final int POS_OUT = 2;
+    int currentSweeperPos = POS_IN;
+    int goalSweeperPos = POS_IN;
+    long startSweepTime;
 
     @Override
     public void init() {
@@ -51,7 +58,7 @@ public class TeleOpOpMode extends BaseOpMode {
     public void loop() {
         control();
         telemetry.addData("leftStickY", gamepad.left_stick_y);
-        telemetry.addData("leftStickY", gamepad.left_stick_x);
+        telemetry.addData("leftStickX", gamepad.left_stick_x);
         telemetry.addData("frontRightMotor", motorFrontRight.getPower());
         telemetry.addData("frontLeftMotor", motorFrontLeft.getPower());
         telemetry.addData("backRightMotor", motorBackRight.getPower());
@@ -63,6 +70,13 @@ public class TeleOpOpMode extends BaseOpMode {
             armServo.setPosition(armServoFinalPos);
         } else if (gamepad1.b || gamepad2.b) {
             armServo.setPosition(armServoInitPos);
+        }
+        if ((gamepad1.x || gamepad2.x) && currentSweeperPos == goalSweeperPos && currentSweeperPos != POS_OUT) {
+            goalSweeperPos++;
+        } else if ((gamepad1.y || gamepad2.y) && currentSweeperPos == goalSweeperPos && currentSweeperPos != POS_IN) {
+            goalSweeperPos--;
+        } else if (currentSweeperPos != goalSweeperPos) {
+            moveSweeper(currentSweeperPos, goalSweeperPos);
         }
         if (Math.abs(gamepad1.left_stick_y) > Math.abs(gamepad2.left_stick_y)) {
             gamepad = gamepad1;
@@ -78,6 +92,7 @@ public class TeleOpOpMode extends BaseOpMode {
             double joystickInputX = gamepad.left_stick_x;
             goDirection(joystickInputX, joystickInputY);
         }
+
     }
 
     protected void goDirection(double x, double y) {
@@ -85,5 +100,86 @@ public class TeleOpOpMode extends BaseOpMode {
         motorBackRight.setPower((y + x) / 3.0);
         motorFrontLeft.setPower((-y - x) / 3.0);
         motorBackLeft.setPower((-y + x) / 3.0);
+    }
+
+    protected void moveSweeper(int startPos, int endPos) {
+        if (startPos == POS_IN || startPos == POS_OUT) {
+            sweepTriangle();
+        } else if (endPos == POS_IN) {
+            sweepIn();
+        } else if (endPos == POS_OUT) {
+            sweepOut();
+        }
+    }
+
+    protected void sweepTriangle() {
+        final int rightOut = 0;
+        final int leftTriangle = 1;
+        final int rightTriangle = 2;
+        if (sweepStage == rightOut) {
+            if (System.currentTimeMillis() - startSweepTime < 200) {
+                rightSweepServo.setPosition(rightSweepOut);
+            } else {
+                sweepStage++;
+                startSweepTime = System.currentTimeMillis();
+            }
+        } else if (sweepStage == leftTriangle) {
+            if (System.currentTimeMillis() - startSweepTime < 200) {
+                leftSweepServo.setPosition(leftSweepTriangle);
+            } else {
+                sweepStage++;
+                startSweepTime = System.currentTimeMillis();
+            }
+        } else if (sweepStage == rightTriangle) {
+            if (System.currentTimeMillis() - startSweepTime < 200) {
+                rightSweepServo.setPosition(rightSweepTriangle);
+            } else {
+                sweepStage++;
+                startSweepTime = System.currentTimeMillis();
+            }
+        } else {
+            sweepStage = 0;
+            currentSweeperPos = POS_TRIANGLE;
+        }
+    }
+
+    protected void sweepOut() {
+        if (System.currentTimeMillis() - startSweepTime < 600) {
+            rightSweepServo.setPosition(rightSweepOut);
+            leftSweepServo.setPosition(leftSweepOut);
+        } else {
+            currentSweeperPos = POS_OUT;
+        }
+    }
+
+    protected void sweepIn() {
+        final int rightOut = 0;
+        final int leftIn = 1;
+        final int rightIn = 2;
+        if (sweepStage == rightOut) {
+            if (System.currentTimeMillis() - startSweepTime < 200) {
+                rightSweepServo.setPosition(rightSweepOut);
+            } else {
+                sweepStage++;
+                startSweepTime = System.currentTimeMillis();
+            }
+        } else if (sweepStage == leftIn) {
+            if (System.currentTimeMillis() - startSweepTime < 200) {
+                leftSweepServo.setPosition(leftSweepIn);
+            } else {
+                sweepStage++;
+                startSweepTime = System.currentTimeMillis();
+            }
+        } else if (sweepStage == rightIn) {
+            if (System.currentTimeMillis() - startSweepTime < 200) {
+                rightSweepServo.setPosition(rightSweepIn);
+            } else {
+                sweepStage++;
+                startSweepTime = System.currentTimeMillis();
+            }
+        } else {
+            sweepStage = 0;
+            currentSweeperPos = POS_IN;
+        }
     }
 }
