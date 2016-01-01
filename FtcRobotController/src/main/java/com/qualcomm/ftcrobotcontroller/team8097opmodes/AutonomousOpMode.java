@@ -76,42 +76,40 @@ public class AutonomousOpMode extends BaseOpMode {
     }
 
     protected double goDistanceForward(double power, double inches, long startTime) {
+        goForward(power);
+        return getDistanceToGo(power, inches, startTime);
+    }
+
+    private double getDistanceToGo(double power, double inches, long startTime) {
         double millisPerInch = MILLIS_PER_INCH_DEFAULT * (DEFAULT_POWER / power);
         double goTime = inches * millisPerInch;
         int timeElapsed = (int) (System.currentTimeMillis() - startTime);
-        goForward(power);
         if (timeElapsed < goTime) {
             double distanceToGo = (goTime - timeElapsed) / millisPerInch;
             return distanceToGo;
         } else {
             return 0;
         }
+    }
+
+    protected double goDistanceRightWheelsForward(double power, double inches, long startTime) {
+        rightWheelsForward(power);
+        return getDistanceToGo(power, inches, startTime);
+    }
+
+    protected double goDistanceLeftWheelsForward(double power, double inches, long startTime) {
+        leftWheelsForward(power);
+        return getDistanceToGo(power, inches, startTime);
     }
 
     protected double goDistanceBackward(double power, double inches, long startTime) {
-        double millisPerInch = MILLIS_PER_INCH_DEFAULT * (DEFAULT_POWER / power);
-        double goTime = inches * millisPerInch;
-        int timeElapsed = (int) (System.currentTimeMillis() - startTime);
         goBackward(power);
-        if (timeElapsed < goTime) {
-            double distanceToGo = (goTime - timeElapsed) / millisPerInch;
-            return distanceToGo;
-        } else {
-            return 0;
-        }
+        return getDistanceToGo(power, inches, startTime);
     }
 
     protected double goDistanceLeft(double power, double inches, long startTime) {
-        double millisPerInch = MILLIS_PER_INCH_DEFAULT * (DEFAULT_POWER / power);
-        double goTime = inches * millisPerInch;
-        int timeElapsed = (int) (System.currentTimeMillis() - startTime);
         goLeft(power);
-        if (timeElapsed < goTime) {
-            double distanceToGo = (goTime - timeElapsed) / millisPerInch;
-            return distanceToGo;
-        } else {
-            return 0;
-        }
+        return getDistanceToGo(power, inches, startTime);
     }
 
     protected double goDistanceDiagLeft(double power, double inches, long startTime) {
@@ -128,16 +126,8 @@ public class AutonomousOpMode extends BaseOpMode {
     }
 
     protected double goDistanceRight(double power, double inches, long startTime) {
-        double millisPerInch = MILLIS_PER_INCH_DEFAULT * (DEFAULT_POWER / power);
-        double goTime = inches * millisPerInch;
-        int timeElapsed = (int) (System.currentTimeMillis() - startTime);
         goRight(power);
-        if (timeElapsed < goTime) {
-            double distanceToGo = (goTime - timeElapsed) / millisPerInch;
-            return distanceToGo;
-        } else {
-            return 0;
-        }
+        return getDistanceToGo(power, inches, startTime);
     }
 
     protected double goDistanceDiagRight(double power, double inches, long startTime) {

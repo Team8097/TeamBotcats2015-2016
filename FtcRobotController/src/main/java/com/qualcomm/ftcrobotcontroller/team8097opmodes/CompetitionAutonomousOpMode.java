@@ -68,8 +68,7 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     double leftLightDetected = 0;
     int seesWallLeft = 0;
     int seesWallRight = 0;
-    boolean wallInFrontRight = true;
-    boolean wallInFrontLeft = true;
+    int ultraInputs = 0;
     int seesTape = 0;
     boolean frontTape = false;
     boolean backTape = false;
@@ -184,13 +183,14 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     }
 
     protected void goToOtherWall() {
-        if (frontLeftUltra.getUltrasonicLevel() > 30) {
+        if (frontLeftUltra.getUltrasonicLevel() > 30 || frontRightUltra.getUltrasonicLevel() > 30) {
             seesWallLeft = 0;
+            seesWallRight = 0;
             stoppedForObstacle = false;
             distanceToGo[distanceToGoIndex] = goDirectionOfOtherWall(DEFAULT_POWER, distanceToGo[distanceToGoIndex - 1], startMoveTime);
-        } else if (seesWallLeft < 20) {
+        } else if (seesWallLeft < 15 || seesWallRight < 15) {
             seesWallLeft++;
-            telemetry.addData("seesWallLeft", seesWallLeft);
+            seesWallRight++;
             stoppedForObstacle = false;
             distanceToGo[distanceToGoIndex] = goDirectionOfOtherWall(DEFAULT_POWER, distanceToGo[distanceToGoIndex - 1], startMoveTime);
         } else if (distanceToGo[distanceToGoIndex] < 36) {
@@ -217,35 +217,40 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     protected abstract double goDirectionOfOtherWall(double power, double inches, long startTime);
 
     protected void alignWithWall() {
-        if (frontLeftUltra.getUltrasonicLevel() <= LEFT_ULTRA_TRIANGLE && seesWallLeft < 5) {
-            seesWallLeft++;
-            if (seesWallLeft == 5) {
-                wallInFrontLeft = false;
+        if (ultraInputs < 20) {
+            stopRobot();
+            if (frontLeftUltra.getUltrasonicLevel() <= LEFT_ULTRA_PERFECT_DIST) {
+                seesWallLeft++;
+            } else if (seesWallLeft < 10) {
+                seesWallLeft = 0;
             }
-        } else {
-            seesWallLeft = 0;
-        }
-        if (frontRightUltra.getUltrasonicLevel() <= RIGHT_ULTRA_TRIANGLE && seesWallRight < 5) {
-            seesWallRight++;
-            if (seesWallRight == 5) {
-                wallInFrontRight = false;
+            if (frontRightUltra.getUltrasonicLevel() <= RIGHT_ULTRA_PERFECT_DIST) {
+                seesWallLeft++;
+            } else if (seesWallLeft < 10) {
+                seesWallLeft = 0;
             }
+            ultraInputs++;
+            startMoveTime = System.currentTimeMillis();
         } else {
-            seesWallRight = 0;
+            if (seesWallLeft < 10 && seesWallRight < 10) {
+                double distanceToGo = goDistanceForward(DEFAULT_POWER / 2.0, 1 * INCHES_PER_CENT, startMoveTime);
+                if (distanceToGo == 0) {
+                    ultraInputs = 0;
+                }
+            } else if (seesWallRight < 10) {
+                double distanceToGo = goDistanceRightWheelsForward(DEFAULT_POWER / 2.0, 1 * INCHES_PER_CENT, startMoveTime);
+                if (distanceToGo == 0) {
+                    ultraInputs = 0;
+                }
+            } else if (seesWallLeft < 10) {
+                double distanceToGo = goDistanceLeftWheelsForward(DEFAULT_POWER / 2.0, 1 * INCHES_PER_CENT, startMoveTime);
+                if (distanceToGo == 0) {
+                    ultraInputs = 0;
+                }
+            } else {
+                endStage();
+            }
         }
-        if (wallInFrontLeft && wallInFrontRight) {
-            goForward(DEFAULT_POWER / 2.0);
-        } else if (wallInFrontRight) {
-            rightWheelsForward(DEFAULT_POWER / 2.0);
-        } else if (wallInFrontLeft) {
-            leftWheelsForward(DEFAULT_POWER / 2.0);
-        } else {
-            endStage();
-        }
-        logData("seesWallLeft", String.valueOf(seesWallLeft));
-        logData("seesWallRight", String.valueOf(seesWallRight));
-        logData("frontLeftUltra", String.valueOf(frontLeftUltra.getUltrasonicLevel()));
-        logData("frontRightUltra", String.valueOf(frontRightUltra.getUltrasonicLevel()));
     }
 
     protected void openSweepers() {
