@@ -67,11 +67,7 @@ public class AutonomousOpMode extends BaseOpMode {
             loop++;
             startTime = System.currentTimeMillis();
         } else {
-            if (System.currentTimeMillis() - startTime < 1000) {
-                leftSweepServo.setPosition(0);
-            } else {
-                stopRobot();
-            }
+            goLeft(DEFAULT_POWER);
         }
     }
 
