@@ -55,7 +55,7 @@ public class BlueAutonomousOpMode extends CompetitionAutonomousOpMode {
             if (seesTape < 2) {
                 seesTape++;
                 telemetry.addData("seesTape", seesTape);
-                goRight(DEFAULT_POWER / 2.0);
+                goRight(DEFAULT_POWER);
             } else {
                 if (frontLightSensor.getLightDetected() > frontTapeThreshold) {
                     frontTape = true;
@@ -69,7 +69,7 @@ public class BlueAutonomousOpMode extends CompetitionAutonomousOpMode {
             }
         } else {
             seesTape = 0;
-            goRight(DEFAULT_POWER / 2.0);
+            goRight(DEFAULT_POWER);
         }
     }
 
@@ -105,6 +105,46 @@ public class BlueAutonomousOpMode extends CompetitionAutonomousOpMode {
             }
         } else {
             endStage();
+        }
+    }
+
+    @Override
+    protected void alignWithTapePerfect() {
+        if (sensorInputs < 6) {
+            stopRobot();
+            if (frontLightSensor.getLightDetected() > frontTapeThreshold) {
+                seesTapeFront++;
+            } else if (seesTapeFront < 3) {
+                seesTapeFront = 0;
+            }
+            if (backLightSensor.getLightDetected() > backTapeThreshold) {
+                seesTapeBack++;
+            } else if (seesTapeBack < 3) {
+                seesTapeBack = 0;
+            }
+            sensorInputs++;
+            startMoveTime = System.currentTimeMillis();
+        } else {
+            if (seesTapeFront < 3 && seesTapeBack < 3) {
+                double distanceToGo = goDistanceLeft(DEFAULT_POWER, 2 * INCHES_PER_CENT, startMoveTime);
+                if (distanceToGo == 0) {
+                    sensorInputs = 0;
+                }
+            } else if (seesTapeFront < 3) {
+                double distanceToGo = goDistanceFrontWheelsLeft(DEFAULT_POWER, 2 * INCHES_PER_CENT, startMoveTime);
+                if (distanceToGo == 0) {
+                    sensorInputs = 0;
+                }
+            } else if (seesTapeBack < 3) {
+                double distanceToGo = goDistanceBackWheelsLeft(DEFAULT_POWER, 2 * INCHES_PER_CENT, startMoveTime);
+                if (distanceToGo == 0) {
+                    sensorInputs = 0;
+                }
+            } else {
+                seesTapeFront = 0;
+                seesTapeBack = 0;
+                endStage();
+            }
         }
     }
 }

@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 //Opmode for TeleOp. Allows for remote control of movement in any direction as well as spinning in place.
@@ -91,9 +92,9 @@ public class TeleOpOpMode extends BaseOpMode {
             activeGamepad = gamepad2;
         }
         if (activeGamepad.dpad_left) {
-            spinLeft(0.125);
+            spinLeft(0.25);
         } else if (activeGamepad.dpad_right) {
-            spinRight(0.125);
+            spinRight(0.25);
         } else {
             double joystickInputY = -activeGamepad.left_stick_y;
             double joystickInputX = activeGamepad.left_stick_x;
@@ -103,10 +104,10 @@ public class TeleOpOpMode extends BaseOpMode {
     }
 
     protected void goDirection(double x, double y) {
-        motorFrontRight.setPower((y - x) / 3.0);
-        motorBackRight.setPower((y + x) / 3.0);
-        motorFrontLeft.setPower((-y - x) / 3.0);
-        motorBackLeft.setPower((-y + x) / 3.0);
+        motorFrontRight.setPower((y - x) / 2.0);
+        motorBackRight.setPower((y + x) / 2.0);
+        motorFrontLeft.setPower((-y - x) / 2.0);
+        motorBackLeft.setPower((-y + x) / 2.0);
     }
 
     protected void moveSweeper(int startPos, int endPos) {

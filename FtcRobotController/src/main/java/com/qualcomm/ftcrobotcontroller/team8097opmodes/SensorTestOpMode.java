@@ -53,13 +53,13 @@ public class SensorTestOpMode extends BaseOpMode {
         logData("Right Color", String.valueOf(rightColorSensor.getLightDetected()));
         leftColorSensor.enableLed(false);
         logData("Left Color", String.valueOf(leftColorSensor.getLightDetected()));
-//        frontLightSensor.enableLed(true);
-//        telemetry.addData("Front Light", frontLightSensor.getLightDetected());
-//        backLightSensor.enableLed(true);
-//        telemetry.addData("Back Light", backLightSensor.getLightDetected());
-//        telemetry.addData("frontLeftUltra", frontLeftUltra.getUltrasonicLevel());
+        frontLightSensor.enableLed(true);
+        telemetry.addData("Front Light", frontLightSensor.getLightDetected());
+        backLightSensor.enableLed(true);
+        telemetry.addData("Back Light", backLightSensor.getLightDetected());
+        telemetry.addData("frontLeftUltra", frontLeftUltra.getUltrasonicLevel());
 //        telemetry.addData("rightUltra", rightUltra.getUltrasonicLevel());
-//        telemetry.addData("frontRightUltra", frontRightUltra.getUltrasonicLevel());
+        telemetry.addData("frontRightUltra", frontRightUltra.getUltrasonicLevel());
 //        telemetry.addData("leftUltra", leftUltra.getUltrasonicLevel());
 //        telemetry.addData("frontOds", frontOds.getLightDetected());
     }
