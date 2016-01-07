@@ -52,6 +52,11 @@ public class TeleOpOpMode extends BaseOpMode {
         motorBackRight = hardwareMap.dcMotor.get("backRight");
         motorBackLeft = hardwareMap.dcMotor.get("backLeft");
         armServo = hardwareMap.servo.get("armServo");
+        armServo.setPosition(armServoInitPos);
+        rightSweepServo = hardwareMap.servo.get("rightSweep");
+        leftSweepServo = hardwareMap.servo.get("leftSweep");
+        leftSweepServo.setPosition(leftSweepIn);
+        rightSweepServo.setPosition(rightSweepIn);
     }
 
     @Override
@@ -73,8 +78,10 @@ public class TeleOpOpMode extends BaseOpMode {
         }
         if ((gamepad1.x || gamepad2.x) && currentSweeperPos == goalSweeperPos && currentSweeperPos != POS_OUT) {
             goalSweeperPos++;
+            startSweepTime = System.currentTimeMillis();
         } else if ((gamepad1.y || gamepad2.y) && currentSweeperPos == goalSweeperPos && currentSweeperPos != POS_IN) {
             goalSweeperPos--;
+            startSweepTime = System.currentTimeMillis();
         } else if (currentSweeperPos != goalSweeperPos) {
             moveSweeper(currentSweeperPos, goalSweeperPos);
         }

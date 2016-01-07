@@ -11,8 +11,8 @@ public class TestServosOpMode extends BaseOpMode {
 //        rightServo = hardwareMap.servo.get("rightServo");
 //        leftServo = hardwareMap.servo.get("leftServo");
 //        armServo = hardwareMap.servo.get("armServo");
-        rightSweepServo = hardwareMap.servo.get("rightSweep");
-        leftSweepServo = hardwareMap.servo.get("leftSweep");
+        rightServo = hardwareMap.servo.get("rightServo");
+        leftServo = hardwareMap.servo.get("leftServo");
     }
 
     @Override
@@ -26,10 +26,10 @@ public class TestServosOpMode extends BaseOpMode {
         } else if (gamepad1.y) {
             leftSweepPos -= 0.002;
         }
-        rightSweepServo.setPosition(rightSweepPos);
-        leftSweepServo.setPosition(leftSweepPos);
-        telemetry.addData("rightSweepPos", rightSweepPos);
-        telemetry.addData("leftSweepPos", leftSweepPos);
+        rightServo.setPosition(rightSweepPos);
+        leftServo.setPosition(leftSweepPos);
+        telemetry.addData("rightPos", rightSweepPos);
+        telemetry.addData("leftPos", leftSweepPos);
         try {
             Thread.sleep(10);
         } catch (InterruptedException e) {

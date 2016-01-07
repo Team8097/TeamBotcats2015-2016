@@ -52,10 +52,10 @@ public abstract class BaseOpMode extends OpMode {
     UltrasonicSensor frontRightUltra;
     UltrasonicSensor leftUltra;
 
-    final double leftServoInitPos = 0.35;
-    final double leftServoFinalPos = 0.5;
-    final double rightServoInitPos = 0.5;
-    final double rightServoFinalPos = 0.35;
+    final double leftServoInitPos = 0.344;
+    final double leftServoFinalPos = 0.588;
+    final double rightServoInitPos = 0.496;
+    final double rightServoFinalPos = 0.282;
     final double armServoInitPos = 1;
     final double armServoFinalPos = 0;
 
