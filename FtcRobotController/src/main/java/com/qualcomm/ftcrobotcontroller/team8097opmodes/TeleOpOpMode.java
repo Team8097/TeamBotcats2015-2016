@@ -58,6 +58,8 @@ public class TeleOpOpMode extends BaseOpMode {
         leftSweepServo = hardwareMap.servo.get("leftSweep");
         leftSweepServo.setPosition(leftSweepIn);
         rightSweepServo.setPosition(rightSweepIn);
+        swiper = hardwareMap.servo.get("swiper");
+        swiper.setPosition(0);
     }
 
     @Override
@@ -69,9 +71,16 @@ public class TeleOpOpMode extends BaseOpMode {
 //        telemetry.addData("frontLeftMotor", motorFrontLeft.getPower());
 //        telemetry.addData("backRightMotor", motorBackRight.getPower());
 //        telemetry.addData("backLeftMotor", motorBackLeft.getPower());
+//        telemetry.addData("left", gamepad1.left_bumper);
+//        telemetry.addData("right", gamepad1.right_bumper);
     }
 
     private void control() {
+        if (gamepad1.left_bumper || gamepad2.left_bumper) {
+            swiper.setPosition(0);
+        } else if (gamepad1.right_bumper || gamepad2.right_bumper) {
+            swiper.setPosition(1);
+        }
         if (gamepad1.a || gamepad2.a) {
             armServo.setPosition(armServoFinalPos);
         } else if (gamepad1.b || gamepad2.b) {
