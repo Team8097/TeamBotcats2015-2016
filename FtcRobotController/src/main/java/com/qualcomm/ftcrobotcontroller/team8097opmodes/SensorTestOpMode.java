@@ -49,9 +49,9 @@ public class SensorTestOpMode extends BaseOpMode {
 
     @Override
     public void loop() {
-        rightColorSensor.enableLed(false);
+//        rightColorSensor.enableLed(false);
         logData("Right Color", String.valueOf(rightColorSensor.getLightDetected()));
-        leftColorSensor.enableLed(false);
+//        leftColorSensor.enableLed(false);
         logData("Left Color", String.valueOf(leftColorSensor.getLightDetected()));
         frontLightSensor.enableLed(true);
         telemetry.addData("Front Light", frontLightSensor.getLightDetected());

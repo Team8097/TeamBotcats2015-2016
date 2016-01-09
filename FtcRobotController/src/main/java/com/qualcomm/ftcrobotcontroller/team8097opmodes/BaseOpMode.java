@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 import java.util.ArrayList;
@@ -52,6 +53,9 @@ public abstract class BaseOpMode extends OpMode {
     UltrasonicSensor rightUltra;
     UltrasonicSensor frontRightUltra;
     UltrasonicSensor leftUltra;
+
+    TouchSensor rightBumpSensor;
+    TouchSensor leftBumpSensor;
 
     final double leftServoInitPos = 0.344;
     final double leftServoFinalPos = 0.588;

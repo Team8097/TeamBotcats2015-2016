@@ -147,4 +147,9 @@ public class BlueAutonomousOpMode extends CompetitionAutonomousOpMode {
             }
         }
     }
+
+    @Override
+    protected void moveIntoFloorGoal() {
+        goRight(DEFAULT_POWER);
+    }
 }

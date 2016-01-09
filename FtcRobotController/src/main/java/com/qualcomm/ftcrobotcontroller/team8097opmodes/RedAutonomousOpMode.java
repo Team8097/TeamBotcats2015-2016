@@ -148,4 +148,9 @@ public class RedAutonomousOpMode extends CompetitionAutonomousOpMode {
             }
         }
     }
+
+    @Override
+    protected void moveIntoFloorGoal() {
+        goLeft(DEFAULT_POWER);
+    }
 }

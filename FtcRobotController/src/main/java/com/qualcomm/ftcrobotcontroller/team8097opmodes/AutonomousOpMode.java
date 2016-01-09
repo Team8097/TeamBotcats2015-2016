@@ -31,8 +31,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-
 //Base class for autonomous. It is used for testing movement autonomously,
 //and includes methods for moving a certain distance or spinning a certain angle.
 public class AutonomousOpMode extends BaseOpMode {
@@ -62,6 +60,8 @@ public class AutonomousOpMode extends BaseOpMode {
         backLightSensor = hardwareMap.lightSensor.get("backLight");
         rightColorSensor = hardwareMap.lightSensor.get("rightColor");
         leftColorSensor = hardwareMap.lightSensor.get("leftColor");
+//        rightBumpSensor = hardwareMap.touchSensor.get("rightBump");
+//        leftBumpSensor = hardwareMap.touchSensor.get("leftBump");
     }
 
     @Override
