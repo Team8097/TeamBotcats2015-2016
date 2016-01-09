@@ -6,6 +6,7 @@ import android.content.SharedPreferences.Editor;
 
 public class CalibrateOpMode extends BaseOpMode {
     public static boolean calibrateTape;
+    public static boolean calibrateRedTape;
     public static boolean calibrateGround;
     double frontValue;
     double backValue;
@@ -15,6 +16,7 @@ public class CalibrateOpMode extends BaseOpMode {
     public void init() {
         readings = 0;
         calibrateTape = false;
+        calibrateRedTape = false;
         calibrateGround = false;
         frontValue = 0;
         backValue = 0;
@@ -60,6 +62,22 @@ public class CalibrateOpMode extends BaseOpMode {
                 frontValue = 0;
                 backValue = 0;
             }
+        } else if (calibrateRedTape) {
+            if (readings < 100) {
+                readings++;
+                frontValue += frontLightSensor.getLightDetected();
+                backValue += backLightSensor.getLightDetected();
+                setButtonsClickable(false);
+            } else {
+                readings = 0;
+                frontValue /= 100.0;
+                backValue /= 100.0;
+                calibrateRedTape = false;
+                FtcRobotControllerActivity.setRedTapeText.obtainMessage(0, (int) (frontValue * 100), (int) (backValue * 100)).sendToTarget();
+                saveRedTapeValue();
+                frontValue = 0;
+                backValue = 0;
+            }
         } else {
             setButtonsClickable(true);
         }
@@ -83,6 +101,13 @@ public class CalibrateOpMode extends BaseOpMode {
         Editor editor = FtcRobotControllerActivity.calibrationSP.edit();
         editor.putFloat("frontTapeValue", (float) frontValue);
         editor.putFloat("backTapeValue", (float) backValue);
+        editor.apply();
+    }
+
+    private void saveRedTapeValue() {
+        Editor editor = FtcRobotControllerActivity.calibrationSP.edit();
+        editor.putFloat("frontRedTapeValue", (float) frontValue);
+        editor.putFloat("backRedTapeValue", (float) backValue);
         editor.apply();
     }
 

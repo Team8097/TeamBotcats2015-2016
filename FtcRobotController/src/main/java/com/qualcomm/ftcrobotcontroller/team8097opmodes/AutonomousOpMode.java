@@ -96,8 +96,18 @@ public class AutonomousOpMode extends BaseOpMode {
         return getDistanceToGo(power, inches, startTime);
     }
 
+    protected double goDistanceRightWheelsBackward(double power, double inches, long startTime) {
+        rightWheelsBackward(power);
+        return getDistanceToGo(power, inches, startTime);
+    }
+
     protected double goDistanceLeftWheelsForward(double power, double inches, long startTime) {
         leftWheelsForward(power);
+        return getDistanceToGo(power, inches, startTime);
+    }
+
+    protected double goDistanceLeftWheelsBackward(double power, double inches, long startTime) {
+        leftWheelsBackward(power);
         return getDistanceToGo(power, inches, startTime);
     }
 

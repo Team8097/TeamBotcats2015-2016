@@ -191,9 +191,23 @@ public abstract class BaseOpMode extends OpMode {
         motorBackLeft.setPower(-power);
     }
 
+    protected void leftWheelsBackward(double power) {
+        motorFrontRight.setPower(0);
+        motorBackRight.setPower(0);
+        motorFrontLeft.setPower(power);
+        motorBackLeft.setPower(power);
+    }
+
     protected void rightWheelsForward(double power) {
         motorFrontRight.setPower(power);
         motorBackRight.setPower(power);
+        motorFrontLeft.setPower(0);
+        motorBackLeft.setPower(0);
+    }
+
+    protected void rightWheelsBackward(double power) {
+        motorFrontRight.setPower(-power);
+        motorBackRight.setPower(-power);
         motorFrontLeft.setPower(0);
         motorBackLeft.setPower(0);
     }

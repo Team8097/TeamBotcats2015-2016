@@ -69,30 +69,43 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     double leftLightDetected = 0;
     int seesWallLeft = 0;
     int seesWallRight = 0;
+    int seesOpeningLeft = 0;
+    int seesOpeningRight = 0;
     int sensorInputs = 0;
     int seesTape = 0;
     int seesTapeFront = 0;
     int seesTapeBack = 0;
     boolean frontTape = false;
     boolean backTape = false;
-    double frontTapeThreshold;
-    double backTapeThreshold;
-
-    boolean stoppedEarly = false; //for debugging
+    double frontTapeLowThreshold;
+    double backTapeLowThreshold;
+    double frontTapeHighThreshold;
+    double backTapeHighThreshold;
 
     @Override
     public void init() {
         super.init();
         distanceToGo[0] = 120;
-        frontTapeThreshold = (FtcRobotControllerActivity.calibrationSP.getFloat("frontTapeValue", -2) + FtcRobotControllerActivity.calibrationSP.getFloat("frontGroundValue", -2)) / 2.0;
-        if (frontTapeThreshold < 0) {
-            frontTapeThreshold = 0.43;
+        frontTapeLowThreshold = (FtcRobotControllerActivity.calibrationSP.getFloat("frontTapeValue", -2) + FtcRobotControllerActivity.calibrationSP.getFloat("frontGroundValue", -2)) / 2.0;
+        if (frontTapeLowThreshold < 0) {
+            frontTapeLowThreshold = 0.43;
         }
-        backTapeThreshold = (FtcRobotControllerActivity.calibrationSP.getFloat("backTapeValue", -2) + FtcRobotControllerActivity.calibrationSP.getFloat("backGroundValue", -2)) / 2.0;
-        if (backTapeThreshold < 0) {
-            backTapeThreshold = 0.43;
+        backTapeLowThreshold = (FtcRobotControllerActivity.calibrationSP.getFloat("backTapeValue", -2) + FtcRobotControllerActivity.calibrationSP.getFloat("backGroundValue", -2)) / 2.0;
+        if (backTapeLowThreshold < 0) {
+            backTapeLowThreshold = 0.43;
         }
-
+        frontTapeHighThreshold = (FtcRobotControllerActivity.calibrationSP.getFloat("frontTapeValue", -2) + FtcRobotControllerActivity.calibrationSP.getFloat("frontRedTapeValue", -2)) / 2.0;
+        if (frontTapeHighThreshold < 0) {
+            frontTapeHighThreshold = 0.62;
+        } else if (FtcRobotControllerActivity.calibrationSP.getFloat("frontRedTapeValue", -2) < FtcRobotControllerActivity.calibrationSP.getFloat("frontTapeValue", -2)) {
+            frontTapeHighThreshold = 2;
+        }
+        backTapeHighThreshold = (FtcRobotControllerActivity.calibrationSP.getFloat("backTapeValue", -2) + FtcRobotControllerActivity.calibrationSP.getFloat("backRedTapeValue", -2)) / 2.0;
+        if (backTapeHighThreshold < 0) {
+            backTapeHighThreshold = 0.62;
+        } else if (FtcRobotControllerActivity.calibrationSP.getFloat("backRedTapeValue", -2) < FtcRobotControllerActivity.calibrationSP.getFloat("backTapeValue", -2)) {
+            backTapeHighThreshold = 2;
+        }
     }
 
     @Override
@@ -116,7 +129,8 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
             } else if (stage == STAGE_ALIGN_WITH_TAPE_PERFECT) {
                 alignWithTapePerfect();
             } else if (stage == STAGE_BACK_UP) {
-                backUp();
+//                backUp();
+                endStage();
             } else if (stage == STAGE_ALIGN_WITH_WALL_2) {
                 alignWithWall();
             } else if (stage == STAGE_OPEN_SWEEPERS) {
@@ -136,7 +150,6 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
                 // the robot presses the correct button
             }
         }
-        logData("stoppedEarly", String.valueOf(stoppedEarly));
     }
 
     protected void endStage() {
@@ -212,7 +225,6 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
             seesWallRight = 0;
             endStage();
         } else {
-            stoppedEarly = true;
             stopRobot();
             if (!stoppedForObstacle) {
                 stoppedForObstacle = true;
@@ -233,31 +245,56 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     protected void alignWithWall() {
         if (sensorInputs < 50) {
             stopRobot();
-            if (frontLeftUltra.getUltrasonicLevel() <= LEFT_ULTRA_PERFECT_DIST) {
+            if (frontLeftUltra.getUltrasonicLevel() < LEFT_ULTRA_PERFECT_DIST) {
                 seesWallLeft++;
             } else if (seesWallLeft < 15) {
                 seesWallLeft = 0;
             }
-            if (frontRightUltra.getUltrasonicLevel() <= RIGHT_ULTRA_PERFECT_DIST) {
+            if (frontRightUltra.getUltrasonicLevel() < RIGHT_ULTRA_PERFECT_DIST) {
                 seesWallRight++;
             } else if (seesWallRight < 15) {
                 seesWallRight = 0;
             }
+            if (frontLeftUltra.getUltrasonicLevel() > LEFT_ULTRA_PERFECT_DIST) {
+                seesOpeningLeft++;
+            } else if (seesOpeningLeft < 15) {
+                seesOpeningLeft = 0;
+            }
+            if (frontRightUltra.getUltrasonicLevel() > RIGHT_ULTRA_PERFECT_DIST) {
+                seesOpeningRight++;
+            } else if (seesOpeningRight < 15) {
+                seesOpeningRight = 0;
+            }
             sensorInputs++;
             startMoveTime = System.currentTimeMillis();
         } else {
-            if (seesWallLeft < 10 && seesWallRight < 10) {
+            if (seesOpeningLeft >= 15 && seesOpeningRight >= 15) {
                 double distanceToGo = goDistanceForward(DEFAULT_POWER, 2 * INCHES_PER_CENT, startMoveTime);
                 if (distanceToGo == 0) {
                     sensorInputs = 0;
                 }
-            } else if (seesWallRight < 10) {
-                double distanceToGo = goDistanceRightWheelsForward(DEFAULT_POWER, 4 * INCHES_PER_CENT, startMoveTime);
+            } else if (seesOpeningRight >= 15) {
+                double distanceToGo = goDistanceRightWheelsForward(DEFAULT_POWER, 2 * INCHES_PER_CENT, startMoveTime);
                 if (distanceToGo == 0) {
                     sensorInputs = 0;
                 }
-            } else if (seesWallLeft < 10) {
-                double distanceToGo = goDistanceLeftWheelsForward(DEFAULT_POWER, 4 * INCHES_PER_CENT, startMoveTime);
+            } else if (seesOpeningLeft >= 15) {
+                double distanceToGo = goDistanceLeftWheelsForward(DEFAULT_POWER, 2 * INCHES_PER_CENT, startMoveTime);
+                if (distanceToGo == 0) {
+                    sensorInputs = 0;
+                }
+            } else if (seesWallLeft >= 15 && seesWallRight >= 15) {
+                double distanceToGo = goDistanceBackward(DEFAULT_POWER, 2 * INCHES_PER_CENT, startMoveTime);
+                if (distanceToGo == 0) {
+                    sensorInputs = 0;
+                }
+            } else if (seesWallRight >= 15) {
+                double distanceToGo = goDistanceRightWheelsBackward(DEFAULT_POWER, 2 * INCHES_PER_CENT, startMoveTime);
+                if (distanceToGo == 0) {
+                    sensorInputs = 0;
+                }
+            } else if (seesWallLeft >= 15) {
+                double distanceToGo = goDistanceLeftWheelsBackward(DEFAULT_POWER, 2 * INCHES_PER_CENT, startMoveTime);
                 if (distanceToGo == 0) {
                     sensorInputs = 0;
                 }
@@ -345,13 +382,13 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     }
 
     protected void readColorSensor() {
-        if (colorSensorInputs < 10) {
+        if (colorSensorInputs < 100) {
             rightLightDetected += rightColorSensor.getLightDetected();
             leftLightDetected += leftColorSensor.getLightDetected();
             colorSensorInputs++;
         } else {
-            rightLightDetected /= 10.0;
-            leftLightDetected /= 10.0;
+            rightLightDetected /= 100.0;
+            leftLightDetected /= 100.0;
             endStage();
         }
     }

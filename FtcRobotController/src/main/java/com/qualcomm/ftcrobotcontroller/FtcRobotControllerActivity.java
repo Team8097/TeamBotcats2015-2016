@@ -95,6 +95,7 @@ public class FtcRobotControllerActivity extends Activity {
 
     public static Button calibrateGroundButt;
     public static Button calibrateTapeButt;
+    public static Button calibrateRedTapeButt;
 
     protected TextView textDeviceName;
     protected TextView textWifiDirectStatus;
@@ -213,8 +214,10 @@ public class FtcRobotControllerActivity extends Activity {
 
         calibrateGroundButt = (Button) findViewById(R.id.calibrateGroundButt);
         calibrateTapeButt = (Button) findViewById(R.id.calibrateTapeButt);
+        calibrateRedTapeButt = (Button) findViewById(R.id.calibrateRedTapeButt);
         calibrationSP = getSharedPreferences(CALIBRATE_SP, MODE_PRIVATE);
         calibrateTapeButt.setText("Calibrate Tape\nF: " + (float) ((int) (calibrationSP.getFloat("frontTapeValue", -2) * 100) / 100.0) + "  B: " + (float) ((int) (calibrationSP.getFloat("backTapeValue", -2) * 100) / 100.0));
+        calibrateRedTapeButt.setText("Calibrate Red Tape\nF: " + (float) ((int) (calibrationSP.getFloat("frontRedTapeValue", -2) * 100) / 100.0) + "  B: " + (float) ((int) (calibrationSP.getFloat("backRedTapeValue", -2) * 100) / 100.0));
         calibrateGroundButt.setText("Calibrate Ground\nF: " + (float) ((int) (calibrationSP.getFloat("frontGroundValue", -2) * 100) / 100.0) + "  B: " + (float) ((int) (calibrationSP.getFloat("backGroundValue", -2) * 100) / 100.0));
     }
 
@@ -406,6 +409,11 @@ public class FtcRobotControllerActivity extends Activity {
         CalibrateOpMode.calibrateTape = true;
     }
 
+    public void calibrateRedTape(View v) {
+        CalibrateOpMode.calibrateRedTape = true;
+    }
+
+
     public void calibrateGround(View v) {
         CalibrateOpMode.calibrateGround = true;
     }
@@ -415,6 +423,7 @@ public class FtcRobotControllerActivity extends Activity {
         public void handleMessage(Message msg) {
             calibrateGroundButt.setClickable(true);
             calibrateTapeButt.setClickable(true);
+            calibrateRedTapeButt.setClickable(true);
         }
     };
 
@@ -423,6 +432,7 @@ public class FtcRobotControllerActivity extends Activity {
         public void handleMessage(Message msg) {
             calibrateGroundButt.setClickable(false);
             calibrateTapeButt.setClickable(false);
+            calibrateRedTapeButt.setClickable(false);
         }
     };
 
@@ -441,6 +451,15 @@ public class FtcRobotControllerActivity extends Activity {
             float front = (float) (msg.arg1 / 100.0);
             float back = (float) (msg.arg2 / 100.0);
             calibrateTapeButt.setText("Calibrate Tape\nF: " + front + "  B: " + back);
+        }
+    };
+
+    public final static Handler setRedTapeText = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            float front = (float) (msg.arg1 / 100.0);
+            float back = (float) (msg.arg2 / 100.0);
+            calibrateRedTapeButt.setText("Calibrate Red Tape\nF: " + front + "  B: " + back);
         }
     };
 
