@@ -33,6 +33,8 @@ public abstract class BaseOpMode extends OpMode {
     double rightSweepOut = 0.038;
     double leftSweepOut = 0.992;
 
+    DcMotor motorSpinny;
+
     DcMotor motorFrontRight;
     DcMotor motorFrontLeft;
     DcMotor motorBackRight;
@@ -63,6 +65,10 @@ public abstract class BaseOpMode extends OpMode {
     final double rightServoFinalPos = 0.282;
     final double armServoInitPos = 1;
     final double armServoFinalPos = 0;
+
+    final double spinnyLeftCorner = 0;
+    final double spinnyFront = 335;
+    final double spinnyRightCorner = 670;
 
     private HashMap<String, String> telemetryData = new HashMap<String, String>();
 

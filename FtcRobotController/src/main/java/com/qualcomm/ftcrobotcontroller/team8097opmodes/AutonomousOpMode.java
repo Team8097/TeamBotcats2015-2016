@@ -31,6 +31,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
 //Base class for autonomous. It is used for testing movement autonomously,
 //and includes methods for moving a certain distance or spinning a certain angle.
 public class AutonomousOpMode extends BaseOpMode {
@@ -41,27 +47,27 @@ public class AutonomousOpMode extends BaseOpMode {
 
     @Override
     public void init() {
-        motorFrontRight = hardwareMap.dcMotor.get("frontRight");
-        motorFrontLeft = hardwareMap.dcMotor.get("frontLeft");
-        motorBackRight = hardwareMap.dcMotor.get("backRight");
-        motorBackLeft = hardwareMap.dcMotor.get("backLeft");
+        motorSpinny = hardwareMap.dcMotor.get("spinny");
+//        motorFrontRight = hardwareMap.dcMotor.get("motor_1");
+//        motorFrontRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+//        motorFrontLeft = hardwareMap.dcMotor.get("motor_2");
+//        motorFrontLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+//        motorBackRight = hardwareMap.dcMotor.get("backRight");
+//        motorBackRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+//        motorBackLeft = hardwareMap.dcMotor.get("backLeft");
+//        motorBackLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
-//        frontOds = hardwareMap.opticalDistanceSensor.get("frontOds");
-        frontLeftUltra = hardwareMap.ultrasonicSensor.get("frontLeftUltra");
-//        rightUltra = hardwareMap.ultrasonicSensor.get("rightUltra");
-        frontRightUltra = hardwareMap.ultrasonicSensor.get("frontRightUltra");
-//        leftUltra = hardwareMap.ultrasonicSensor.get("leftUltra");
-        rightServo = hardwareMap.servo.get("rightServo");
-        leftServo = hardwareMap.servo.get("leftServo");
-        armServo = hardwareMap.servo.get("armServo");
-        rightSweepServo = hardwareMap.servo.get("rightSweep");
-        leftSweepServo = hardwareMap.servo.get("leftSweep");
-        frontLightSensor = hardwareMap.lightSensor.get("frontLight");
-        backLightSensor = hardwareMap.lightSensor.get("backLight");
-        rightColorSensor = hardwareMap.lightSensor.get("rightColor");
-        leftColorSensor = hardwareMap.lightSensor.get("leftColor");
-//        rightBumpSensor = hardwareMap.touchSensor.get("rightBump");
-//        leftBumpSensor = hardwareMap.touchSensor.get("leftBump");
+//        frontLeftUltra = hardwareMap.ultrasonicSensor.get("frontLeftUltra");
+//        frontRightUltra = hardwareMap.ultrasonicSensor.get("frontRightUltra");
+//        rightServo = hardwareMap.servo.get("rightServo");
+//        leftServo = hardwareMap.servo.get("leftServo");
+//        armServo = hardwareMap.servo.get("armServo");
+//        rightSweepServo = hardwareMap.servo.get("rightSweep");
+//        leftSweepServo = hardwareMap.servo.get("leftSweep");
+//        frontLightSensor = hardwareMap.lightSensor.get("frontLight");
+//        backLightSensor = hardwareMap.lightSensor.get("backLight");
+//        rightColorSensor = hardwareMap.lightSensor.get("rightColor");
+//        leftColorSensor = hardwareMap.lightSensor.get("leftColor");
     }
 
     @Override
@@ -70,7 +76,34 @@ public class AutonomousOpMode extends BaseOpMode {
             loop++;
             startTime = System.currentTimeMillis();
         } else {
-            goLeft(DEFAULT_POWER);
+            if (gamepad1.a)
+                motorSpinny.setPower(0.1);
+            else if (gamepad1.b)
+                motorSpinny.setPower(-0.1);
+            else
+                motorSpinny.setPower(0);
+            logData("spinny", String.valueOf(motorSpinny.getCurrentPosition()));
+//            goPerfectlyStraight2Wheels();
+//            logData("Front Right", String.valueOf(motorFrontRight.getCurrentPosition()));
+//            logData("Front Left", String.valueOf(motorFrontLeft.getCurrentPosition()));
+//            logData("Back Right", String.valueOf(motorBackRight.getCurrentPosition()));
+//            logData("Back Left", String.valueOf(motorBackLeft.getCurrentPosition()));
+        }
+    }
+
+    protected void goPerfectlyStraight2Wheels() {
+        if (Math.abs(motorFrontRight.getCurrentPosition()) > Math.abs(motorFrontLeft.getCurrentPosition()) + 8) {
+            motorFrontRight.setPower(DEFAULT_POWER * 0.75);
+            motorFrontLeft.setPower(-DEFAULT_POWER);
+            logData("fixing", "right too fast");
+        } else if (Math.abs(motorFrontLeft.getCurrentPosition()) > Math.abs(motorFrontRight.getCurrentPosition()) + 8) {
+            motorFrontRight.setPower(DEFAULT_POWER);
+            motorFrontLeft.setPower(-DEFAULT_POWER * 0.75);
+            logData("fixing", "left too fast");
+        } else {
+            motorFrontRight.setPower(DEFAULT_POWER);
+            motorFrontLeft.setPower(-DEFAULT_POWER);
+            logData("fixing", "perfect");
         }
     }
 
