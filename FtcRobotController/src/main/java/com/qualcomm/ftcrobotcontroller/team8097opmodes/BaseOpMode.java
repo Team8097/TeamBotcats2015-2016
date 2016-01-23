@@ -22,8 +22,8 @@ public abstract class BaseOpMode extends OpMode {
     public final static double MILLIS_PER_INCH_DEFAULT = 37.736 * (0.25 / DEFAULT_POWER);
     public final static double MILLIS_PER_DEGREE_DEFAULT = 5 * (0.25 / DEFAULT_POWER);
     public final static double INCHES_PER_CENT = 0.393701;
-    public final static int LEFT_ULTRA_PERFECT_DIST = 16;
-    public final static int RIGHT_ULTRA_PERFECT_DIST = 16;
+    public final static int LEFT_ULTRA_PERFECT_DIST = 21;
+    public final static int RIGHT_ULTRA_PERFECT_DIST = 21;
     public final static double BLUE_THRESHOLD = 0.6;
 
     double rightSweepTriangle = 0.524;
@@ -34,41 +34,47 @@ public abstract class BaseOpMode extends OpMode {
     double leftSweepOut = 0.992;
 
     DcMotor motorSpinny;
+    DcMotor motorExtend;
+    DcMotor motorMoveArm;
+    DcMotor motorCollection;
 
     DcMotor motorFrontRight;
     DcMotor motorFrontLeft;
     DcMotor motorBackRight;
     DcMotor motorBackLeft;
-    Servo swiper;
-    Servo rightServo;
-    Servo leftServo;
+    //    Servo swiper;
+    Servo rightFlapServo;
+    Servo leftFlapServo;
     Servo rightSweepServo;
     Servo leftSweepServo;
-    Servo armServo;
+    Servo climberServo;
+    Servo rightHookServo;
+    Servo leftHookServo;
+
     LightSensor rightColorSensor;
     LightSensor leftColorSensor;
 
     LightSensor frontLightSensor;
     LightSensor backLightSensor;
-    OpticalDistanceSensor frontOds;
+    //    OpticalDistanceSensor frontOds;
     UltrasonicSensor frontLeftUltra;
-    UltrasonicSensor rightUltra;
+    //    UltrasonicSensor rightUltra;
     UltrasonicSensor frontRightUltra;
-    UltrasonicSensor leftUltra;
+//    UltrasonicSensor leftUltra;
 
-    TouchSensor rightBumpSensor;
-    TouchSensor leftBumpSensor;
+//    TouchSensor rightBumpSensor;
+//    TouchSensor leftBumpSensor;
 
-    final double leftServoInitPos = 0.344;
-    final double leftServoFinalPos = 0.588;
-    final double rightServoInitPos = 0.496;
-    final double rightServoFinalPos = 0.282;
-    final double armServoInitPos = 1;
-    final double armServoFinalPos = 0;
-
-    final double spinnyLeftCorner = 0;
-    final double spinnyFront = 335;
-    final double spinnyRightCorner = 670;
+    final double leftFlapServoInitPos = 0.414;
+    final double leftFlapServoFinalPos = 0.282;
+    final double rightFlapServoInitPos = 0.414;
+    final double rightFlapServoFinalPos = 0.588;
+    final double climberServoInitPos = 1;
+    final double climberServoFinalPos = 0;
+    final double rightHookInitPos = 0;
+    final double rightHookFinalPos = 1;
+    final double leftHookInitPos = 1;
+    final double leftHookFinalPos = 0;
 
     private HashMap<String, String> telemetryData = new HashMap<String, String>();
 
@@ -230,5 +236,27 @@ public abstract class BaseOpMode extends OpMode {
             data += key + ": " + telemetryData.get(key) + "" + "\n";
         }
         FtcRobotControllerActivity.logData.obtainMessage(0, data).sendToTarget();
+    }
+
+    private void allInit() {
+        motorFrontLeft = hardwareMap.dcMotor.get("0motor1");
+        motorFrontRight = hardwareMap.dcMotor.get("0motor2");
+        motorBackRight = hardwareMap.dcMotor.get("1motor1");
+        motorBackLeft = hardwareMap.dcMotor.get("1motor2");
+        frontRightUltra = hardwareMap.ultrasonicSensor.get("2ultra4");
+        frontLeftUltra = hardwareMap.ultrasonicSensor.get("2ultra5");
+        frontLightSensor = hardwareMap.lightSensor.get("2light3");
+        backLightSensor = hardwareMap.lightSensor.get("2light2");
+        rightColorSensor = hardwareMap.lightSensor.get("3light3");
+        leftColorSensor = hardwareMap.lightSensor.get("3light1");
+        motorSpinny = hardwareMap.dcMotor.get("3hitech5motor2");
+        motorMoveArm = hardwareMap.dcMotor.get("3hitech5motor1");
+        motorExtend = hardwareMap.dcMotor.get("3hitech0motor1");
+        motorCollection = hardwareMap.dcMotor.get("3hitech0motor2");
+        climberServo = hardwareMap.servo.get("4servo1");
+        rightFlapServo = hardwareMap.servo.get("4servo2");
+        leftFlapServo = hardwareMap.servo.get("4servo3");
+        rightSweepServo = hardwareMap.servo.get("4servo4");
+        leftSweepServo = hardwareMap.servo.get("4servo5");
     }
 }

@@ -31,7 +31,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 //Opmode for TeleOp. Allows for remote control of movement in any direction as well as spinning in place.
@@ -48,23 +47,33 @@ public class TeleOpOpMode extends BaseOpMode {
 
     @Override
     public void init() {
-        motorFrontRight = hardwareMap.dcMotor.get("frontRight");
-        motorFrontLeft = hardwareMap.dcMotor.get("frontLeft");
-        motorBackRight = hardwareMap.dcMotor.get("backRight");
-        motorBackLeft = hardwareMap.dcMotor.get("backLeft");
-        armServo = hardwareMap.servo.get("armServo");
-        armServo.setPosition(armServoInitPos);
-        rightSweepServo = hardwareMap.servo.get("rightSweep");
-        leftSweepServo = hardwareMap.servo.get("leftSweep");
-        leftSweepServo.setPosition(leftSweepIn);
+        motorFrontLeft = hardwareMap.dcMotor.get("0motor1");
+        motorFrontRight = hardwareMap.dcMotor.get("0motor2");
+        motorBackRight = hardwareMap.dcMotor.get("1motor1");
+        motorBackLeft = hardwareMap.dcMotor.get("1motor2");
+        motorSpinny = hardwareMap.dcMotor.get("3hitech5motor2");
+        motorMoveArm = hardwareMap.dcMotor.get("3hitech5motor1");
+        motorExtend = hardwareMap.dcMotor.get("3hitech0motor1");
+        motorCollection = hardwareMap.dcMotor.get("3hitech0motor2");
+        climberServo = hardwareMap.servo.get("4servo1");
+        climberServo.setPosition(climberServoInitPos);
+        rightSweepServo = hardwareMap.servo.get("4servo4");
         rightSweepServo.setPosition(rightSweepIn);
-        swiper = hardwareMap.servo.get("swiper");
-        swiper.setPosition(0);
+        leftSweepServo = hardwareMap.servo.get("4servo5");
+        leftSweepServo.setPosition(leftSweepIn);
+        rightFlapServo = hardwareMap.servo.get("4servo2");
+        rightFlapServo.setPosition(rightFlapServoInitPos);
+        leftFlapServo = hardwareMap.servo.get("4servo3");
+        leftFlapServo.setPosition(leftFlapServoInitPos);
     }
 
     @Override
     public void loop() {
         control();
+        logData("left trigger", String.valueOf(gamepad1.left_trigger));
+        logData("right trigger", String.valueOf(gamepad1.right_trigger));
+        logData("left stick button", String.valueOf(gamepad1.left_stick_button));
+        logData("right stick button", String.valueOf(gamepad1.right_stick_button));
 //        telemetry.addData("leftStickY", activeGamepad.left_stick_y);
 //        telemetry.addData("leftStickX", activeGamepad.left_stick_x);
 //        telemetry.addData("frontRightMotor", motorFrontRight.getPower());
@@ -76,24 +85,51 @@ public class TeleOpOpMode extends BaseOpMode {
     }
 
     private void control() {
-        if (gamepad1.left_bumper || gamepad2.left_bumper) {
-            swiper.setPosition(0);
-        } else if (gamepad1.right_bumper || gamepad2.right_bumper) {
-            swiper.setPosition(1);
+        if (gamepad2.a) {
+            climberServo.setPosition(climberServoFinalPos);
+        } else if (gamepad2.b) {
+            climberServo.setPosition(climberServoInitPos);
         }
-        if (gamepad1.a || gamepad2.a) {
-            armServo.setPosition(armServoFinalPos);
-        } else if (gamepad1.b || gamepad2.b) {
-            armServo.setPosition(armServoInitPos);
-        }
-        if ((gamepad1.x || gamepad2.x) && currentSweeperPos == goalSweeperPos && currentSweeperPos != POS_OUT) {
+        if (gamepad1.a && currentSweeperPos == goalSweeperPos && currentSweeperPos != POS_OUT) {
             goalSweeperPos++;
             startSweepTime = System.currentTimeMillis();
-        } else if ((gamepad1.y || gamepad2.y) && currentSweeperPos == goalSweeperPos && currentSweeperPos != POS_IN) {
+        } else if (gamepad1.b && currentSweeperPos == goalSweeperPos && currentSweeperPos != POS_IN) {
             goalSweeperPos--;
             startSweepTime = System.currentTimeMillis();
         } else if (currentSweeperPos != goalSweeperPos) {
             moveSweeper(currentSweeperPos, goalSweeperPos);
+        }
+        if (gamepad1.left_bumper || gamepad2.left_bumper) {
+            motorSpinny.setPower(-0.5);
+        } else if (gamepad1.right_bumper || gamepad2.right_bumper) {
+            motorSpinny.setPower(0.5);
+        } else {
+            motorSpinny.setPower(0);
+        }
+        if (gamepad1.x || gamepad2.x) {
+            motorMoveArm.setPower(0.5);
+        } else if (gamepad1.y || gamepad2.y) {
+            motorMoveArm.setPower(-0.5);
+        } else {
+            motorMoveArm.setPower(0);
+        }
+        if (gamepad1.right_stick_y > -1 && gamepad1.right_stick_y != 0) {
+            motorExtend.setPower((gamepad1.right_stick_y + 1) / 6.0);
+        } else if (gamepad1.right_stick_x > -1 && gamepad1.right_stick_x != 0) {
+            motorExtend.setPower(-(gamepad1.right_stick_x + 1) / 6.0);
+        } else if (gamepad2.right_stick_y > -1 && gamepad2.right_stick_y != 0) {
+            motorExtend.setPower((gamepad2.right_stick_y + 1) / 6.0);
+        } else if (gamepad2.right_stick_x > -1 && gamepad2.right_stick_x != 0) {
+            motorExtend.setPower(-(gamepad2.right_stick_x + 1) / 6.0);
+        } else {
+            motorExtend.setPower(0);
+        }
+        if (gamepad1.dpad_down || gamepad2.dpad_down) {
+            motorCollection.setPower(1);
+        } else if (gamepad1.dpad_up || gamepad2.dpad_up) {
+            motorCollection.setPower(-1);
+        } else {
+            motorCollection.setPower(0);
         }
         if (Math.abs(gamepad1.left_stick_y) > Math.abs(gamepad2.left_stick_y)) {
             activeGamepad = gamepad1;
@@ -198,5 +234,14 @@ public class TeleOpOpMode extends BaseOpMode {
             sweepStage = 0;
             currentSweeperPos = POS_IN;
         }
+    }
+
+    @Override
+    public void stop() {
+        motorCollection.setPower(0);
+        motorSpinny.setPower(0);
+        motorExtend.setPower(0);
+        motorMoveArm.setPower(0);
+        super.stop();
     }
 }

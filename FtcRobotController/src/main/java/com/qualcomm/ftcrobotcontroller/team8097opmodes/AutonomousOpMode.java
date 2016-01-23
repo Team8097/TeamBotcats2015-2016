@@ -33,6 +33,7 @@ package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.configuration.LegacyModuleControllerConfiguration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,31 +44,28 @@ public class AutonomousOpMode extends BaseOpMode {
     final int initialLoops = 10;
     int loop = 1;
     long startTime;
+    DcMotorController legacyControl1;
+    DcMotorController legacyControl2;
 
 
     @Override
     public void init() {
-        motorSpinny = hardwareMap.dcMotor.get("spinny");
-//        motorFrontRight = hardwareMap.dcMotor.get("motor_1");
-//        motorFrontRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-//        motorFrontLeft = hardwareMap.dcMotor.get("motor_2");
-//        motorFrontLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-//        motorBackRight = hardwareMap.dcMotor.get("backRight");
-//        motorBackRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-//        motorBackLeft = hardwareMap.dcMotor.get("backLeft");
-//        motorBackLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-
-//        frontLeftUltra = hardwareMap.ultrasonicSensor.get("frontLeftUltra");
-//        frontRightUltra = hardwareMap.ultrasonicSensor.get("frontRightUltra");
-//        rightServo = hardwareMap.servo.get("rightServo");
-//        leftServo = hardwareMap.servo.get("leftServo");
-//        armServo = hardwareMap.servo.get("armServo");
-//        rightSweepServo = hardwareMap.servo.get("rightSweep");
-//        leftSweepServo = hardwareMap.servo.get("leftSweep");
-//        frontLightSensor = hardwareMap.lightSensor.get("frontLight");
-//        backLightSensor = hardwareMap.lightSensor.get("backLight");
-//        rightColorSensor = hardwareMap.lightSensor.get("rightColor");
-//        leftColorSensor = hardwareMap.lightSensor.get("leftColor");
+        motorFrontLeft = hardwareMap.dcMotor.get("0motor1");
+        motorFrontRight = hardwareMap.dcMotor.get("0motor2");
+        motorBackRight = hardwareMap.dcMotor.get("1motor1");
+        motorBackLeft = hardwareMap.dcMotor.get("1motor2");
+        frontRightUltra = hardwareMap.ultrasonicSensor.get("2ultra4");
+        frontLeftUltra = hardwareMap.ultrasonicSensor.get("2ultra5");
+        frontLightSensor = hardwareMap.lightSensor.get("2light3");
+        backLightSensor = hardwareMap.lightSensor.get("2light2");
+        rightColorSensor = hardwareMap.lightSensor.get("3light3");
+        leftColorSensor = hardwareMap.lightSensor.get("3light1");
+//        motorSpinny = hardwareMap.dcMotor.get("3hitech5motor2");
+        climberServo = hardwareMap.servo.get("4servo1");
+        rightFlapServo = hardwareMap.servo.get("4servo2");
+        leftFlapServo = hardwareMap.servo.get("4servo3");
+        rightSweepServo = hardwareMap.servo.get("4servo4");
+        leftSweepServo = hardwareMap.servo.get("4servo5");
     }
 
     @Override
@@ -76,13 +74,16 @@ public class AutonomousOpMode extends BaseOpMode {
             loop++;
             startTime = System.currentTimeMillis();
         } else {
-            if (gamepad1.a)
-                motorSpinny.setPower(0.1);
-            else if (gamepad1.b)
-                motorSpinny.setPower(-0.1);
-            else
-                motorSpinny.setPower(0);
-            logData("spinny", String.valueOf(motorSpinny.getCurrentPosition()));
+//            if (gamepad1.a)
+//                motorSpinny.setPower(0.1);
+//            else if (gamepad1.b)
+//                motorSpinny.setPower(-0.1);
+//            else
+            legacyControl1.setMotorPower(1, 0.25);
+            legacyControl1.setMotorPower(2, 0.25);
+//            legacyControl2.setMotorPower(1, 0.25);
+            legacyControl2.setMotorPower(2, 0.25);
+//            logData("spinny", String.valueOf(motorSpinny.getCurrentPosition()));
 //            goPerfectlyStraight2Wheels();
 //            logData("Front Right", String.valueOf(motorFrontRight.getCurrentPosition()));
 //            logData("Front Left", String.valueOf(motorFrontLeft.getCurrentPosition()));

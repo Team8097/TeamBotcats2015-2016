@@ -180,9 +180,9 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
 
     protected void initServos() {
         if (System.currentTimeMillis() - startMoveTime < 300) {
-            leftServo.setPosition(leftServoInitPos);
-            rightServo.setPosition(rightServoInitPos);
-            armServo.setPosition(armServoInitPos);
+            leftFlapServo.setPosition(leftFlapServoInitPos);
+            rightFlapServo.setPosition(rightFlapServoInitPos);
+            climberServo.setPosition(climberServoInitPos);
             leftSweepServo.setPosition(leftSweepIn);
             rightSweepServo.setPosition(rightSweepIn);
             frontLightSensor.enableLed(true);
@@ -437,7 +437,7 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     protected void dropClimbers() {
         if (dropClimbers) {
             if (System.currentTimeMillis() - startMoveTime < 500) {
-                armServo.setPosition(armServoFinalPos);
+                climberServo.setPosition(climberServoFinalPos);
             } else {
                 endStage();
             }
@@ -448,7 +448,7 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
 
     protected void liftArm() {
         if (System.currentTimeMillis() - startMoveTime < 500) {
-            armServo.setPosition(armServoInitPos);
+            climberServo.setPosition(climberServoInitPos);
         } else {
             endStage();
         }
@@ -468,8 +468,8 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
 
     protected void moveRightFlap() {
         if (System.currentTimeMillis() - startMoveTime < 1000) {
-            rightServo.setPosition(rightServoFinalPos);
-            leftServo.setPosition(leftServoInitPos);
+            rightFlapServo.setPosition(rightFlapServoFinalPos);
+            leftFlapServo.setPosition(leftFlapServoInitPos);
         } else {
             endStage();
         }
@@ -477,8 +477,8 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
 
     protected void moveLeftFlap() {
         if (System.currentTimeMillis() - startMoveTime < 1000) {
-            leftServo.setPosition(leftServoFinalPos);
-            rightServo.setPosition(rightServoInitPos);
+            leftFlapServo.setPosition(leftFlapServoFinalPos);
+            rightFlapServo.setPosition(rightFlapServoInitPos);
         } else {
             endStage();
         }

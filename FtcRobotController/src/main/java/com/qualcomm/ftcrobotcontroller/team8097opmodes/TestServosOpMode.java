@@ -6,12 +6,8 @@ public class TestServosOpMode extends BaseOpMode {
 
     @Override
     public void init() {
-//        rightServo = hardwareMap.servo.get("rightServo");
-//        leftServo = hardwareMap.servo.get("leftServo");
-//        armServo = hardwareMap.servo.get("armServo");
-//        rightServo = hardwareMap.servo.get("rightServo");
-//        leftServo = hardwareMap.servo.get("leftServo");
-        swiper = hardwareMap.servo.get("swiper");
+        rightFlapServo = hardwareMap.servo.get("4servo2");
+        leftFlapServo = hardwareMap.servo.get("4servo3");
     }
 
     @Override
@@ -25,10 +21,10 @@ public class TestServosOpMode extends BaseOpMode {
         } else if (gamepad1.y) {
             sweepPos2 -= 0.002;
         }
-        swiper.setPosition(sweepPos1);
-//        leftServo.setPosition(sweepPos2);
-        telemetry.addData("swipePos", sweepPos1);
-//        telemetry.addData("leftPos", sweepPos2);
+        rightFlapServo.setPosition(sweepPos1);
+        telemetry.addData("rightPos", sweepPos1);
+        leftFlapServo.setPosition(sweepPos2);
+        telemetry.addData("leftPos", sweepPos2);
         try {
             Thread.sleep(10);
         } catch (InterruptedException e) {
