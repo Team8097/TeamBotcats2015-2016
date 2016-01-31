@@ -6,8 +6,8 @@ public class TestServosOpMode extends BaseOpMode {
 
     @Override
     public void init() {
-        rightFlapServo = hardwareMap.servo.get("4servo2");
-        leftFlapServo = hardwareMap.servo.get("4servo3");
+//        rightHookServo = hardwareMap.servo.get("4servo5");
+//        leftHookServo = hardwareMap.servo.get("4servo4");
     }
 
     @Override
@@ -21,9 +21,9 @@ public class TestServosOpMode extends BaseOpMode {
         } else if (gamepad1.y) {
             sweepPos2 -= 0.002;
         }
-        rightFlapServo.setPosition(sweepPos1);
+//        rightHookServo.setPosition(sweepPos1);
         telemetry.addData("rightPos", sweepPos1);
-        leftFlapServo.setPosition(sweepPos2);
+//        leftHookServo.setPosition(sweepPos2);
         telemetry.addData("leftPos", sweepPos2);
         try {
             Thread.sleep(10);

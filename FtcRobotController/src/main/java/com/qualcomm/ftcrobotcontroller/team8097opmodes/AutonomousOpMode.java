@@ -31,11 +31,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.configuration.LegacyModuleControllerConfiguration;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 //Base class for autonomous. It is used for testing movement autonomously,
@@ -50,19 +48,18 @@ public class AutonomousOpMode extends BaseOpMode {
 
     @Override
     public void init() {
-        motorFrontLeft = hardwareMap.dcMotor.get("0motor1");
+        motorFrontLeft = hardwareMap.dcMotor.get("1motor1");
         motorFrontRight = hardwareMap.dcMotor.get("0motor2");
-        motorBackRight = hardwareMap.dcMotor.get("1motor1");
+        motorBackRight = hardwareMap.dcMotor.get("0motor1");
         motorBackLeft = hardwareMap.dcMotor.get("1motor2");
-        frontRightUltra = hardwareMap.ultrasonicSensor.get("2ultra4");
-        frontLeftUltra = hardwareMap.ultrasonicSensor.get("2ultra5");
-        frontLightSensor = hardwareMap.lightSensor.get("2light3");
-        backLightSensor = hardwareMap.lightSensor.get("2light2");
-        rightColorSensor = hardwareMap.lightSensor.get("3light3");
-        leftColorSensor = hardwareMap.lightSensor.get("3light1");
-//        motorSpinny = hardwareMap.dcMotor.get("3hitech5motor2");
-        climberServo = hardwareMap.servo.get("4servo1");
-        rightFlapServo = hardwareMap.servo.get("4servo2");
+        frontRightUltra = hardwareMap.ultrasonicSensor.get("3ultra4");
+        frontLeftUltra = hardwareMap.ultrasonicSensor.get("3ultra5");
+        frontLightSensor = hardwareMap.lightSensor.get("3light1");
+        backLightSensor = hardwareMap.lightSensor.get("3light0");
+        rightColorSensor = hardwareMap.lightSensor.get("2light1");
+        leftColorSensor = hardwareMap.lightSensor.get("2light2");
+        climberServo = hardwareMap.servo.get("4servo2");
+        rightFlapServo = hardwareMap.servo.get("4servo1");
         leftFlapServo = hardwareMap.servo.get("4servo3");
         rightSweepServo = hardwareMap.servo.get("4servo4");
         leftSweepServo = hardwareMap.servo.get("4servo5");
@@ -92,145 +89,304 @@ public class AutonomousOpMode extends BaseOpMode {
         }
     }
 
-    protected void goPerfectlyStraight2Wheels() {
-        if (Math.abs(motorFrontRight.getCurrentPosition()) > Math.abs(motorFrontLeft.getCurrentPosition()) + 8) {
-            motorFrontRight.setPower(DEFAULT_POWER * 0.75);
-            motorFrontLeft.setPower(-DEFAULT_POWER);
-            logData("fixing", "right too fast");
-        } else if (Math.abs(motorFrontLeft.getCurrentPosition()) > Math.abs(motorFrontRight.getCurrentPosition()) + 8) {
-            motorFrontRight.setPower(DEFAULT_POWER);
-            motorFrontLeft.setPower(-DEFAULT_POWER * 0.75);
-            logData("fixing", "left too fast");
+    protected void stopRobot() {
+        motorFrontRight.setPower(0);
+        motorFrontLeft.setPower(0);
+        motorBackRight.setPower(0);
+        motorBackLeft.setPower(0);
+    }
+
+    protected void goForward(double power) {
+        double[] powers = syncEncoders4Motors(power, motorFrontRight.getCurrentPosition(), motorBackRight.getCurrentPosition(), motorFrontLeft.getCurrentPosition(), motorBackLeft.getCurrentPosition());
+        motorFrontRight.setPower(powers[0]);
+        motorBackRight.setPower(powers[1]);
+        motorFrontLeft.setPower(-powers[2]);
+        motorBackLeft.setPower(-powers[3]);
+    }
+
+    protected void goBackward(double power) {
+        double[] powers = syncEncoders4Motors(power, motorFrontRight.getCurrentPosition(), motorBackRight.getCurrentPosition(), motorFrontLeft.getCurrentPosition(), motorBackLeft.getCurrentPosition());
+        motorFrontRight.setPower(-powers[0]);
+        motorBackRight.setPower(-powers[1]);
+        motorFrontLeft.setPower(powers[2]);
+        motorBackLeft.setPower(powers[3]);
+    }
+
+    protected void goLeft(double power) {
+        double[] powers = syncEncoders4Motors(power, motorFrontRight.getCurrentPosition(), motorBackRight.getCurrentPosition(), motorFrontLeft.getCurrentPosition(), motorBackLeft.getCurrentPosition());
+        motorFrontRight.setPower(powers[0]);
+        motorBackRight.setPower(-powers[1]);
+        motorFrontLeft.setPower(powers[2]);
+        motorBackLeft.setPower(-powers[3]);
+    }
+
+    protected void goDiagLeft(double power) {
+        double[] powers = syncEncoders2Motors(power, motorFrontRight.getCurrentPosition(), motorBackLeft.getCurrentPosition());
+        motorFrontRight.setPower(powers[0]);
+        motorBackLeft.setPower(-powers[1]);
+        motorFrontLeft.setPower(0);
+        motorBackRight.setPower(0);
+    }
+
+    protected void goRight(double power) {
+        double[] powers = syncEncoders4Motors(power, motorFrontRight.getCurrentPosition(), motorBackRight.getCurrentPosition(), motorFrontLeft.getCurrentPosition(), motorBackLeft.getCurrentPosition());
+        motorFrontRight.setPower(-powers[0]);
+        motorBackRight.setPower(powers[1]);
+        motorFrontLeft.setPower(-powers[2]);
+        motorBackLeft.setPower(powers[3]);
+    }
+
+    protected void goDiagRight(double power) {
+        double[] powers = syncEncoders2Motors(power, motorFrontLeft.getCurrentPosition(), motorBackRight.getCurrentPosition());
+        motorFrontLeft.setPower(-powers[0]);
+        motorBackRight.setPower(powers[1]);
+        motorFrontRight.setPower(0);
+        motorBackLeft.setPower(0);
+    }
+
+    protected void spinRight(double power) {
+        double[] powers = syncEncoders4Motors(power, motorFrontRight.getCurrentPosition(), motorBackRight.getCurrentPosition(), motorFrontLeft.getCurrentPosition(), motorBackLeft.getCurrentPosition());
+        motorFrontRight.setPower(-powers[0]);
+        motorBackRight.setPower(-powers[1]);
+        motorFrontLeft.setPower(-powers[2]);
+        motorBackLeft.setPower(-powers[3]);
+    }
+
+    protected void spinLeft(double power) {
+        double[] powers = syncEncoders4Motors(power, motorFrontRight.getCurrentPosition(), motorBackRight.getCurrentPosition(), motorFrontLeft.getCurrentPosition(), motorBackLeft.getCurrentPosition());
+        motorFrontRight.setPower(powers[0]);
+        motorBackRight.setPower(powers[1]);
+        motorFrontLeft.setPower(powers[2]);
+        motorBackLeft.setPower(powers[3]);
+    }
+
+    protected void frontWheelsRight(double power) {
+        double[] powers = syncEncoders2Motors(power, motorFrontRight.getCurrentPosition(), motorFrontLeft.getCurrentPosition());
+        motorFrontRight.setPower(-powers[0]);
+        motorFrontLeft.setPower(-powers[1]);
+        motorBackRight.setPower(0);
+        motorBackLeft.setPower(0);
+    }
+
+    protected void frontWheelsLeft(double power) {
+        double[] powers = syncEncoders2Motors(power, motorFrontRight.getCurrentPosition(), motorFrontLeft.getCurrentPosition());
+        motorFrontRight.setPower(powers[0]);
+        motorFrontLeft.setPower(powers[1]);
+        motorBackRight.setPower(0);
+        motorBackLeft.setPower(0);
+    }
+
+    protected void backWheelsRight(double power) {
+        double[] powers = syncEncoders2Motors(power, motorBackRight.getCurrentPosition(), motorBackLeft.getCurrentPosition());
+        motorBackRight.setPower(powers[0]);
+        motorBackLeft.setPower(powers[1]);
+        motorFrontRight.setPower(0);
+        motorFrontLeft.setPower(0);
+    }
+
+    protected void backWheelsLeft(double power) {
+        double[] powers = syncEncoders2Motors(power, motorBackRight.getCurrentPosition(), motorBackLeft.getCurrentPosition());
+        motorBackRight.setPower(-powers[0]);
+        motorBackLeft.setPower(-powers[1]);
+        motorFrontRight.setPower(0);
+        motorFrontLeft.setPower(0);
+    }
+
+    protected void leftWheelsForward(double power) {
+        double[] powers = syncEncoders2Motors(power, motorFrontLeft.getCurrentPosition(), motorBackLeft.getCurrentPosition());
+        motorFrontRight.setPower(0);
+        motorBackRight.setPower(0);
+        motorFrontLeft.setPower(-powers[0]);
+        motorBackLeft.setPower(-powers[1]);
+    }
+
+    protected void leftWheelsBackward(double power) {
+        double[] powers = syncEncoders2Motors(power, motorFrontLeft.getCurrentPosition(), motorBackLeft.getCurrentPosition());
+        motorFrontRight.setPower(0);
+        motorBackRight.setPower(0);
+        motorFrontLeft.setPower(powers[0]);
+        motorBackLeft.setPower(powers[1]);
+    }
+
+    protected void rightWheelsForward(double power) {
+        double[] powers = syncEncoders2Motors(power, motorFrontRight.getCurrentPosition(), motorBackRight.getCurrentPosition());
+        motorFrontRight.setPower(powers[0]);
+        motorBackRight.setPower(powers[1]);
+        motorFrontLeft.setPower(0);
+        motorBackLeft.setPower(0);
+    }
+
+    protected void rightWheelsBackward(double power) {
+        double[] powers = syncEncoders2Motors(power, motorFrontRight.getCurrentPosition(), motorBackRight.getCurrentPosition());
+        motorFrontRight.setPower(-powers[0]);
+        motorBackRight.setPower(-powers[1]);
+        motorFrontLeft.setPower(0);
+        motorBackLeft.setPower(0);
+    }
+//    protected void goPerfectlyStraight2Wheels() {
+//        if (Math.abs(motorFrontRight.getCurrentPosition()) > Math.abs(motorFrontLeft.getCurrentPosition()) + 8) {
+//            motorFrontRight.setPower(DEFAULT_POWER * 0.75);
+//            motorFrontLeft.setPower(-DEFAULT_POWER);
+//            logData("fixing", "right too fast");
+//        } else if (Math.abs(motorFrontLeft.getCurrentPosition()) > Math.abs(motorFrontRight.getCurrentPosition()) + 8) {
+//            motorFrontRight.setPower(DEFAULT_POWER);
+//            motorFrontLeft.setPower(-DEFAULT_POWER * 0.75);
+//            logData("fixing", "left too fast");
+//        } else {
+//            motorFrontRight.setPower(DEFAULT_POWER);
+//            motorFrontLeft.setPower(-DEFAULT_POWER);
+//            logData("fixing", "perfect");
+//        }
+//    }
+
+    public double[] syncEncoders2Motors(double power, int encoder0, int encoder1) {
+        double[] newPowers = new double[2];
+        newPowers[0] = power;
+        newPowers[1] = power;
+        if (Math.abs(encoder0) > Math.abs(encoder1) + 8) {
+            newPowers[0] = power * 0.75;
+        } else if (Math.abs(encoder1) > Math.abs(encoder0) + 8) {
+            newPowers[1] = power * 0.75;
+        }
+        return newPowers;
+    }
+
+    public double[] syncEncoders4Motors(double power, int encoder0, int encoder1, int encoder2, int encoder3) {
+        HashMap<Integer, Integer> encoderIndexes = new HashMap<Integer, Integer>();
+        encoderIndexes.put(Math.abs(encoder0), 0);
+        encoderIndexes.put(Math.abs(encoder1), 1);
+        encoderIndexes.put(Math.abs(encoder2), 2);
+        encoderIndexes.put(Math.abs(encoder3), 3);
+        int[] encoderValuesSorted = new int[]{Math.abs(encoder0), Math.abs(encoder1), Math.abs(encoder2), Math.abs(encoder3)};
+        Arrays.sort(encoderValuesSorted);
+        double[] newPowers = new double[4];
+        newPowers[0] = power;
+        newPowers[1] = power;
+        newPowers[2] = power;
+        newPowers[3] = power;
+        if (encoderValuesSorted[3] > encoderValuesSorted[2] + 8) {
+            newPowers[encoderIndexes.get(encoderValuesSorted[3])] = power * 0.85;
+        }
+        if (encoderValuesSorted[2] > encoderValuesSorted[1] + 8) {
+            newPowers[encoderIndexes.get(encoderValuesSorted[2])] = power * 0.85;
+            newPowers[encoderIndexes.get(encoderValuesSorted[3])] = newPowers[encoderIndexes.get(encoderValuesSorted[3])] * 0.85;
+        }
+        if (encoderValuesSorted[1] > encoderValuesSorted[0] + 8) {
+            newPowers[encoderIndexes.get(encoderValuesSorted[1])] = power * 0.85;
+            newPowers[encoderIndexes.get(encoderValuesSorted[2])] = newPowers[encoderIndexes.get(encoderValuesSorted[2])] * 0.85;
+            newPowers[encoderIndexes.get(encoderValuesSorted[3])] = newPowers[encoderIndexes.get(encoderValuesSorted[3])] * 0.85;
+        }
+        return newPowers;
+    }
+
+    private double getDistanceToGo(double inches, int encoderTicksSoFar) {
+        int totalEncoderTicks = (int) (inches * ENCODER_TICKS_PER_INCH);
+        if (encoderTicksSoFar < totalEncoderTicks) {
+            double distanceToGo = (totalEncoderTicks - encoderTicksSoFar) / ENCODER_TICKS_PER_INCH;
+            return distanceToGo;
         } else {
-            motorFrontRight.setPower(DEFAULT_POWER);
-            motorFrontLeft.setPower(-DEFAULT_POWER);
-            logData("fixing", "perfect");
+            return 0;
         }
     }
 
-    protected double goDistanceForward(double power, double inches, long startTime) {
+    private double getDistanceToGoDiag(double inches, int encoderTicksSoFar) {
+        int totalEncoderTicks = (int) (inches * ENCODER_TICKS_PER_INCH_DIAG);
+        if (encoderTicksSoFar < totalEncoderTicks) {
+            double distanceToGo = (totalEncoderTicks - encoderTicksSoFar) / ENCODER_TICKS_PER_INCH_DIAG;
+            return distanceToGo;
+        } else {
+            return 0;
+        }
+    }
+
+    private double getDegreesToGo(double degrees, int encoderTicksSoFar) {
+        int totalEncoderTicks = (int) (degrees * ENCODER_TICKS_PER_DEGREE);
+        if (encoderTicksSoFar < totalEncoderTicks) {
+            double degreesToGo = (totalEncoderTicks - encoderTicksSoFar) / ENCODER_TICKS_PER_DEGREE;
+            return degreesToGo;
+        } else {
+            return 0;
+        }
+    }
+
+    protected double goDistanceForward(double power, double inches) {
         goForward(power);
-        return getDistanceToGo(power, inches, startTime);
+        return getDistanceToGo(inches, motorFrontRight.getCurrentPosition());
     }
 
-    private double getDistanceToGo(double power, double inches, long startTime) {
-        double millisPerInch = MILLIS_PER_INCH_DEFAULT * (DEFAULT_POWER / power);
-        double goTime = inches * millisPerInch;
-        int timeElapsed = (int) (System.currentTimeMillis() - startTime);
-        if (timeElapsed < goTime) {
-            double distanceToGo = (goTime - timeElapsed) / millisPerInch;
-            return distanceToGo;
-        } else {
-            return 0;
-        }
-    }
-
-    protected double goDistanceRightWheelsForward(double power, double inches, long startTime) {
+    protected double goDistanceRightWheelsForward(double power, double inches) {
         rightWheelsForward(power);
-        return getDistanceToGo(power, inches, startTime);
+        return getDistanceToGo(inches, motorFrontRight.getCurrentPosition());
     }
 
-    protected double goDistanceRightWheelsBackward(double power, double inches, long startTime) {
+    protected double goDistanceRightWheelsBackward(double power, double inches) {
         rightWheelsBackward(power);
-        return getDistanceToGo(power, inches, startTime);
+        return getDistanceToGo(inches, motorFrontRight.getCurrentPosition());
     }
 
-    protected double goDistanceLeftWheelsForward(double power, double inches, long startTime) {
+    protected double goDistanceLeftWheelsForward(double power, double inches) {
         leftWheelsForward(power);
-        return getDistanceToGo(power, inches, startTime);
+        return getDistanceToGo(inches, motorFrontLeft.getCurrentPosition());
     }
 
-    protected double goDistanceLeftWheelsBackward(double power, double inches, long startTime) {
+    protected double goDistanceLeftWheelsBackward(double power, double inches) {
         leftWheelsBackward(power);
-        return getDistanceToGo(power, inches, startTime);
+        return getDistanceToGo(inches, motorFrontLeft.getCurrentPosition());
     }
 
-    protected double goDistanceFrontWheelsRight(double power, double inches, long startTime) {
+    protected double goDistanceFrontWheelsRight(double power, double inches) {
         frontWheelsRight(power);
-        return getDistanceToGo(power, inches, startTime);
+        return getDistanceToGo(inches, motorFrontRight.getCurrentPosition());
     }
 
-    protected double goDistanceFrontWheelsLeft(double power, double inches, long startTime) {
+    protected double goDistanceFrontWheelsLeft(double power, double inches) {
         frontWheelsLeft(power);
-        return getDistanceToGo(power, inches, startTime);
+        return getDistanceToGo(inches, motorFrontRight.getCurrentPosition());
     }
 
-    protected double goDistanceBackWheelsRight(double power, double inches, long startTime) {
+    protected double goDistanceBackWheelsRight(double power, double inches) {
         backWheelsRight(power);
-        return getDistanceToGo(power, inches, startTime);
+        return getDistanceToGo(inches, motorBackRight.getCurrentPosition());
     }
 
-    protected double goDistanceBackWheelsLeft(double power, double inches, long startTime) {
+    protected double goDistanceBackWheelsLeft(double power, double inches) {
         backWheelsLeft(power);
-        return getDistanceToGo(power, inches, startTime);
+        return getDistanceToGo(inches, motorBackRight.getCurrentPosition());
     }
 
-    protected double goDistanceBackward(double power, double inches, long startTime) {
+    protected double goDistanceBackward(double power, double inches) {
         goBackward(power);
-        return getDistanceToGo(power, inches, startTime);
+        return getDistanceToGo(inches, motorFrontRight.getCurrentPosition());
     }
 
-    protected double goDistanceLeft(double power, double inches, long startTime) {
+    protected double goDistanceLeft(double power, double inches) {
         goLeft(power);
-        return getDistanceToGo(power, inches, startTime);
+        return getDistanceToGo(inches, motorFrontRight.getCurrentPosition());
     }
 
-    protected double goDistanceDiagLeft(double power, double inches, long startTime) {
-        double millisPerInch = MILLIS_PER_INCH_DEFAULT * (DEFAULT_POWER / power);
-        double goTime = inches * millisPerInch;
-        int timeElapsed = (int) (System.currentTimeMillis() - startTime);
+    protected double goDistanceDiagLeft(double power, double inches) {
         goDiagLeft(power);
-        if (timeElapsed < goTime) {
-            double distanceToGo = (goTime - timeElapsed) / millisPerInch;
-            return distanceToGo;
-        } else {
-            return 0;
-        }
+        return getDistanceToGoDiag(inches, motorFrontRight.getCurrentPosition());
     }
 
-    protected double goDistanceRight(double power, double inches, long startTime) {
+    protected double goDistanceRight(double power, double inches) {
         goRight(power);
-        return getDistanceToGo(power, inches, startTime);
+        return getDistanceToGo(inches, motorFrontRight.getCurrentPosition());
     }
 
-    protected double goDistanceDiagRight(double power, double inches, long startTime) {
-        double millisPerInch = MILLIS_PER_INCH_DEFAULT * (DEFAULT_POWER / power);
-        double goTime = inches * millisPerInch;
-        int timeElapsed = (int) (System.currentTimeMillis() - startTime);
+    protected double goDistanceDiagRight(double power, double inches) {
         goDiagRight(power);
-        if (timeElapsed < goTime) {
-            double distanceToGo = (goTime - timeElapsed) / millisPerInch;
-            return distanceToGo;
-        } else {
-            return 0;
-        }
+        return getDistanceToGoDiag(inches, motorBackRight.getCurrentPosition());
     }
 
-    protected double spinRightDegrees(double power, double degrees, long startTime) {
-        double millisPerDegree = MILLIS_PER_DEGREE_DEFAULT * (DEFAULT_POWER / power);
-        double goTime = degrees * millisPerDegree;
-        int timeElapsed = (int) (System.currentTimeMillis() - startTime);
-        if (timeElapsed < goTime) {
-            spinRight(power);
-            double degreesToGo = (goTime - timeElapsed) / millisPerDegree;
-            return degreesToGo;
-        } else {
-            stopRobot();
-            return 0;
-        }
+    protected double spinRightDegrees(double power, double degrees) {
+        spinRight(power);
+        return getDegreesToGo(degrees, motorFrontRight.getCurrentPosition());
     }
 
-    protected double spinLeftDegrees(double power, double degrees, long startTime) {
-        double millisPerDegree = MILLIS_PER_DEGREE_DEFAULT * (DEFAULT_POWER / power);
-        double goTime = degrees * millisPerDegree;
-        int timeElapsed = (int) (System.currentTimeMillis() - startTime);
-        if (timeElapsed < goTime) {
-            spinLeft(power);
-            double degreesToGo = (goTime - timeElapsed) / millisPerDegree;
-            return degreesToGo;
-        } else {
-            stopRobot();
-            return 0;
-        }
+    protected double spinLeftDegrees(double power, double degrees) {
+        spinLeft(power);
+        return getDegreesToGo(degrees, motorFrontRight.getCurrentPosition());
+
     }
 }

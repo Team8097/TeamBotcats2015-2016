@@ -36,7 +36,7 @@ public class RedAutonomousOpMode extends CompetitionAutonomousOpMode {
 
     @Override
     protected double goDirectionOfOtherWall(double power, double inches, long startTime) {
-        return goDistanceDiagRight(power, inches, startTime);
+        return goDistanceDiagRight(power, inches);
     }
 
     @Override
@@ -127,17 +127,17 @@ public class RedAutonomousOpMode extends CompetitionAutonomousOpMode {
             startMoveTime = System.currentTimeMillis();
         } else {
             if (seesTapeFront < 3 && seesTapeBack < 3) {
-                double distanceToGo = goDistanceRight(DEFAULT_POWER, 2 * INCHES_PER_CENT, startMoveTime);
+                double distanceToGo = goDistanceRight(DEFAULT_POWER, 2 * INCHES_PER_CENT);
                 if (distanceToGo == 0) {
                     sensorInputs = 0;
                 }
             } else if (seesTapeFront < 3) {
-                double distanceToGo = goDistanceFrontWheelsRight(DEFAULT_POWER, 2 * INCHES_PER_CENT, startMoveTime);
+                double distanceToGo = goDistanceFrontWheelsRight(DEFAULT_POWER, 2 * INCHES_PER_CENT);
                 if (distanceToGo == 0) {
                     sensorInputs = 0;
                 }
             } else if (seesTapeBack < 3) {
-                double distanceToGo = goDistanceBackWheelsRight(DEFAULT_POWER, 2 * INCHES_PER_CENT, startMoveTime);
+                double distanceToGo = goDistanceBackWheelsRight(DEFAULT_POWER, 2 * INCHES_PER_CENT);
                 if (distanceToGo == 0) {
                     sensorInputs = 0;
                 }

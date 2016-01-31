@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
 import com.qualcomm.ftcrobotcontroller.FtcRobotControllerActivity;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 
 /*
  * Base class for opmodes used for autonomous.
@@ -122,6 +123,7 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
                 initServos();//Sets servos to start positions, as well as enables LEDs for light sensors
             } else if (stage == STAGE_MAKE_TRIANGLE) {
                 sweepTriangle();
+//                endStage();
             } else if (stage == STAGE_GO_TO_OTHER_WALL) {
                 goToOtherWall();//The robot goes to the opposite wall in the alliance zone
             } else if (stage == STAGE_ALIGN_WITH_WALL) {
@@ -156,6 +158,7 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
             } else if (stage == STAGE_LIFT_ARM) {
                 liftArm();//arm is lifted up to let the climbers fall
             } else if (stage == STAGE_READ_COLOR) {
+//                climberServo.setPosition(climberServoFinalPos);
                 readColorSensor();//an average of 10 readings or is recorded from the light sensor facing the buttons
             } else if (stage == STAGE_PRESS_BUTTON) {
                 if (!fail) {
@@ -165,7 +168,7 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
                     endStage();
                 }
             } else {
-                moveIntoFloorGoal();
+                // moveIntoFloorGoal();
             }
         }
 //        logData("rightLight", String.valueOf(rightLightDetected));
@@ -174,6 +177,7 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
 
     protected void endStage() {
         stopRobot();
+        resetEncoders();
         stage++;
         startMoveTime = System.currentTimeMillis();
     }
@@ -183,6 +187,8 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
             leftFlapServo.setPosition(leftFlapServoInitPos);
             rightFlapServo.setPosition(rightFlapServoInitPos);
             climberServo.setPosition(climberServoInitPos);
+//            rightHookServo.setPosition(rightHookInitPos);
+//            leftHookServo.setPosition(leftHookInitPos);
             leftSweepServo.setPosition(leftSweepIn);
             rightSweepServo.setPosition(rightSweepIn);
             frontLightSensor.enableLed(true);
@@ -343,21 +349,24 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
             sensorInputs++;
             startMoveTime = System.currentTimeMillis();
         } else {
-            if (seesWallLeft < 10 && seesWallRight < 10) {
-                double distanceToGo = goDistanceForward(DEFAULT_POWER, 2 * INCHES_PER_CENT, startMoveTime);
+            if (seesWallLeft < 15 && seesWallRight < 15) {
+                double distanceToGo = goDistanceForward(DEFAULT_POWER, 2 * INCHES_PER_CENT);
                 if (distanceToGo == 0) {
+                    resetEncoders();
                     sensorInputs = 0;
                     alignPeriods++;
                 }
-            } else if (seesWallRight < 10) {
-                double distanceToGo = goDistanceRightWheelsForward(DEFAULT_POWER, 4 * INCHES_PER_CENT, startMoveTime);
+            } else if (seesWallRight < 15) {
+                double distanceToGo = goDistanceRightWheelsForward(DEFAULT_POWER, 4 * INCHES_PER_CENT);
                 if (distanceToGo == 0) {
+                    resetEncoders();
                     sensorInputs = 0;
                     alignPeriods++;
                 }
-            } else if (seesWallLeft < 10) {
-                double distanceToGo = goDistanceLeftWheelsForward(DEFAULT_POWER, 4 * INCHES_PER_CENT, startMoveTime);
+            } else if (seesWallLeft < 15) {
+                double distanceToGo = goDistanceLeftWheelsForward(DEFAULT_POWER, 4 * INCHES_PER_CENT);
                 if (distanceToGo == 0) {
+                    resetEncoders();
                     sensorInputs = 0;
                     alignPeriods++;
                 }
@@ -369,7 +378,7 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
                 endStage();
             }
         }
-        if (alignPeriods > 12){
+        if (alignPeriods > 15) {
             seesWallRight = 0;
             seesWallLeft = 0;
             sensorInputs = 0;
@@ -411,14 +420,14 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     }
 
     protected void ramWall() {
-        double distanceToGo = goDistanceForward(DEFAULT_POWER * 0.625, 16, startMoveTime);
+        double distanceToGo = goDistanceForward(DEFAULT_POWER * 0.625, 16);
         if (distanceToGo == 0) {
             endStage();
         }
     }
 
     protected void backUp(int distance) {
-        double distanceToGo = goDistanceBackward(DEFAULT_POWER, distance, startMoveTime);
+        double distanceToGo = goDistanceBackward(DEFAULT_POWER, distance);
         if (distanceToGo == 0) {
             endStage();
         }

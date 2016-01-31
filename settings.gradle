@@ -1,2 +1,3 @@
+include ':robotcore'
 // FTC Apps
-include (':FtcRobotController')
+include(':FtcRobotController')
