@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
 import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -48,21 +49,21 @@ public class AutonomousOpMode extends BaseOpMode {
 
     @Override
     public void init() {
-        motorFrontLeft = hardwareMap.dcMotor.get("1motor1");
-        motorFrontRight = hardwareMap.dcMotor.get("0motor2");
-        motorBackRight = hardwareMap.dcMotor.get("0motor1");
-        motorBackLeft = hardwareMap.dcMotor.get("1motor2");
-        frontRightUltra = hardwareMap.ultrasonicSensor.get("3ultra4");
-        frontLeftUltra = hardwareMap.ultrasonicSensor.get("3ultra5");
-        frontLightSensor = hardwareMap.lightSensor.get("3light1");
-        backLightSensor = hardwareMap.lightSensor.get("3light0");
-        rightColorSensor = hardwareMap.lightSensor.get("2light1");
-        leftColorSensor = hardwareMap.lightSensor.get("2light2");
-        climberServo = hardwareMap.servo.get("4servo2");
-        rightFlapServo = hardwareMap.servo.get("4servo1");
-        leftFlapServo = hardwareMap.servo.get("4servo3");
-        rightSweepServo = hardwareMap.servo.get("4servo4");
-        leftSweepServo = hardwareMap.servo.get("4servo5");
+//        motorFrontLeft = hardwareMap.dcMotor.get("1motor1");
+//        motorFrontRight = hardwareMap.dcMotor.get("0motor2");
+//        motorBackRight = hardwareMap.dcMotor.get("0motor1");
+//        motorBackLeft = hardwareMap.dcMotor.get("1motor2");
+//        frontRightUltra = hardwareMap.ultrasonicSensor.get("3ultra4");
+//        frontLeftUltra = hardwareMap.ultrasonicSensor.get("3ultra5");
+//        frontLightSensor = hardwareMap.lightSensor.get("3light1");
+//        backLightSensor = hardwareMap.lightSensor.get("3light0");
+//        rightColorSensor = hardwareMap.lightSensor.get("2light1");
+//        leftColorSensor = hardwareMap.lightSensor.get("2light2");
+//        climberServo = hardwareMap.servo.get("4servo2");
+//        rightFlapServo = hardwareMap.servo.get("4servo1");
+//        leftFlapServo = hardwareMap.servo.get("4servo3");
+//        rightSweepServo = hardwareMap.servo.get("4servo4");
+//        leftSweepServo = hardwareMap.servo.get("4servo5");
     }
 
     @Override
@@ -71,17 +72,11 @@ public class AutonomousOpMode extends BaseOpMode {
             loop++;
             startTime = System.currentTimeMillis();
         } else {
-//            if (gamepad1.a)
-//                motorSpinny.setPower(0.1);
-//            else if (gamepad1.b)
-//                motorSpinny.setPower(-0.1);
-//            else
-            legacyControl1.setMotorPower(1, 0.25);
-            legacyControl1.setMotorPower(2, 0.25);
-//            legacyControl2.setMotorPower(1, 0.25);
-            legacyControl2.setMotorPower(2, 0.25);
-//            logData("spinny", String.valueOf(motorSpinny.getCurrentPosition()));
-//            goPerfectlyStraight2Wheels();
+            logData("_update", String.valueOf(gamepad1.update));
+            logData("_left stick y", String.valueOf(gamepad1.left_stick_y));
+            for (int i = 0; i < gamepad1.allFloatValues.length; i++) {
+                logData(String.valueOf(i), String.valueOf(gamepad1.allFloatValues[i]));
+            }
 //            logData("Front Right", String.valueOf(motorFrontRight.getCurrentPosition()));
 //            logData("Front Left", String.valueOf(motorFrontLeft.getCurrentPosition()));
 //            logData("Back Right", String.valueOf(motorBackRight.getCurrentPosition()));
@@ -142,22 +137,6 @@ public class AutonomousOpMode extends BaseOpMode {
         motorBackRight.setPower(powers[1]);
         motorFrontRight.setPower(0);
         motorBackLeft.setPower(0);
-    }
-
-    protected void spinRight(double power) {
-        double[] powers = syncEncoders4Motors(power, motorFrontRight.getCurrentPosition(), motorBackRight.getCurrentPosition(), motorFrontLeft.getCurrentPosition(), motorBackLeft.getCurrentPosition());
-        motorFrontRight.setPower(-powers[0]);
-        motorBackRight.setPower(-powers[1]);
-        motorFrontLeft.setPower(-powers[2]);
-        motorBackLeft.setPower(-powers[3]);
-    }
-
-    protected void spinLeft(double power) {
-        double[] powers = syncEncoders4Motors(power, motorFrontRight.getCurrentPosition(), motorBackRight.getCurrentPosition(), motorFrontLeft.getCurrentPosition(), motorBackLeft.getCurrentPosition());
-        motorFrontRight.setPower(powers[0]);
-        motorBackRight.setPower(powers[1]);
-        motorFrontLeft.setPower(powers[2]);
-        motorBackLeft.setPower(powers[3]);
     }
 
     protected void frontWheelsRight(double power) {
@@ -238,46 +217,6 @@ public class AutonomousOpMode extends BaseOpMode {
 //            logData("fixing", "perfect");
 //        }
 //    }
-
-    public double[] syncEncoders2Motors(double power, int encoder0, int encoder1) {
-        double[] newPowers = new double[2];
-        newPowers[0] = power;
-        newPowers[1] = power;
-        if (Math.abs(encoder0) > Math.abs(encoder1) + 8) {
-            newPowers[0] = power * 0.75;
-        } else if (Math.abs(encoder1) > Math.abs(encoder0) + 8) {
-            newPowers[1] = power * 0.75;
-        }
-        return newPowers;
-    }
-
-    public double[] syncEncoders4Motors(double power, int encoder0, int encoder1, int encoder2, int encoder3) {
-        HashMap<Integer, Integer> encoderIndexes = new HashMap<Integer, Integer>();
-        encoderIndexes.put(Math.abs(encoder0), 0);
-        encoderIndexes.put(Math.abs(encoder1), 1);
-        encoderIndexes.put(Math.abs(encoder2), 2);
-        encoderIndexes.put(Math.abs(encoder3), 3);
-        int[] encoderValuesSorted = new int[]{Math.abs(encoder0), Math.abs(encoder1), Math.abs(encoder2), Math.abs(encoder3)};
-        Arrays.sort(encoderValuesSorted);
-        double[] newPowers = new double[4];
-        newPowers[0] = power;
-        newPowers[1] = power;
-        newPowers[2] = power;
-        newPowers[3] = power;
-        if (encoderValuesSorted[3] > encoderValuesSorted[2] + 8) {
-            newPowers[encoderIndexes.get(encoderValuesSorted[3])] = power * 0.85;
-        }
-        if (encoderValuesSorted[2] > encoderValuesSorted[1] + 8) {
-            newPowers[encoderIndexes.get(encoderValuesSorted[2])] = power * 0.85;
-            newPowers[encoderIndexes.get(encoderValuesSorted[3])] = newPowers[encoderIndexes.get(encoderValuesSorted[3])] * 0.85;
-        }
-        if (encoderValuesSorted[1] > encoderValuesSorted[0] + 8) {
-            newPowers[encoderIndexes.get(encoderValuesSorted[1])] = power * 0.85;
-            newPowers[encoderIndexes.get(encoderValuesSorted[2])] = newPowers[encoderIndexes.get(encoderValuesSorted[2])] * 0.85;
-            newPowers[encoderIndexes.get(encoderValuesSorted[3])] = newPowers[encoderIndexes.get(encoderValuesSorted[3])] * 0.85;
-        }
-        return newPowers;
-    }
 
     private double getDistanceToGo(double inches, int encoderTicksSoFar) {
         int totalEncoderTicks = (int) (inches * ENCODER_TICKS_PER_INCH);
@@ -387,6 +326,5 @@ public class AutonomousOpMode extends BaseOpMode {
     protected double spinLeftDegrees(double power, double degrees) {
         spinLeft(power);
         return getDegreesToGo(degrees, motorFrontRight.getCurrentPosition());
-
     }
 }

@@ -23,21 +23,27 @@ public class LogitechGamepadF310 extends Gamepad {
     public void update(final MotionEvent event) {
         this.id = event.getDeviceId();
         this.timestamp = event.getEventTime();
-        if (Build.VERSION.RELEASE.startsWith("5")) {
-            this.a(event);
-        } else {
-            this.left_stick_x = this.cleanMotionValues(event.getAxisValue(0));
-            this.left_stick_y = this.cleanMotionValues(event.getAxisValue(1));
-            this.right_stick_x = this.cleanMotionValues(event.getAxisValue(12));
-            this.right_stick_y = this.cleanMotionValues(event.getAxisValue(13));
-            this.left_trigger = (event.getAxisValue(11) + 1.0f) / 2.0f;
-            this.right_trigger = (event.getAxisValue(14) + 1.0f) / 2.0f;
-            this.dpad_down = (event.getAxisValue(16) > this.dpadThreshold);
-            this.dpad_up = (event.getAxisValue(16) < -this.dpadThreshold);
-            this.dpad_right = (event.getAxisValue(15) > this.dpadThreshold);
-            this.dpad_left = (event.getAxisValue(15) < -this.dpadThreshold);
-            this.callCallback();
+//        if (Build.VERSION.RELEASE.startsWith("5")) {
+//            this.a(event);
+//        } else {
+        this.left_stick_x = this.cleanMotionValues(event.getAxisValue(0));
+        this.left_stick_y = this.cleanMotionValues(event.getAxisValue(1));
+        this.right_stick_x = this.cleanMotionValues(event.getAxisValue(12));
+        this.right_stick_y = this.cleanMotionValues(event.getAxisValue(13));
+        this.left_trigger = (event.getAxisValue(11) + 1.0f) / 2.0f;
+        this.right_trigger = (event.getAxisValue(14) + 1.0f) / 2.0f;
+        this.dpad_down = (event.getAxisValue(16) > this.dpadThreshold);
+        this.dpad_up = (event.getAxisValue(16) < -this.dpadThreshold);
+        this.dpad_right = (event.getAxisValue(15) > this.dpadThreshold);
+        this.dpad_left = (event.getAxisValue(15) < -this.dpadThreshold);
+        for (int i = 0; i < allFloatValues.length; i++) {
+            if (i <= 25 || i >= 32) {
+                allFloatValues[i] = event.getAxisValue(i);
+            }
         }
+        update = true;
+        this.callCallback();
+//        }
     }
 
     private void a(final MotionEvent motionEvent) {

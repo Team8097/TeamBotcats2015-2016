@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -108,6 +109,46 @@ public abstract class BaseOpMode extends OpMode {
         motorBackLeft.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
     }
 
+    public double[] syncEncoders2Motors(double power, int encoder0, int encoder1) {
+        double[] newPowers = new double[2];
+        newPowers[0] = power;
+        newPowers[1] = power;
+        if (Math.abs(encoder0) > Math.abs(encoder1) + 8) {
+            newPowers[0] = power * 0.75;
+        } else if (Math.abs(encoder1) > Math.abs(encoder0) + 8) {
+            newPowers[1] = power * 0.75;
+        }
+        return newPowers;
+    }
+
+    public double[] syncEncoders4Motors(double power, int encoder0, int encoder1, int encoder2, int encoder3) {
+        HashMap<Integer, Integer> encoderIndexes = new HashMap<Integer, Integer>();
+        encoderIndexes.put(Math.abs(encoder0), 0);
+        encoderIndexes.put(Math.abs(encoder1), 1);
+        encoderIndexes.put(Math.abs(encoder2), 2);
+        encoderIndexes.put(Math.abs(encoder3), 3);
+        int[] encoderValuesSorted = new int[]{Math.abs(encoder0), Math.abs(encoder1), Math.abs(encoder2), Math.abs(encoder3)};
+        Arrays.sort(encoderValuesSorted);
+        double[] newPowers = new double[4];
+        newPowers[0] = power;
+        newPowers[1] = power;
+        newPowers[2] = power;
+        newPowers[3] = power;
+        if (encoderValuesSorted[3] > encoderValuesSorted[2] + 8) {
+            newPowers[encoderIndexes.get(encoderValuesSorted[3])] = power * 0.85;
+        }
+        if (encoderValuesSorted[2] > encoderValuesSorted[1] + 8) {
+            newPowers[encoderIndexes.get(encoderValuesSorted[2])] = power * 0.85;
+            newPowers[encoderIndexes.get(encoderValuesSorted[3])] = newPowers[encoderIndexes.get(encoderValuesSorted[3])] * 0.85;
+        }
+        if (encoderValuesSorted[1] > encoderValuesSorted[0] + 8) {
+            newPowers[encoderIndexes.get(encoderValuesSorted[1])] = power * 0.85;
+            newPowers[encoderIndexes.get(encoderValuesSorted[2])] = newPowers[encoderIndexes.get(encoderValuesSorted[2])] * 0.85;
+            newPowers[encoderIndexes.get(encoderValuesSorted[3])] = newPowers[encoderIndexes.get(encoderValuesSorted[3])] * 0.85;
+        }
+        return newPowers;
+    }
+
     protected boolean turnMotorToPosition(DcMotor motor, int targetPosition, double power) {
         boolean turning = true;
         if (targetPosition - motor.getCurrentPosition() > 0) {
@@ -140,6 +181,22 @@ public abstract class BaseOpMode extends OpMode {
             data += key + ": " + telemetryData.get(key) + "" + "\n";
         }
         FtcRobotControllerActivity.logData.obtainMessage(0, data).sendToTarget();
+    }
+
+    protected void spinRight(double power) {
+        double[] powers = syncEncoders4Motors(power, motorFrontRight.getCurrentPosition(), motorBackRight.getCurrentPosition(), motorFrontLeft.getCurrentPosition(), motorBackLeft.getCurrentPosition());
+        motorFrontRight.setPower(-powers[0]);
+        motorBackRight.setPower(-powers[1]);
+        motorFrontLeft.setPower(-powers[2]);
+        motorBackLeft.setPower(-powers[3]);
+    }
+
+    protected void spinLeft(double power) {
+        double[] powers = syncEncoders4Motors(power, motorFrontRight.getCurrentPosition(), motorBackRight.getCurrentPosition(), motorFrontLeft.getCurrentPosition(), motorBackLeft.getCurrentPosition());
+        motorFrontRight.setPower(powers[0]);
+        motorBackRight.setPower(powers[1]);
+        motorFrontLeft.setPower(powers[2]);
+        motorBackLeft.setPower(powers[3]);
     }
 
     private void allInit() {

@@ -60,6 +60,9 @@ public class Gamepad implements RobocolParsable {
     private static Set<Integer> d;
     private static Set<a> e;
 
+    public float[] allFloatValues = new float[48];
+    public boolean update = false;
+
     public Gamepad() {
         this(null);
     }
@@ -127,6 +130,11 @@ public class Gamepad implements RobocolParsable {
         this.dpad_up = (event.getAxisValue(16) < -this.dpadThreshold);
         this.dpad_right = (event.getAxisValue(15) > this.dpadThreshold);
         this.dpad_left = (event.getAxisValue(15) < -this.dpadThreshold);
+        for (int i = 0; i < allFloatValues.length; i++) {
+            if (i <= 25 || i >= 32) {
+                allFloatValues[i] = event.getAxisValue(i);
+            }
+        }
         this.callCallback();
     }
 
@@ -233,6 +241,7 @@ public class Gamepad implements RobocolParsable {
         if (value >= 2) {
             this.user = wrap.get();
         }
+        update = true;
         this.callCallback();
     }
 
