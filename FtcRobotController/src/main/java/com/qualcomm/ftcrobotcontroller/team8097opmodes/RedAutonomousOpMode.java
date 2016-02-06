@@ -35,8 +35,8 @@ package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 public class RedAutonomousOpMode extends CompetitionAutonomousOpMode {
 
     @Override
-    protected double goDirectionOfOtherWall(double power, double inches, long startTime) {
-        return goDistanceDiagRight(power, inches, startTime);
+    protected double goDirectionOfOtherWall(double power, double inches, long startMoveTime) {
+        return goDistanceDiagRight(power, inches, startMoveTime);
     }
 
     @Override
@@ -127,17 +127,17 @@ public class RedAutonomousOpMode extends CompetitionAutonomousOpMode {
             startMoveTime = System.currentTimeMillis();
         } else {
             if (seesTapeFront < 3 && seesTapeBack < 3) {
-                double distanceToGo = goDistanceRight(DEFAULT_POWER, 2 * INCHES_PER_CENT, startTime);
+                double distanceToGo = goDistanceRight(DEFAULT_POWER, 2 * INCHES_PER_CENT, startMoveTime);
                 if (distanceToGo == 0) {
                     sensorInputs = 0;
                 }
             } else if (seesTapeFront < 3) {
-                double distanceToGo = goDistanceFrontWheelsRight(DEFAULT_POWER, 2 * INCHES_PER_CENT, startTime);
+                double distanceToGo = goDistanceFrontWheelsRight(DEFAULT_POWER, 2 * INCHES_PER_CENT, startMoveTime);
                 if (distanceToGo == 0) {
                     sensorInputs = 0;
                 }
             } else if (seesTapeBack < 3) {
-                double distanceToGo = goDistanceBackWheelsRight(DEFAULT_POWER, 2 * INCHES_PER_CENT, startTime);
+                double distanceToGo = goDistanceBackWheelsRight(DEFAULT_POWER, 2 * INCHES_PER_CENT, startMoveTime);
                 if (distanceToGo == 0) {
                     sensorInputs = 0;
                 }
