@@ -49,21 +49,24 @@ public class AutonomousOpMode extends BaseOpMode {
 
     @Override
     public void init() {
-//        motorFrontLeft = hardwareMap.dcMotor.get("1motor1");
-//        motorFrontRight = hardwareMap.dcMotor.get("0motor2");
-//        motorBackRight = hardwareMap.dcMotor.get("0motor1");
-//        motorBackLeft = hardwareMap.dcMotor.get("1motor2");
-//        frontRightUltra = hardwareMap.ultrasonicSensor.get("3ultra4");
-//        frontLeftUltra = hardwareMap.ultrasonicSensor.get("3ultra5");
-//        frontLightSensor = hardwareMap.lightSensor.get("3light1");
-//        backLightSensor = hardwareMap.lightSensor.get("3light0");
-//        rightColorSensor = hardwareMap.lightSensor.get("2light1");
-//        leftColorSensor = hardwareMap.lightSensor.get("2light2");
-//        climberServo = hardwareMap.servo.get("4servo2");
-//        rightFlapServo = hardwareMap.servo.get("4servo1");
-//        leftFlapServo = hardwareMap.servo.get("4servo3");
-//        rightSweepServo = hardwareMap.servo.get("4servo4");
-//        leftSweepServo = hardwareMap.servo.get("4servo5");
+        motorFrontLeft = hardwareMap.dcMotor.get("frontRight");
+        motorFrontRight = hardwareMap.dcMotor.get("backRight");
+        motorBackRight = hardwareMap.dcMotor.get("backLeft");
+        motorBackLeft = hardwareMap.dcMotor.get("frontLeft");
+        frontRightUltra = hardwareMap.ultrasonicSensor.get("rightUltra");
+        frontLeftUltra = hardwareMap.ultrasonicSensor.get("leftUltra");
+        frontLightSensor = hardwareMap.lightSensor.get("frontLight");
+        backLightSensor = hardwareMap.lightSensor.get("backLight");
+        rightColorSensor = hardwareMap.lightSensor.get("rightColor");
+        leftColorSensor = hardwareMap.lightSensor.get("leftColor");
+        climberServo = hardwareMap.servo.get("climbers");
+        rightFlapServo = hardwareMap.servo.get("rightButton");
+        leftFlapServo = hardwareMap.servo.get("leftButton");
+        rightHookServo = hardwareMap.servo.get("rightHook");
+        leftHookServo = hardwareMap.servo.get("leftHook");
+        armLatchServo = hardwareMap.servo.get("armLatch");
+        rightSweepServo = hardwareMap.servo.get("rightSweep");
+        leftSweepServo = hardwareMap.servo.get("leftSweep");
     }
 
     @Override
@@ -72,11 +75,6 @@ public class AutonomousOpMode extends BaseOpMode {
             loop++;
             startTime = System.currentTimeMillis();
         } else {
-            logData("_update", String.valueOf(gamepad1.update));
-            logData("_left stick y", String.valueOf(gamepad1.left_stick_y));
-            for (int i = 0; i < gamepad1.allFloatValues.length; i++) {
-                logData(String.valueOf(i), String.valueOf(gamepad1.allFloatValues[i]));
-            }
 //            logData("Front Right", String.valueOf(motorFrontRight.getCurrentPosition()));
 //            logData("Front Left", String.valueOf(motorFrontLeft.getCurrentPosition()));
 //            logData("Back Right", String.valueOf(motorBackRight.getCurrentPosition()));
@@ -228,6 +226,18 @@ public class AutonomousOpMode extends BaseOpMode {
         }
     }
 
+    private double getDistanceToGo(double power, double inches, long startTime) {
+        double millisPerInch = MILLIS_PER_INCH_DEFAULT * (DEFAULT_POWER / power);
+        double goTime = inches * millisPerInch;
+        int timeElapsed = (int) (System.currentTimeMillis() - startTime);
+        if (timeElapsed < goTime) {
+            double distanceToGo = (goTime - timeElapsed) / millisPerInch;
+            return distanceToGo;
+        } else {
+            return 0;
+        }
+    }
+
     private double getDistanceToGoDiag(double inches, int encoderTicksSoFar) {
         int totalEncoderTicks = (int) (inches * ENCODER_TICKS_PER_INCH_DIAG);
         if (encoderTicksSoFar < totalEncoderTicks) {
@@ -326,5 +336,91 @@ public class AutonomousOpMode extends BaseOpMode {
     protected double spinLeftDegrees(double power, double degrees) {
         spinLeft(power);
         return getDegreesToGo(degrees, motorFrontRight.getCurrentPosition());
+    }
+
+    protected double goDistanceForward(double power, double inches, long startTime) {
+        goForward(power);
+        return getDistanceToGo(power, inches, startTime);
+    }
+
+    protected double goDistanceRightWheelsForward(double power, double inches, long startTime) {
+        rightWheelsForward(power);
+        return getDistanceToGo(power, inches, startTime);
+    }
+
+    protected double goDistanceRightWheelsBackward(double power, double inches, long startTime) {
+        rightWheelsBackward(power);
+        return getDistanceToGo(power, inches, startTime);
+    }
+
+    protected double goDistanceLeftWheelsForward(double power, double inches, long startTime) {
+        leftWheelsForward(power);
+        return getDistanceToGo(power, inches, startTime);
+    }
+
+    protected double goDistanceLeftWheelsBackward(double power, double inches, long startTime) {
+        leftWheelsBackward(power);
+        return getDistanceToGo(power, inches, startTime);
+    }
+
+    protected double goDistanceFrontWheelsRight(double power, double inches, long startTime) {
+        frontWheelsRight(power);
+        return getDistanceToGo(power, inches, startTime);
+    }
+
+    protected double goDistanceFrontWheelsLeft(double power, double inches, long startTime) {
+        frontWheelsLeft(power);
+        return getDistanceToGo(power, inches, startTime);
+    }
+
+    protected double goDistanceBackWheelsRight(double power, double inches, long startTime) {
+        backWheelsRight(power);
+        return getDistanceToGo(power, inches, startTime);
+    }
+
+    protected double goDistanceBackWheelsLeft(double power, double inches, long startTime) {
+        backWheelsLeft(power);
+        return getDistanceToGo(power, inches, startTime);
+    }
+
+    protected double goDistanceBackward(double power, double inches, long startTime) {
+        goBackward(power);
+        return getDistanceToGo(power, inches, startTime);
+    }
+
+    protected double goDistanceLeft(double power, double inches, long startTime) {
+        goLeft(power);
+        return getDistanceToGo(power, inches, startTime);
+    }
+
+    protected double goDistanceDiagLeft(double power, double inches, long startTime) {
+        double millisPerInch = MILLIS_PER_INCH_DEFAULT * (DEFAULT_POWER / power);
+        double goTime = inches * millisPerInch;
+        int timeElapsed = (int) (System.currentTimeMillis() - startTime);
+        goDiagLeft(power);
+        if (timeElapsed < goTime) {
+            double distanceToGo = (goTime - timeElapsed) / millisPerInch;
+            return distanceToGo;
+        } else {
+            return 0;
+        }
+    }
+
+    protected double goDistanceRight(double power, double inches, long startTime) {
+        goRight(power);
+        return getDistanceToGo(power, inches, startTime);
+    }
+
+    protected double goDistanceDiagRight(double power, double inches, long startTime) {
+        double millisPerInch = MILLIS_PER_INCH_DEFAULT * (DEFAULT_POWER / power);
+        double goTime = inches * millisPerInch;
+        int timeElapsed = (int) (System.currentTimeMillis() - startTime);
+        goDiagRight(power);
+        if (timeElapsed < goTime) {
+            double distanceToGo = (goTime - timeElapsed) / millisPerInch;
+            return distanceToGo;
+        } else {
+            return 0;
+        }
     }
 }

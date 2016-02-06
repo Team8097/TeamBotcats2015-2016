@@ -42,10 +42,11 @@ allprojects {
 }
 
 dependencies {
-    compile project(':ftccommon2')
-    compile project(':hardware')
-    compile project(':modernrobotics')
-    compile project(':robotcore')
-    compile project(':analytics')
+    compile(name:'RobotCore-release', ext:'aar')
+    compile(name:'Analytics-release', ext:'aar')
+    compile(name:'ModernRobotics-release', ext:'aar')
+    compile(name:'Hardware-release', ext:'aar')
+    compile(name:'FtcCommon-release', ext:'aar')
+    compile(name:'WirelessP2p-release', ext:'aar')
     compile 'com.android.support:support-v4:23.1.1'
 }

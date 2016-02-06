@@ -135,6 +135,7 @@ public class Gamepad implements RobocolParsable {
                 allFloatValues[i] = event.getAxisValue(i);
             }
         }
+        update = true;
         this.callCallback();
     }
 

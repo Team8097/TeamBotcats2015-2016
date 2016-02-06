@@ -1,3 +1,2 @@
-include ':robotcore', ':hardware', ':modernrobotics', ':analytics', ':ftccommon2', ':wirelessp2p2'
 // FTC Apps
 include(':FtcRobotController')

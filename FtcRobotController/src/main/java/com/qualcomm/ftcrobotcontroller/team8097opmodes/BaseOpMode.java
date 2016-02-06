@@ -1,7 +1,5 @@
 package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
-import android.view.MotionEvent;
-
 import com.qualcomm.ftcrobotcontroller.FtcRobotControllerActivity;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 //import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -13,17 +11,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 //import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 // This is the base class for all our opmodes,
 // and includes methods for basic movement and variables for all sensors, motors, etc.
 public abstract class BaseOpMode extends OpMode {
     public final static double DEFAULT_POWER = 0.2;
-    //    public final static double MILLIS_PER_INCH_DEFAULT = 37.736 * (0.25 / DEFAULT_POWER);
+        public final static double MILLIS_PER_INCH_DEFAULT = 37.736 * (0.25 / DEFAULT_POWER);
 //    public final static double MILLIS_PER_DEGREE_DEFAULT = 5 * (0.25 / DEFAULT_POWER);
     public final static double WHEEL_DIAMETER = 4;
     public final static double ROBOT_DIAMETER = 18;
@@ -31,8 +26,8 @@ public abstract class BaseOpMode extends OpMode {
     public final static double ENCODER_TICKS_PER_INCH_DIAG = 1440 / (WHEEL_DIAMETER * Math.PI);
     public final static double ENCODER_TICKS_PER_DEGREE = ((1440 / (WHEEL_DIAMETER * Math.PI)) * (ROBOT_DIAMETER / WHEEL_DIAMETER)) / 360;
     public final static double INCHES_PER_CENT = 0.393701;
-    public final static int LEFT_ULTRA_PERFECT_DIST = 21;
-    public final static int RIGHT_ULTRA_PERFECT_DIST = 21;
+    public final static int LEFT_ULTRA_PERFECT_DIST = 19;
+    public final static int RIGHT_ULTRA_PERFECT_DIST = 19;
     public final static double BLUE_THRESHOLD = 0.6;
 
     double rightSweepTriangle = 0.524;
@@ -44,7 +39,7 @@ public abstract class BaseOpMode extends OpMode {
 
     DcMotor motorSpinny;
     DcMotor motorExtend;
-    DcMotor motorMoveArm;
+    DcMotor motorLiftArm;
     DcMotor motorCollection;
 
     DcMotor motorFrontRight;
@@ -59,6 +54,7 @@ public abstract class BaseOpMode extends OpMode {
     Servo rightSweepServo;
     Servo leftSweepServo;
     Servo climberServo;
+    Servo armLatchServo;
 
     LightSensor rightColorSensor;
     LightSensor leftColorSensor;
@@ -80,10 +76,14 @@ public abstract class BaseOpMode extends OpMode {
     final double rightFlapServoFinalPos = 0.588;
     final double climberServoInitPos = 1;
     final double climberServoFinalPos = 0;
-    final double rightHookInitPos = 0;
-    final double rightHookFinalPos = 1;
+    final double rightHookInitPos = 0.046;
+    final double rightHookUpPos = 0.83;
+    final double rightHookHookPos = 0.298;
     final double leftHookInitPos = 1;
-    final double leftHookFinalPos = 0;
+    final double leftHookUpPos = 0.23;
+    final double leftHookHookPos = 0.758;
+    final double armLatchInitPos = 0.894;
+    final double armLatchFinalPos = 0.624;
 
     private HashMap<String, String> telemetryData = new HashMap<String, String>();
 
@@ -110,43 +110,45 @@ public abstract class BaseOpMode extends OpMode {
     }
 
     public double[] syncEncoders2Motors(double power, int encoder0, int encoder1) {
-        double[] newPowers = new double[2];
-        newPowers[0] = power;
-        newPowers[1] = power;
-        if (Math.abs(encoder0) > Math.abs(encoder1) + 8) {
-            newPowers[0] = power * 0.75;
-        } else if (Math.abs(encoder1) > Math.abs(encoder0) + 8) {
-            newPowers[1] = power * 0.75;
-        }
-        return newPowers;
+//        double[] newPowers = new double[2];
+//        newPowers[0] = power;
+//        newPowers[1] = power;
+//        if (Math.abs(encoder0) > Math.abs(encoder1) + 8) {
+//            newPowers[0] = power * 0.75;
+//        } else if (Math.abs(encoder1) > Math.abs(encoder0) + 8) {
+//            newPowers[1] = power * 0.75;
+//        }
+//        return newPowers;
+        return new double[] {power, power};
     }
 
     public double[] syncEncoders4Motors(double power, int encoder0, int encoder1, int encoder2, int encoder3) {
-        HashMap<Integer, Integer> encoderIndexes = new HashMap<Integer, Integer>();
-        encoderIndexes.put(Math.abs(encoder0), 0);
-        encoderIndexes.put(Math.abs(encoder1), 1);
-        encoderIndexes.put(Math.abs(encoder2), 2);
-        encoderIndexes.put(Math.abs(encoder3), 3);
-        int[] encoderValuesSorted = new int[]{Math.abs(encoder0), Math.abs(encoder1), Math.abs(encoder2), Math.abs(encoder3)};
-        Arrays.sort(encoderValuesSorted);
-        double[] newPowers = new double[4];
-        newPowers[0] = power;
-        newPowers[1] = power;
-        newPowers[2] = power;
-        newPowers[3] = power;
-        if (encoderValuesSorted[3] > encoderValuesSorted[2] + 8) {
-            newPowers[encoderIndexes.get(encoderValuesSorted[3])] = power * 0.85;
-        }
-        if (encoderValuesSorted[2] > encoderValuesSorted[1] + 8) {
-            newPowers[encoderIndexes.get(encoderValuesSorted[2])] = power * 0.85;
-            newPowers[encoderIndexes.get(encoderValuesSorted[3])] = newPowers[encoderIndexes.get(encoderValuesSorted[3])] * 0.85;
-        }
-        if (encoderValuesSorted[1] > encoderValuesSorted[0] + 8) {
-            newPowers[encoderIndexes.get(encoderValuesSorted[1])] = power * 0.85;
-            newPowers[encoderIndexes.get(encoderValuesSorted[2])] = newPowers[encoderIndexes.get(encoderValuesSorted[2])] * 0.85;
-            newPowers[encoderIndexes.get(encoderValuesSorted[3])] = newPowers[encoderIndexes.get(encoderValuesSorted[3])] * 0.85;
-        }
-        return newPowers;
+//        HashMap<Integer, Integer> encoderIndexes = new HashMap<Integer, Integer>();
+//        encoderIndexes.put(Math.abs(encoder0), 0);
+//        encoderIndexes.put(Math.abs(encoder1), 1);
+//        encoderIndexes.put(Math.abs(encoder2), 2);
+//        encoderIndexes.put(Math.abs(encoder3), 3);
+//        int[] encoderValuesSorted = new int[]{Math.abs(encoder0), Math.abs(encoder1), Math.abs(encoder2), Math.abs(encoder3)};
+//        Arrays.sort(encoderValuesSorted);
+//        double[] newPowers = new double[4];
+//        newPowers[0] = power;
+//        newPowers[1] = power;
+//        newPowers[2] = power;
+//        newPowers[3] = power;
+//        if (encoderValuesSorted[3] > encoderValuesSorted[2] + 8) {
+//            newPowers[encoderIndexes.get(encoderValuesSorted[3])] = power * 0.85;
+//        }
+//        if (encoderValuesSorted[2] > encoderValuesSorted[1] + 8) {
+//            newPowers[encoderIndexes.get(encoderValuesSorted[2])] = power * 0.85;
+//            newPowers[encoderIndexes.get(encoderValuesSorted[3])] = newPowers[encoderIndexes.get(encoderValuesSorted[3])] * 0.85;
+//        }
+//        if (encoderValuesSorted[1] > encoderValuesSorted[0] + 8) {
+//            newPowers[encoderIndexes.get(encoderValuesSorted[1])] = power * 0.85;
+//            newPowers[encoderIndexes.get(encoderValuesSorted[2])] = newPowers[encoderIndexes.get(encoderValuesSorted[2])] * 0.85;
+//            newPowers[encoderIndexes.get(encoderValuesSorted[3])] = newPowers[encoderIndexes.get(encoderValuesSorted[3])] * 0.85;
+//        }
+//        return newPowers;
+        return new double[] {power, power, power, power};
     }
 
     protected boolean turnMotorToPosition(DcMotor motor, int targetPosition, double power) {
@@ -200,24 +202,27 @@ public abstract class BaseOpMode extends OpMode {
     }
 
     private void allInit() {
-        motorFrontLeft = hardwareMap.dcMotor.get("1motor2");
-        motorFrontRight = hardwareMap.dcMotor.get("1motor1");
-        motorBackRight = hardwareMap.dcMotor.get("0motor2");
-        motorBackLeft = hardwareMap.dcMotor.get("0motor1");
-        frontRightUltra = hardwareMap.ultrasonicSensor.get("3ultra4");
-        frontLeftUltra = hardwareMap.ultrasonicSensor.get("3ultra5");
-        frontLightSensor = hardwareMap.lightSensor.get("3light1");
-        backLightSensor = hardwareMap.lightSensor.get("3light0");
-        rightColorSensor = hardwareMap.lightSensor.get("2light1");
-        leftColorSensor = hardwareMap.lightSensor.get("2light2");
-        motorSpinny = hardwareMap.dcMotor.get("2hitech5motor2");
-        motorMoveArm = hardwareMap.dcMotor.get("2hitech5motor1");
-        motorExtend = hardwareMap.dcMotor.get("2hitech0motor1");
-        motorCollection = hardwareMap.dcMotor.get("2hitech0motor2");
-        climberServo = hardwareMap.servo.get("4servo2");
-        rightFlapServo = hardwareMap.servo.get("4servo1");
-        leftFlapServo = hardwareMap.servo.get("4servo3");
-//        rightHookServo = hardwareMap.servo.get("4servo5");
-//        leftHookServo = hardwareMap.servo.get("4servo4");
+        motorFrontLeft = hardwareMap.dcMotor.get("frontLeft");
+        motorFrontRight = hardwareMap.dcMotor.get("frontRight");
+        motorBackRight = hardwareMap.dcMotor.get("backRight");
+        motorBackLeft = hardwareMap.dcMotor.get("backLeft");
+        frontRightUltra = hardwareMap.ultrasonicSensor.get("rightUltra");
+        frontLeftUltra = hardwareMap.ultrasonicSensor.get("leftUltra");
+        frontLightSensor = hardwareMap.lightSensor.get("frontLight");
+        backLightSensor = hardwareMap.lightSensor.get("backLight");
+        rightColorSensor = hardwareMap.lightSensor.get("rightColor");
+        leftColorSensor = hardwareMap.lightSensor.get("leftColor");
+        motorSpinny = hardwareMap.dcMotor.get("spinny");
+        motorLiftArm = hardwareMap.dcMotor.get("liftArm");
+        motorExtend = hardwareMap.dcMotor.get("extend");
+        motorCollection = hardwareMap.dcMotor.get("collect");
+        climberServo = hardwareMap.servo.get("climbers");
+        rightFlapServo = hardwareMap.servo.get("rightButton");
+        leftFlapServo = hardwareMap.servo.get("leftButton");
+        rightHookServo = hardwareMap.servo.get("rightHook");
+        leftHookServo = hardwareMap.servo.get("leftHook");
+        armLatchServo = hardwareMap.servo.get("armLatch");
+        rightSweepServo = hardwareMap.servo.get("rightSweep");
+        leftSweepServo = hardwareMap.servo.get("leftSweep");
     }
 }

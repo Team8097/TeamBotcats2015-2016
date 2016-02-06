@@ -184,13 +184,14 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
 
     protected void initServos() {
         if (System.currentTimeMillis() - startMoveTime < 300) {
-            leftFlapServo.setPosition(leftFlapServoInitPos);
-            rightFlapServo.setPosition(rightFlapServoInitPos);
             climberServo.setPosition(climberServoInitPos);
-//            rightHookServo.setPosition(rightHookInitPos);
-//            leftHookServo.setPosition(leftHookInitPos);
-            leftSweepServo.setPosition(leftSweepIn);
             rightSweepServo.setPosition(rightSweepIn);
+            leftSweepServo.setPosition(leftSweepIn);
+            rightHookServo.setPosition(rightHookInitPos);
+            leftHookServo.setPosition(leftHookInitPos);
+            rightFlapServo.setPosition(rightFlapServoInitPos);
+            leftFlapServo.setPosition(leftFlapServoInitPos);
+            armLatchServo.setPosition(armLatchInitPos);
             frontLightSensor.enableLed(true);
             backLightSensor.enableLed(true);
         } else {
@@ -350,21 +351,21 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
             startMoveTime = System.currentTimeMillis();
         } else {
             if (seesWallLeft < 15 && seesWallRight < 15) {
-                double distanceToGo = goDistanceForward(DEFAULT_POWER, 2 * INCHES_PER_CENT);
+                double distanceToGo = goDistanceForward(DEFAULT_POWER, 2 * INCHES_PER_CENT, startTime);
                 if (distanceToGo == 0) {
                     resetEncoders();
                     sensorInputs = 0;
                     alignPeriods++;
                 }
             } else if (seesWallRight < 15) {
-                double distanceToGo = goDistanceRightWheelsForward(DEFAULT_POWER, 4 * INCHES_PER_CENT);
+                double distanceToGo = goDistanceRightWheelsForward(DEFAULT_POWER, 4 * INCHES_PER_CENT, startTime);
                 if (distanceToGo == 0) {
                     resetEncoders();
                     sensorInputs = 0;
                     alignPeriods++;
                 }
             } else if (seesWallLeft < 15) {
-                double distanceToGo = goDistanceLeftWheelsForward(DEFAULT_POWER, 4 * INCHES_PER_CENT);
+                double distanceToGo = goDistanceLeftWheelsForward(DEFAULT_POWER, 4 * INCHES_PER_CENT, startTime);
                 if (distanceToGo == 0) {
                     resetEncoders();
                     sensorInputs = 0;
@@ -420,14 +421,14 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     }
 
     protected void ramWall() {
-        double distanceToGo = goDistanceForward(DEFAULT_POWER * 0.625, 16);
+        double distanceToGo = goDistanceForward(DEFAULT_POWER * 0.625, 16, startTime);
         if (distanceToGo == 0) {
             endStage();
         }
     }
 
     protected void backUp(int distance) {
-        double distanceToGo = goDistanceBackward(DEFAULT_POWER, distance);
+        double distanceToGo = goDistanceBackward(DEFAULT_POWER, distance, startTime);
         if (distanceToGo == 0) {
             endStage();
         }
