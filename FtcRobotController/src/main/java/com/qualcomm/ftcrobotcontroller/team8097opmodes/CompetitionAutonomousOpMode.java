@@ -32,7 +32,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.qualcomm.ftcrobotcontroller.team8097opmodes;
 
 import com.qualcomm.ftcrobotcontroller.FtcRobotControllerActivity;
-import com.qualcomm.robotcore.hardware.DcMotorController;
 
 /*
  * Base class for opmodes used for autonomous.
@@ -42,21 +41,19 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
  */
 public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     final static int STAGE_INIT_SERVOS = 0;
-    final static int STAGE_MAKE_TRIANGLE = 1;
-    final static int STAGE_GO_TO_OTHER_WALL = 2;
-    final static int STAGE_ALIGN_WITH_WALL = 3;
-    final static int STAGE_LOOK_FOR_TAPE = 4;
-    final static int STAGE_ALIGN_WITH_TAPE = 5;
-    final static int STAGE_ALIGN_WITH_TAPE_PERFECT = 6;
-    final static int STAGE_BACK_UP = 7;
-    final static int STAGE_ALIGN_WITH_WALL_2 = 8;
-    final static int STAGE_OPEN_SWEEPERS = 9;
-    final static int STAGE_CLOSE_SWEEPERS = 10;
-    final static int STAGE_RAM_WALL = 11;
+    final static int STAGE_GO_TO_OTHER_WALL = 1;
+    final static int STAGE_ALIGN_WITH_WALL = 2;
+    final static int STAGE_LOOK_FOR_TAPE = 3;
+    final static int STAGE_ALIGN_WITH_TAPE = 4;
+    final static int STAGE_ALIGN_WITH_TAPE_PERFECT = 5;
+    final static int STAGE_BACK_UP = 6;
+    final static int STAGE_ALIGN_WITH_WALL_2 = 7;
+    final static int STAGE_PUT_DOWN_FLAPS = 8;
+    final static int STAGE_READ_COLOR = 9;
+    final static int STAGE_MOVE_BUTTON_FLAP = 10;
+    final static int STAGE_RAM_BUTTON = 11;
     final static int STAGE_DROP_CLIMBERS = 12;
     final static int STAGE_LIFT_ARM = 13;
-    final static int STAGE_READ_COLOR = 14;
-    final static int STAGE_PRESS_BUTTON = 15;
     boolean dropClimbers = true;
     int stage = 0;
     int sweepStage = 0;
@@ -121,17 +118,15 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
         } else {
             if (stage == STAGE_INIT_SERVOS) {
                 initServos();//Sets servos to start positions, as well as enables LEDs for light sensors
-            } else if (stage == STAGE_MAKE_TRIANGLE) {
-                sweepTriangle();
-//                endStage();
             } else if (stage == STAGE_GO_TO_OTHER_WALL) {
                 goToOtherWall();//The robot goes to the opposite wall in the alliance zone
             } else if (stage == STAGE_ALIGN_WITH_WALL) {
-                if (!fail) {
-                    alignWithWall();
-                } else {
-                    endStage();
-                }
+//                if (!fail) {
+//                    alignWithWall(15);
+//                } else {
+//                    endStage();
+//                }
+                endStage();
             } else if (stage == STAGE_LOOK_FOR_TAPE) {
                 lookForTape();//The robot moves to the side until it sees tape
             } else if (stage == STAGE_ALIGN_WITH_TAPE) {
@@ -139,34 +134,32 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
             } else if (stage == STAGE_ALIGN_WITH_TAPE_PERFECT) {
                 alignWithTapePerfect();
             } else if (stage == STAGE_BACK_UP) {
-                backUp(3);
+                backUp(10 * INCHES_PER_CENT);
 //                endStage();
             } else if (stage == STAGE_ALIGN_WITH_WALL_2) {
                 if (!fail) {
-                    alignWithWall();
+                    alignWithWall(25);
                 } else {
                     endStage();
                 }
-            } else if (stage == STAGE_OPEN_SWEEPERS) {
-                openSweepers();
-            } else if (stage == STAGE_CLOSE_SWEEPERS) {
-                closeSweepers();
-            } else if (stage == STAGE_RAM_WALL) {
-                ramWall();//The robot hits the wall to align with it
-            } else if (stage == STAGE_DROP_CLIMBERS) {
-                dropClimbers();//arm controlled by servo moves to drop climbers
-            } else if (stage == STAGE_LIFT_ARM) {
-                liftArm();//arm is lifted up to let the climbers fall
+            } else if (stage == STAGE_PUT_DOWN_FLAPS) {
+                putDownFlaps();
             } else if (stage == STAGE_READ_COLOR) {
 //                climberServo.setPosition(climberServoFinalPos);
                 readColorSensor();//an average of 10 readings or is recorded from the light sensor facing the buttons
-            } else if (stage == STAGE_PRESS_BUTTON) {
+            } else if (stage == STAGE_MOVE_BUTTON_FLAP) {
                 if (!fail) {
                     moveCorrectButtonFlap();//based on the light detected in the previous stage,
                     // the robot presses the correct button
                 } else {
                     endStage();
                 }
+            } else if (stage == STAGE_RAM_BUTTON) {
+                ramButton();
+            } else if (stage == STAGE_DROP_CLIMBERS) {
+                dropClimbers();//arm controlled by servo moves to drop climbers
+            } else if (stage == STAGE_LIFT_ARM) {
+                liftArm();//arm is lifted up to let the climbers fall
             } else {
                 // moveIntoFloorGoal();
             }
@@ -185,13 +178,13 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     protected void initServos() {
         if (System.currentTimeMillis() - startMoveTime < 300) {
             climberServo.setPosition(climberServoInitPos);
-            rightSweepServo.setPosition(rightSweepIn);
-            leftSweepServo.setPosition(leftSweepIn);
-            rightHookServo.setPosition(rightHookInitPos);
-            leftHookServo.setPosition(leftHookInitPos);
-            rightFlapServo.setPosition(rightFlapServoInitPos);
-            leftFlapServo.setPosition(leftFlapServoInitPos);
-            armLatchServo.setPosition(armLatchInitPos);
+//            rightHookServo.setPosition(rightHookInitPos);
+//            leftHookServo.setPosition(leftHookInitPos);
+//            rightFlapServo.setPosition(rightFlapServoInitPos);
+//            leftFlapServo.setPosition(leftFlapServoInitPos);
+//            boxSpin.setPosition(spinInitPos);
+//            boxLift.setPosition(liftInitPos);
+//            boxTilt.setPosition(tiltInitPos);
             frontLightSensor.enableLed(true);
             backLightSensor.enableLed(true);
         } else {
@@ -199,42 +192,42 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
         }
     }
 
-    protected void sweepTriangle() {
-        final int rightOut = 0;
-        final int leftTriangle = 1;
-        final int rightTriangle = 2;
-        if (sweepStage == rightOut) {
-            if (System.currentTimeMillis() - startMoveTime < 300) {
-                rightSweepServo.setPosition(rightSweepOut);
-            } else {
-                sweepStage++;
-                startMoveTime = System.currentTimeMillis();
-            }
-        } else if (sweepStage == leftTriangle) {
-            if (System.currentTimeMillis() - startMoveTime < 300) {
-                leftSweepServo.setPosition(leftSweepTriangle);
-            } else {
-                sweepStage++;
-                startMoveTime = System.currentTimeMillis();
-            }
-        } else if (sweepStage == rightTriangle) {
-            if (System.currentTimeMillis() - startMoveTime < 300) {
-                rightSweepServo.setPosition(rightSweepTriangle);
-            } else {
-                sweepStage++;
-                startMoveTime = System.currentTimeMillis();
-            }
-        } else {
-            sweepStage = 0;
-            endStage();
-        }
-    }
+//    protected void sweepTriangle() {
+//        final int rightOut = 0;
+//        final int leftTriangle = 1;
+//        final int rightTriangle = 2;
+//        if (sweepStage == rightOut) {
+//            if (System.currentTimeMillis() - startMoveTime < 300) {
+//                rightSweepServo.setPosition(rightSweepOut);
+//            } else {
+//                sweepStage++;
+//                startMoveTime = System.currentTimeMillis();
+//            }
+//        } else if (sweepStage == leftTriangle) {
+//            if (System.currentTimeMillis() - startMoveTime < 300) {
+//                leftSweepServo.setPosition(leftSweepTriangle);
+//            } else {
+//                sweepStage++;
+//                startMoveTime = System.currentTimeMillis();
+//            }
+//        } else if (sweepStage == rightTriangle) {
+//            if (System.currentTimeMillis() - startMoveTime < 300) {
+//                rightSweepServo.setPosition(rightSweepTriangle);
+//            } else {
+//                sweepStage++;
+//                startMoveTime = System.currentTimeMillis();
+//            }
+//        } else {
+//            sweepStage = 0;
+//            endStage();
+//        }
+//    }
 
     protected void goToOtherWall() {
         if (System.currentTimeMillis() - startProgramTime > 15000) {
             backUp(5);
             fail = true;
-        } else if (frontLeftUltra.getUltrasonicLevel() > 25 && frontRightUltra.getUltrasonicLevel() > 25) {
+        } else if (frontLeftUltra.getUltrasonicLevel() > 20 && frontRightUltra.getUltrasonicLevel() > 20) {
             seesWallLeft = 0;
             seesWallRight = 0;
             if (stoppedForObstacle) {
@@ -272,7 +265,7 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
 
     protected abstract double goDirectionOfOtherWall(double power, double inches, long startTime);
 
-    protected void alignWithWall() {
+    protected void alignWithWall(int distance) {
 //        if (sensorInputs < 50) {
 //            stopRobot();
 //            if (frontLeftUltra.getUltrasonicLevel() < LEFT_ULTRA_PERFECT_DIST) {
@@ -335,37 +328,37 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
 //                endStage();
 //            }
 //        }
-        if (sensorInputs < 50) {
+        if (sensorInputs < 35) {
             stopRobot();
-            if (frontLeftUltra.getUltrasonicLevel() <= LEFT_ULTRA_PERFECT_DIST) {
+            if (frontLeftUltra.getUltrasonicLevel() <= distance) {
                 seesWallLeft++;
-            } else if (seesWallLeft < 15) {
+            } else if (seesWallLeft < 11) {
                 seesWallLeft = 0;
             }
-            if (frontRightUltra.getUltrasonicLevel() <= RIGHT_ULTRA_PERFECT_DIST) {
+            if (frontRightUltra.getUltrasonicLevel() <= distance) {
                 seesWallRight++;
-            } else if (seesWallRight < 15) {
+            } else if (seesWallRight < 11) {
                 seesWallRight = 0;
             }
             sensorInputs++;
             startMoveTime = System.currentTimeMillis();
         } else {
             if (seesWallLeft < 15 && seesWallRight < 15) {
-                double distanceToGo = goDistanceForward(DEFAULT_POWER, 2 * INCHES_PER_CENT, startTime);
+                double distanceToGo = goDistanceForward(DEFAULT_POWER, 4 * INCHES_PER_CENT, startTime);
                 if (distanceToGo == 0) {
                     resetEncoders();
                     sensorInputs = 0;
                     alignPeriods++;
                 }
             } else if (seesWallRight < 15) {
-                double distanceToGo = goDistanceRightWheelsForward(DEFAULT_POWER, 4 * INCHES_PER_CENT, startMoveTime);
+                double distanceToGo = goDistanceRightWheelsForward(DEFAULT_POWER, 6 * INCHES_PER_CENT, startMoveTime);
                 if (distanceToGo == 0) {
                     resetEncoders();
                     sensorInputs = 0;
                     alignPeriods++;
                 }
             } else if (seesWallLeft < 15) {
-                double distanceToGo = goDistanceLeftWheelsForward(DEFAULT_POWER, 4 * INCHES_PER_CENT, startMoveTime);
+                double distanceToGo = goDistanceLeftWheelsForward(DEFAULT_POWER, 6 * INCHES_PER_CENT, startMoveTime);
                 if (distanceToGo == 0) {
                     resetEncoders();
                     sensorInputs = 0;
@@ -388,34 +381,43 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
         }
     }
 
-    protected void openSweepers() {
-        if (System.currentTimeMillis() - startMoveTime < 300) {
-            rightSweepServo.setPosition(rightSweepOut);
-            leftSweepServo.setPosition(leftSweepOut);
-        } else {
-            endStage();
-        }
-    }
+//    protected void openSweepers() {
+//        if (System.currentTimeMillis() - startMoveTime < 300) {
+//            rightSweepServo.setPosition(rightSweepOut);
+//            leftSweepServo.setPosition(leftSweepOut);
+//        } else {
+//            endStage();
+//        }
+//    }
 
-    protected void closeSweepers() {
-        final int leftIn = 0;
-        final int rightIn = 1;
-        if (sweepStage == leftIn) {
-            if (System.currentTimeMillis() - startMoveTime < 300) {
-                leftSweepServo.setPosition(leftSweepIn);
-            } else {
-                sweepStage++;
-                startMoveTime = System.currentTimeMillis();
-            }
-        } else if (sweepStage == rightIn) {
-            if (System.currentTimeMillis() - startMoveTime < 300) {
-                rightSweepServo.setPosition(rightSweepIn);
-            } else {
-                sweepStage++;
-                startMoveTime = System.currentTimeMillis();
-            }
+//    protected void closeSweepers() {
+//        final int leftIn = 0;
+//        final int rightIn = 1;
+//        if (sweepStage == leftIn) {
+//            if (System.currentTimeMillis() - startMoveTime < 300) {
+//                leftSweepServo.setPosition(leftSweepIn);
+//            } else {
+//                sweepStage++;
+//                startMoveTime = System.currentTimeMillis();
+//            }
+//        } else if (sweepStage == rightIn) {
+//            if (System.currentTimeMillis() - startMoveTime < 300) {
+//                rightSweepServo.setPosition(rightSweepIn);
+//            } else {
+//                sweepStage++;
+//                startMoveTime = System.currentTimeMillis();
+//            }
+//        } else {
+//            sweepStage = 0;
+//            endStage();
+//        }
+//    }
+
+    protected void putDownFlaps() {
+        if (System.currentTimeMillis() - startMoveTime < 300) {
+            rightFlapServo.setPosition(rightFlapServoFinalPos);
+            leftFlapServo.setPosition(leftFlapServoFinalPos);
         } else {
-            sweepStage = 0;
             endStage();
         }
     }
@@ -427,7 +429,7 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
         }
     }
 
-    protected void backUp(int distance) {
+    protected void backUp(double distance) {
         double distanceToGo = goDistanceBackward(DEFAULT_POWER, distance, startMoveTime);
         if (distanceToGo == 0) {
             endStage();
@@ -441,6 +443,24 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     protected abstract void alignWithTapePerfect();
 
     protected abstract void moveCorrectButtonFlap();
+
+    protected void ramButton() {
+        if (frontLeftUltra.getUltrasonicLevel() > 18 && frontRightUltra.getUltrasonicLevel() > 18) {
+            seesWallLeft = 0;
+            seesWallRight = 0;
+            goForward(DEFAULT_POWER);
+        } else if (seesWallLeft < 11 && seesWallRight < 11) {
+            seesWallLeft++;
+            seesWallRight++;
+            goForward(DEFAULT_POWER);
+        } else {
+            stopRobot();
+            seesWallLeft = 0;
+            seesWallRight = 0;
+            endStage();
+        }
+    }
+
 
     protected abstract void moveIntoFloorGoal();
 

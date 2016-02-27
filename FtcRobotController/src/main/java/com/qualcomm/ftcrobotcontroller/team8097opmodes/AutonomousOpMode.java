@@ -49,24 +49,27 @@ public class AutonomousOpMode extends BaseOpMode {
 
     @Override
     public void init() {
-        motorFrontLeft = hardwareMap.dcMotor.get("frontRight");
-        motorFrontRight = hardwareMap.dcMotor.get("backRight");
-        motorBackRight = hardwareMap.dcMotor.get("backLeft");
-        motorBackLeft = hardwareMap.dcMotor.get("frontLeft");
         frontRightUltra = hardwareMap.ultrasonicSensor.get("rightUltra");
         frontLeftUltra = hardwareMap.ultrasonicSensor.get("leftUltra");
         frontLightSensor = hardwareMap.lightSensor.get("frontLight");
         backLightSensor = hardwareMap.lightSensor.get("backLight");
         rightColorSensor = hardwareMap.lightSensor.get("rightColor");
         leftColorSensor = hardwareMap.lightSensor.get("leftColor");
-        climberServo = hardwareMap.servo.get("climbers");
-        rightFlapServo = hardwareMap.servo.get("rightButton");
-        leftFlapServo = hardwareMap.servo.get("leftButton");
-        rightHookServo = hardwareMap.servo.get("rightHook");
-        leftHookServo = hardwareMap.servo.get("leftHook");
-        armLatchServo = hardwareMap.servo.get("armLatch");
-        rightSweepServo = hardwareMap.servo.get("rightSweep");
-        leftSweepServo = hardwareMap.servo.get("leftSweep");
+
+        motorFrontLeft = hardwareMap.dcMotor.get("backRight");
+        motorFrontRight = hardwareMap.dcMotor.get("backLeft");
+        motorBackRight = hardwareMap.dcMotor.get("frontLeft");
+        motorBackLeft = hardwareMap.dcMotor.get("frontRight");
+        motorExtend = hardwareMap.dcMotor.get("extend");
+        motorCollection = hardwareMap.dcMotor.get("collect");
+//        climberServo = hardwareMap.servo.get("climbers");
+//        rightFlapServo = hardwareMap.servo.get("rightFlap");
+//        leftFlapServo = hardwareMap.servo.get("leftFlap");
+//        rightHookServo = hardwareMap.servo.get("rightHook");
+//        leftHookServo = hardwareMap.servo.get("leftHook");
+//        boxSpin = hardwareMap.servo.get("boxSpin");
+//        boxLift = hardwareMap.servo.get("boxLift");
+//        boxTilt = hardwareMap.servo.get("boxTilt");
     }
 
     @Override

@@ -37,19 +37,19 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 //Also allows for movement of the arm to drop climbers in case autonomous fails.
 public class TeleOpOpMode extends BaseOpMode {
     Gamepad activeGamepad;
-    int sweepStage = 0;
-    static final int POS_IN = 0;
-    static final int POS_TRIANGLE = 1;
-    static final int POS_OUT = 2;
-    int currentSweeperPos = POS_IN;
-    int goalSweeperPos = POS_IN;
-    long startSweepTime;
+//    int sweepStage = 0;
+//    static final int POS_IN = 0;
+//    static final int POS_TRIANGLE = 1;
+//    static final int POS_OUT = 2;
+//    int currentSweeperPos = POS_IN;
+//    int goalSweeperPos = POS_IN;
+//    long startSweepTime;
     boolean hookDown = false;
-    boolean armLatchServoLatched = true;
+//    boolean armLatchServoLatched = true;
     boolean climberServoOut = false;
     long climberServoStart = 0;
     long hookServoStart = 0;
-    long armLatchServoStart = 0;
+//    long armLatchServoStart = 0;
 
     int loop = 1;
     final int initialLoops = 10;
@@ -60,18 +60,18 @@ public class TeleOpOpMode extends BaseOpMode {
         motorFrontRight = hardwareMap.dcMotor.get("frontRight");
         motorBackRight = hardwareMap.dcMotor.get("backRight");
         motorBackLeft = hardwareMap.dcMotor.get("backLeft");
-        motorSpinny = hardwareMap.dcMotor.get("spinny");
-        motorLiftArm = hardwareMap.dcMotor.get("liftArm");
-        motorExtend = hardwareMap.dcMotor.get("extend");
-        motorCollection = hardwareMap.dcMotor.get("collect");
+//        motorSpinny = hardwareMap.dcMotor.get("spinny");
+//        motorLiftArm = hardwareMap.dcMotor.get("liftArm");
+//        motorExtend = hardwareMap.dcMotor.get("extend");
+//        motorCollection = hardwareMap.dcMotor.get("collect");
         climberServo = hardwareMap.servo.get("climbers");
         rightFlapServo = hardwareMap.servo.get("rightButton");
         leftFlapServo = hardwareMap.servo.get("leftButton");
         rightHookServo = hardwareMap.servo.get("rightHook");
         leftHookServo = hardwareMap.servo.get("leftHook");
-        rightSweepServo = hardwareMap.servo.get("rightSweep");
-        leftSweepServo = hardwareMap.servo.get("leftSweep");
-        armLatchServo = hardwareMap.servo.get("armLatch");
+//        rightSweepServo = hardwareMap.servo.get("rightSweep");
+//        leftSweepServo = hardwareMap.servo.get("leftSweep");
+//        armLatchServo = hardwareMap.servo.get("armLatch");
     }
 
     @Override
@@ -79,13 +79,13 @@ public class TeleOpOpMode extends BaseOpMode {
         if (loop <= initialLoops) {
             activeGamepad = gamepad1;
             climberServo.setPosition(climberServoInitPos);
-            rightSweepServo.setPosition(rightSweepIn);
-            leftSweepServo.setPosition(leftSweepIn);
-            rightHookServo.setPosition(rightHookUpPos);
-            leftHookServo.setPosition(leftHookUpPos);
+//            rightSweepServo.setPosition(rightSweepIn);
+//            leftSweepServo.setPosition(leftSweepIn);
+//            rightHookServo.setPosition(rightHookUpPos);
+//            leftHookServo.setPosition(leftHookUpPos);
             rightFlapServo.setPosition(rightFlapServoInitPos);
             leftFlapServo.setPosition(leftFlapServoInitPos);
-            armLatchServo.setPosition(armLatchInitPos);
+//            armLatchServo.setPosition(armLatchInitPos);
             loop++;
         } else {
             control();
@@ -117,69 +117,69 @@ public class TeleOpOpMode extends BaseOpMode {
                 climberServoStart = System.currentTimeMillis();
             }
         }
-        if (gamepad1.start || gamepad2.start) {
-            if (System.currentTimeMillis() - armLatchServoStart > 300) {
-                if (armLatchServoLatched) {
-                    armLatchServo.setPosition(armLatchFinalPos);
-                    armLatchServoLatched = false;
-                } else {
-                    armLatchServo.setPosition(armLatchInitPos);
-                    armLatchServoLatched = true;
-                }
-                armLatchServoStart = System.currentTimeMillis();
-            }
-        }
-        if ((gamepad1.x || gamepad2.x) && currentSweeperPos == goalSweeperPos && currentSweeperPos != POS_OUT) {
-            goalSweeperPos++;
-            startSweepTime = System.currentTimeMillis();
-        } else if ((gamepad1.y || gamepad2.y) && currentSweeperPos == goalSweeperPos && currentSweeperPos != POS_IN) {
-            goalSweeperPos--;
-            startSweepTime = System.currentTimeMillis();
-        } else if (currentSweeperPos != goalSweeperPos) {
-            moveSweeper(currentSweeperPos, goalSweeperPos);
-        }
+//        if (gamepad1.start || gamepad2.start) {
+//            if (System.currentTimeMillis() - armLatchServoStart > 300) {
+//                if (armLatchServoLatched) {
+//                    armLatchServo.setPosition(armLatchFinalPos);
+//                    armLatchServoLatched = false;
+//                } else {
+//                    armLatchServo.setPosition(armLatchInitPos);
+//                    armLatchServoLatched = true;
+//                }
+//                armLatchServoStart = System.currentTimeMillis();
+//            }
+//        }
+//        if ((gamepad1.x || gamepad2.x) && currentSweeperPos == goalSweeperPos && currentSweeperPos != POS_OUT) {
+//            goalSweeperPos++;
+//            startSweepTime = System.currentTimeMillis();
+//        } else if ((gamepad1.y || gamepad2.y) && currentSweeperPos == goalSweeperPos && currentSweeperPos != POS_IN) {
+//            goalSweeperPos--;
+//            startSweepTime = System.currentTimeMillis();
+//        } else if (currentSweeperPos != goalSweeperPos) {
+//            moveSweeper(currentSweeperPos, goalSweeperPos);
+//        }
         if (gamepad1.b || gamepad2.b) {
             if (System.currentTimeMillis() - hookServoStart > 300) {
                 if (hookDown) {
-                    rightHookServo.setPosition(rightHookUpPos);
-                    leftHookServo.setPosition(leftHookUpPos);
+//                    rightHookServo.setPosition(rightHookUpPos);
+//                    leftHookServo.setPosition(leftHookUpPos);
                     hookDown = false;
                 } else {
-                    rightHookServo.setPosition(rightHookHookPos);
-                    leftHookServo.setPosition(leftHookHookPos);
+                    rightHookServo.setPosition(rightHookDownPos);
+                    leftHookServo.setPosition(leftHookDownPos);
                     hookDown = true;
                 }
                 hookServoStart = System.currentTimeMillis();
             }
         }
-        if (gamepad1.left_bumper || gamepad2.left_bumper) {
-            motorSpinny.setPower(-0.5);
-        } else if (gamepad1.right_bumper || gamepad2.right_bumper) {
-            motorSpinny.setPower(0.5);
-        } else {
-            motorSpinny.setPower(0);
-        }
-        if (Math.abs(gamepad1.right_stick_y) > 0) {
-            motorLiftArm.setPower(Math.cbrt(-gamepad1.right_stick_y));
-        } else if (Math.abs(gamepad2.right_stick_y) > 0) {
-            motorLiftArm.setPower(Math.cbrt(-gamepad2.right_stick_y));
-        } else {
-            motorLiftArm.setPower(0);
-        }
-        if (gamepad1.dpad_up || gamepad2.dpad_up) {
-            motorExtend.setPower(0.25);
-        } else if (gamepad1.dpad_down || gamepad2.dpad_down) {
-            motorExtend.setPower(-0.25);
-        } else {
-            motorExtend.setPower(0);
-        }
-        if (gamepad1.dpad_right || gamepad2.dpad_right) {
-            motorCollection.setPower(-1);
-        } else if (gamepad1.dpad_left || gamepad2.dpad_left) {
-            motorCollection.setPower(1);
-        } else {
-            motorCollection.setPower(0);
-        }
+//        if (gamepad1.left_bumper || gamepad2.left_bumper) {
+//            motorSpinny.setPower(-0.5);
+//        } else if (gamepad1.right_bumper || gamepad2.right_bumper) {
+//            motorSpinny.setPower(0.5);
+//        } else {
+//            motorSpinny.setPower(0);
+//        }
+//        if (Math.abs(gamepad1.right_stick_y) > 0) {
+//            motorLiftArm.setPower(Math.cbrt(-gamepad1.right_stick_y));
+//        } else if (Math.abs(gamepad2.right_stick_y) > 0) {
+//            motorLiftArm.setPower(Math.cbrt(-gamepad2.right_stick_y));
+//        } else {
+//            motorLiftArm.setPower(0);
+//        }
+//        if (gamepad1.dpad_up || gamepad2.dpad_up) {
+//            motorExtend.setPower(0.25);
+//        } else if (gamepad1.dpad_down || gamepad2.dpad_down) {
+//            motorExtend.setPower(-0.25);
+//        } else {
+//            motorExtend.setPower(0);
+//        }
+//        if (gamepad1.dpad_right || gamepad2.dpad_right) {
+//            motorCollection.setPower(-1);
+//        } else if (gamepad1.dpad_left || gamepad2.dpad_left) {
+//            motorCollection.setPower(1);
+//        } else {
+//            motorCollection.setPower(0);
+//        }
         if (Math.abs(gamepad1.left_stick_y) > Math.abs(gamepad2.left_stick_y)) {
             activeGamepad = gamepad1;
         } else if (Math.abs(gamepad2.left_stick_y) > Math.abs(gamepad1.left_stick_y)) {
@@ -204,93 +204,93 @@ public class TeleOpOpMode extends BaseOpMode {
         motorBackLeft.setPower((-y + x) / 2.0);
     }
 
-    protected void moveSweeper(int startPos, int endPos) {
-        if (startPos == POS_IN || startPos == POS_OUT) {
-            sweepTriangle();
-        } else if (endPos == POS_IN) {
-            sweepIn();
-        } else if (endPos == POS_OUT) {
-            sweepOut();
-        }
-    }
+//    protected void moveSweeper(int startPos, int endPos) {
+//        if (startPos == POS_IN || startPos == POS_OUT) {
+//            sweepTriangle();
+//        } else if (endPos == POS_IN) {
+//            sweepIn();
+//        } else if (endPos == POS_OUT) {
+//            sweepOut();
+//        }
+//    }
 
-    protected void sweepTriangle() {
-        final int rightOut = 0;
-        final int leftTriangle = 1;
-        final int rightTriangle = 2;
-        if (sweepStage == rightOut) {
-            if (System.currentTimeMillis() - startSweepTime < 200) {
-                rightSweepServo.setPosition(rightSweepOut);
-            } else {
-                sweepStage++;
-                startSweepTime = System.currentTimeMillis();
-            }
-        } else if (sweepStage == leftTriangle) {
-            if (System.currentTimeMillis() - startSweepTime < 200) {
-                leftSweepServo.setPosition(leftSweepTriangle);
-            } else {
-                sweepStage++;
-                startSweepTime = System.currentTimeMillis();
-            }
-        } else if (sweepStage == rightTriangle) {
-            if (System.currentTimeMillis() - startSweepTime < 200) {
-                rightSweepServo.setPosition(rightSweepTriangle);
-            } else {
-                sweepStage++;
-                startSweepTime = System.currentTimeMillis();
-            }
-        } else {
-            sweepStage = 0;
-            currentSweeperPos = POS_TRIANGLE;
-        }
-    }
-
-    protected void sweepOut() {
-        if (System.currentTimeMillis() - startSweepTime < 600) {
-            rightSweepServo.setPosition(rightSweepOut);
-            leftSweepServo.setPosition(leftSweepOut);
-        } else {
-            currentSweeperPos = POS_OUT;
-        }
-    }
-
-    protected void sweepIn() {
-        final int rightOut = 0;
-        final int leftIn = 1;
-        final int rightIn = 2;
-        if (sweepStage == rightOut) {
-            if (System.currentTimeMillis() - startSweepTime < 200) {
-                rightSweepServo.setPosition(rightSweepOut);
-            } else {
-                sweepStage++;
-                startSweepTime = System.currentTimeMillis();
-            }
-        } else if (sweepStage == leftIn) {
-            if (System.currentTimeMillis() - startSweepTime < 200) {
-                leftSweepServo.setPosition(leftSweepIn);
-            } else {
-                sweepStage++;
-                startSweepTime = System.currentTimeMillis();
-            }
-        } else if (sweepStage == rightIn) {
-            if (System.currentTimeMillis() - startSweepTime < 200) {
-                rightSweepServo.setPosition(rightSweepIn);
-            } else {
-                sweepStage++;
-                startSweepTime = System.currentTimeMillis();
-            }
-        } else {
-            sweepStage = 0;
-            currentSweeperPos = POS_IN;
-        }
-    }
+//    protected void sweepTriangle() {
+//        final int rightOut = 0;
+//        final int leftTriangle = 1;
+//        final int rightTriangle = 2;
+//        if (sweepStage == rightOut) {
+//            if (System.currentTimeMillis() - startSweepTime < 200) {
+//                rightSweepServo.setPosition(rightSweepOut);
+//            } else {
+//                sweepStage++;
+//                startSweepTime = System.currentTimeMillis();
+//            }
+//        } else if (sweepStage == leftTriangle) {
+//            if (System.currentTimeMillis() - startSweepTime < 200) {
+//                leftSweepServo.setPosition(leftSweepTriangle);
+//            } else {
+//                sweepStage++;
+//                startSweepTime = System.currentTimeMillis();
+//            }
+//        } else if (sweepStage == rightTriangle) {
+//            if (System.currentTimeMillis() - startSweepTime < 200) {
+//                rightSweepServo.setPosition(rightSweepTriangle);
+//            } else {
+//                sweepStage++;
+//                startSweepTime = System.currentTimeMillis();
+//            }
+//        } else {
+//            sweepStage = 0;
+//            currentSweeperPos = POS_TRIANGLE;
+//        }
+//    }
+//
+//    protected void sweepOut() {
+//        if (System.currentTimeMillis() - startSweepTime < 600) {
+//            rightSweepServo.setPosition(rightSweepOut);
+//            leftSweepServo.setPosition(leftSweepOut);
+//        } else {
+//            currentSweeperPos = POS_OUT;
+//        }
+//    }
+//
+//    protected void sweepIn() {
+//        final int rightOut = 0;
+//        final int leftIn = 1;
+//        final int rightIn = 2;
+//        if (sweepStage == rightOut) {
+//            if (System.currentTimeMillis() - startSweepTime < 200) {
+//                rightSweepServo.setPosition(rightSweepOut);
+//            } else {
+//                sweepStage++;
+//                startSweepTime = System.currentTimeMillis();
+//            }
+//        } else if (sweepStage == leftIn) {
+//            if (System.currentTimeMillis() - startSweepTime < 200) {
+//                leftSweepServo.setPosition(leftSweepIn);
+//            } else {
+//                sweepStage++;
+//                startSweepTime = System.currentTimeMillis();
+//            }
+//        } else if (sweepStage == rightIn) {
+//            if (System.currentTimeMillis() - startSweepTime < 200) {
+//                rightSweepServo.setPosition(rightSweepIn);
+//            } else {
+//                sweepStage++;
+//                startSweepTime = System.currentTimeMillis();
+//            }
+//        } else {
+//            sweepStage = 0;
+//            currentSweeperPos = POS_IN;
+//        }
+//    }
 
     @Override
     public void stop() {
-        motorCollection.setPower(0);
-        motorSpinny.setPower(0);
-        motorExtend.setPower(0);
-        motorLiftArm.setPower(0);
+//        motorCollection.setPower(0);
+//        motorSpinny.setPower(0);
+//        motorExtend.setPower(0);
+//        motorLiftArm.setPower(0);
         super.stop();
     }
 }

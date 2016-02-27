@@ -18,8 +18,8 @@ import java.util.HashMap;
 // and includes methods for basic movement and variables for all sensors, motors, etc.
 public abstract class BaseOpMode extends OpMode {
     public final static double DEFAULT_POWER = 0.2;
-        public final static double MILLIS_PER_INCH_DEFAULT = 37.736 * (0.25 / DEFAULT_POWER);
-//    public final static double MILLIS_PER_DEGREE_DEFAULT = 5 * (0.25 / DEFAULT_POWER);
+    public final static double MILLIS_PER_INCH_DEFAULT = 37.736 * (0.25 / DEFAULT_POWER);
+    //    public final static double MILLIS_PER_DEGREE_DEFAULT = 5 * (0.25 / DEFAULT_POWER);
     public final static double WHEEL_DIAMETER = 4;
     public final static double ROBOT_DIAMETER = 18;
     public final static double ENCODER_TICKS_PER_INCH = (1440 / (WHEEL_DIAMETER * Math.PI)) * (Math.sqrt(2) / 2);
@@ -30,16 +30,16 @@ public abstract class BaseOpMode extends OpMode {
     public final static int RIGHT_ULTRA_PERFECT_DIST = 19;
     public final static double BLUE_THRESHOLD = 0.6;
 
-    double rightSweepTriangle = 0.524;
-    double leftSweepTriangle = 0.534;
-    double rightSweepIn = 0.832;
-    double leftSweepIn = 0.206;
-    double rightSweepOut = 0.038;
-    double leftSweepOut = 0.992;
+//    double rightSweepTriangle = 0.524;
+//    double leftSweepTriangle = 0.534;
+//    double rightSweepIn = 0.832;
+//    double leftSweepIn = 0.206;
+//    double rightSweepOut = 0.038;
+//    double leftSweepOut = 0.992;
 
-    DcMotor motorSpinny;
+    //    DcMotor motorSpinny;
     DcMotor motorExtend;
-    DcMotor motorLiftArm;
+    //    DcMotor motorLiftArm;
     DcMotor motorCollection;
 
     DcMotor motorFrontRight;
@@ -51,10 +51,13 @@ public abstract class BaseOpMode extends OpMode {
     Servo leftFlapServo;
     Servo rightHookServo;
     Servo leftHookServo;
-    Servo rightSweepServo;
-    Servo leftSweepServo;
+    //    Servo rightSweepServo;
+//    Servo leftSweepServo;
     Servo climberServo;
-    Servo armLatchServo;
+    //    Servo armLatchServo;
+    Servo boxSpin;
+    Servo boxLift;
+    Servo boxTilt;
 
     LightSensor rightColorSensor;
     LightSensor leftColorSensor;
@@ -70,20 +73,29 @@ public abstract class BaseOpMode extends OpMode {
 //    TouchSensor rightBumpSensor;
 //    TouchSensor leftBumpSensor;
 
-    final double leftFlapServoInitPos = 0.414;
-    final double leftFlapServoFinalPos = 0.282;
-    final double rightFlapServoInitPos = 0.414;
-    final double rightFlapServoFinalPos = 0.588;
-    final double climberServoInitPos = 1;
-    final double climberServoFinalPos = 0;
-    final double rightHookInitPos = 0.046;
-    final double rightHookUpPos = 0.83;
-    final double rightHookHookPos = 0.298;
-    final double leftHookInitPos = 1;
-    final double leftHookUpPos = 0.23;
-    final double leftHookHookPos = 0.758;
-    final double armLatchInitPos = 0.894;
-    final double armLatchFinalPos = 0.624;
+    final double leftFlapServoInitPos = 0;
+    final double leftFlapServoFinalPos = 0;
+    final double rightFlapServoInitPos = 0;
+    final double rightFlapServoFinalPos = 0;
+    final double climberServoInitPos = 0.0;
+    final double climberServoFinalPos = 1.0;
+    final double rightHookInitPos = 0;
+    final double rightHookDownPos = 0;
+    final double leftHookInitPos = 0;
+    final double leftHookDownPos = 0;
+
+    final double tiltInitPos = 0;
+    final double tiltLeftPos = 0;
+    final double tiltRightPos = 0;
+    final double spinInitPos = 0;
+    final double spinRightPos = 0;
+    final double spinLeftPos = 0;
+    final double liftInitPos = 0;
+    final double liftUpPos = 0;
+
+
+//    final double armLatchInitPos = 0.894;
+//    final double armLatchFinalPos = 0.624;
 
     private HashMap<String, String> telemetryData = new HashMap<String, String>();
 
@@ -119,7 +131,7 @@ public abstract class BaseOpMode extends OpMode {
 //            newPowers[1] = power * 0.75;
 //        }
 //        return newPowers;
-        return new double[] {power, power};
+        return new double[]{power, power};
     }
 
     public double[] syncEncoders4Motors(double power, int encoder0, int encoder1, int encoder2, int encoder3) {
@@ -148,7 +160,7 @@ public abstract class BaseOpMode extends OpMode {
 //            newPowers[encoderIndexes.get(encoderValuesSorted[3])] = newPowers[encoderIndexes.get(encoderValuesSorted[3])] * 0.85;
 //        }
 //        return newPowers;
-        return new double[] {power, power, power, power};
+        return new double[]{power, power, power, power};
     }
 
     protected boolean turnMotorToPosition(DcMotor motor, int targetPosition, double power) {
@@ -212,17 +224,17 @@ public abstract class BaseOpMode extends OpMode {
         backLightSensor = hardwareMap.lightSensor.get("backLight");
         rightColorSensor = hardwareMap.lightSensor.get("rightColor");
         leftColorSensor = hardwareMap.lightSensor.get("leftColor");
-        motorSpinny = hardwareMap.dcMotor.get("spinny");
-        motorLiftArm = hardwareMap.dcMotor.get("liftArm");
-        motorExtend = hardwareMap.dcMotor.get("extend");
-        motorCollection = hardwareMap.dcMotor.get("collect");
+//        motorSpinny = hardwareMap.dcMotor.get("spinny");
+//        motorLiftArm = hardwareMap.dcMotor.get("liftArm");
+//        motorExtend = hardwareMap.dcMotor.get("extend");
+//        motorCollection = hardwareMap.dcMotor.get("collect");
         climberServo = hardwareMap.servo.get("climbers");
         rightFlapServo = hardwareMap.servo.get("rightButton");
         leftFlapServo = hardwareMap.servo.get("leftButton");
         rightHookServo = hardwareMap.servo.get("rightHook");
         leftHookServo = hardwareMap.servo.get("leftHook");
-        armLatchServo = hardwareMap.servo.get("armLatch");
-        rightSweepServo = hardwareMap.servo.get("rightSweep");
-        leftSweepServo = hardwareMap.servo.get("leftSweep");
+//        armLatchServo = hardwareMap.servo.get("armLatch");
+//        rightSweepServo = hardwareMap.servo.get("rightSweep");
+//        leftSweepServo = hardwareMap.servo.get("leftSweep");
     }
 }
