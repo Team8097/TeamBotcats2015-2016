@@ -8,25 +8,22 @@ public class TestServosOpMode extends BaseOpMode {
 
     @Override
     public void init() {
-//        climberServo = hardwareMap.servo.get("climbers");
-//        rightFlapServo = hardwareMap.servo.get("rightButton");
-//        leftFlapServo = hardwareMap.servo.get("leftButton");
-//        rightHookServo = hardwareMap.servo.get("rightHook");
-//        leftHookServo = hardwareMap.servo.get("leftHook");
-//        rightSweepServo = hardwareMap.servo.get("rightSweep");
-//        leftSweepServo = hardwareMap.servo.get("leftSweep");
-//        armLatchServo = hardwareMap.servo.get("armLatch");
-//        climberServo.setPosition(climberServoInitPos);
-//        rightSweepServo.setPosition(rightSweepIn);
-//        leftSweepServo.setPosition(leftSweepIn);
-//        rightHookServo.setPosition(rightHookUpPos);
-//        leftHookServo.setPosition(leftHookUpPos);
-//        rightFlapServo.setPosition(rightFlapServoFinalPos);
-//        leftFlapServo.setPosition(leftFlapServoFinalPos);
-//        armLatchServo.setPosition(armLatchInitPos);
-        boxSpin = hardwareMap.servo.get("armSpin1");
+        boxSpin = hardwareMap.servo.get("boxSpin");
         boxLift = hardwareMap.servo.get("boxLift");
         boxTilt = hardwareMap.servo.get("boxTilt");
+        climberServo = hardwareMap.servo.get("climbers");
+        rightFlapServo = hardwareMap.servo.get("rightFlap");
+        leftFlapServo = hardwareMap.servo.get("leftFlap");
+        rightHookServo = hardwareMap.servo.get("rightHook");
+        leftHookServo = hardwareMap.servo.get("leftHook");
+        climberServo.setPosition(climberServoInitPos);
+        rightHookServo.setPosition(rightHookInitPos);
+        leftHookServo.setPosition(leftHookInitPos);
+        rightFlapServo.setPosition(rightFlapServoInitPos);
+        leftFlapServo.setPosition(leftFlapServoInitPos);
+//        boxSpin.setPosition(spinInitPos);
+//        boxLift.setPosition(liftInitPos);
+//        boxTilt.setPosition(tiltInitPos);
     }
 
     @Override
@@ -59,10 +56,10 @@ public class TestServosOpMode extends BaseOpMode {
             if (pos4 - 0.002 >= 0)
                 pos4 -= 0.002;
         }
-        boxSpin.setPosition(pos1);
-        logData("boxSpin", String.valueOf(pos1));
-        boxLift.setPosition(pos3);
-        logData("boxLift", String.valueOf(pos3));
+        boxLift.setPosition(pos1);
+        logData("boxLift", String.valueOf(pos1));
+        boxSpin.setPosition(pos3);
+        logData("boxSpin", String.valueOf(pos3));
         boxTilt.setPosition(pos4);
         logData("boxTilt", String.valueOf(pos4));
         try {

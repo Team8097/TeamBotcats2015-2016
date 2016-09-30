@@ -55,7 +55,7 @@ public class BlueAutonomousOpMode extends CompetitionAutonomousOpMode {
             if (seesTape < 2) {
                 seesTape++;
                 telemetry.addData("seesTape", seesTape);
-                goRight(DEFAULT_POWER);
+                goRight(DEFAULT_POWER/2.0);
             } else {
                 if (frontLightSensor.getLightDetected() > frontTapeLowThreshold && frontLightSensor.getLightDetected() < frontTapeHighThreshold) {
                     frontTape = true;
@@ -69,7 +69,7 @@ public class BlueAutonomousOpMode extends CompetitionAutonomousOpMode {
             }
         } else {
             seesTape = 0;
-            goRight(DEFAULT_POWER);
+            goRight(DEFAULT_POWER/2.0);
         }
     }
 
@@ -80,28 +80,28 @@ public class BlueAutonomousOpMode extends CompetitionAutonomousOpMode {
                 if (seesTape < 2) {
                     seesTape++;
                     telemetry.addData("seesTape (front)", seesTape);
-                    frontWheelsRight(DEFAULT_POWER);
+                    frontWheelsRight(DEFAULT_POWER/2.0);
                 } else {
                     telemetry.addData("Found tape on the right (front)", "");
                     endStage();
                 }
             } else {
                 seesTape = 0;
-                frontWheelsRight(DEFAULT_POWER);
+                frontWheelsRight(DEFAULT_POWER/2.0);
             }
         } else if (!backTape) {
             if (backLightSensor.getLightDetected() > backTapeLowThreshold && backLightSensor.getLightDetected() < backTapeHighThreshold) {
                 if (seesTape < 2) {
                     seesTape++;
                     telemetry.addData("seesTape (back)", seesTape);
-                    backWheelsRight(DEFAULT_POWER);
+                    backWheelsRight(DEFAULT_POWER/2.0);
                 } else {
                     telemetry.addData("Found tape on the right (back)", "");
                     endStage();
                 }
             } else {
                 seesTape = 0;
-                backWheelsRight(DEFAULT_POWER);
+                backWheelsRight(DEFAULT_POWER/2.0);
             }
         } else {
             endStage();
@@ -126,17 +126,17 @@ public class BlueAutonomousOpMode extends CompetitionAutonomousOpMode {
             startMoveTime = System.currentTimeMillis();
         } else {
             if (seesTapeFront < 3 && seesTapeBack < 3) {
-                double distanceToGo = goDistanceLeft(DEFAULT_POWER, 2 * INCHES_PER_CENT, startMoveTime);
+                double distanceToGo = goDistanceLeft(DEFAULT_POWER/2.0, 2 * INCHES_PER_CENT, startMoveTime);
                 if (distanceToGo == 0) {
                     sensorInputs = 0;
                 }
             } else if (seesTapeFront < 3) {
-                double distanceToGo = goDistanceFrontWheelsLeft(DEFAULT_POWER, 2 * INCHES_PER_CENT, startMoveTime);
+                double distanceToGo = goDistanceFrontWheelsLeft(DEFAULT_POWER/2.0, 2 * INCHES_PER_CENT, startMoveTime);
                 if (distanceToGo == 0) {
                     sensorInputs = 0;
                 }
             } else if (seesTapeBack < 3) {
-                double distanceToGo = goDistanceBackWheelsLeft(DEFAULT_POWER, 2 * INCHES_PER_CENT, startMoveTime);
+                double distanceToGo = goDistanceBackWheelsLeft(DEFAULT_POWER/2.0, 2 * INCHES_PER_CENT, startMoveTime);
                 if (distanceToGo == 0) {
                     sensorInputs = 0;
                 }

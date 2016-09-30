@@ -17,8 +17,8 @@ import java.util.HashMap;
 // This is the base class for all our opmodes,
 // and includes methods for basic movement and variables for all sensors, motors, etc.
 public abstract class BaseOpMode extends OpMode {
-    public final static double DEFAULT_POWER = 0.2;
-    public final static double MILLIS_PER_INCH_DEFAULT = 37.736 * (0.25 / DEFAULT_POWER);
+    public final static double DEFAULT_POWER = 0.5;
+    public final static double MILLIS_PER_INCH_DEFAULT = 106.67 * (0.2 / DEFAULT_POWER);//37.736 * (0.25 / DEFAULT_POWER);
     //    public final static double MILLIS_PER_DEGREE_DEFAULT = 5 * (0.25 / DEFAULT_POWER);
     public final static double WHEEL_DIAMETER = 4;
     public final static double ROBOT_DIAMETER = 18;
@@ -73,16 +73,16 @@ public abstract class BaseOpMode extends OpMode {
 //    TouchSensor rightBumpSensor;
 //    TouchSensor leftBumpSensor;
 
-    final double leftFlapServoInitPos = 0;
-    final double leftFlapServoFinalPos = 0;
-    final double rightFlapServoInitPos = 0;
-    final double rightFlapServoFinalPos = 0;
-    final double climberServoInitPos = 0.0;
-    final double climberServoFinalPos = 1.0;
-    final double rightHookInitPos = 0;
-    final double rightHookDownPos = 0;
-    final double leftHookInitPos = 0;
-    final double leftHookDownPos = 0;
+    final double leftFlapServoInitPos = 0.698;
+    final double leftFlapServoFinalPos = 0.056;
+    final double rightFlapServoInitPos = 0.348;
+    final double rightFlapServoFinalPos = 0.990;
+    final double climberServoInitPos = 1.0;
+    final double climberServoFinalPos = 0.0;
+    final double rightHookInitPos = 0.0;
+    final double rightHookDownPos = 1.0;
+    final double leftHookInitPos = 1.0;
+    final double leftHookDownPos = 0.0;
 
     final double tiltInitPos = 0;
     final double tiltLeftPos = 0;

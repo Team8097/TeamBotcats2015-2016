@@ -51,9 +51,10 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     final static int STAGE_PUT_DOWN_FLAPS = 8;
     final static int STAGE_READ_COLOR = 9;
     final static int STAGE_MOVE_BUTTON_FLAP = 10;
-    final static int STAGE_RAM_BUTTON = 11;
-    final static int STAGE_DROP_CLIMBERS = 12;
-    final static int STAGE_LIFT_ARM = 13;
+    final static int STAGE_APPROACH_BUTTON = 11;
+    final static int STAGE_RAM_BUTTON = 12;
+    final static int STAGE_DROP_CLIMBERS = 13;
+    final static int STAGE_LIFT_ARM = 14;
     boolean dropClimbers = true;
     int stage = 0;
     int sweepStage = 0;
@@ -132,20 +133,22 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
             } else if (stage == STAGE_ALIGN_WITH_TAPE) {
                 alignWithTape();//The robot turns its front or back wheels until both light sensors see tape
             } else if (stage == STAGE_ALIGN_WITH_TAPE_PERFECT) {
-                alignWithTapePerfect();
+//                alignWithTapePerfect();
+                endStage();
             } else if (stage == STAGE_BACK_UP) {
-                backUp(10 * INCHES_PER_CENT);
+                backUp(15 * INCHES_PER_CENT);//TODO this value
 //                endStage();
             } else if (stage == STAGE_ALIGN_WITH_WALL_2) {
-                if (!fail) {
-                    alignWithWall(25);
-                } else {
-                    endStage();
-                }
+//                if (!fail) {
+//                alignWithWall(29);
+                approachDistance(32);
+
+//                } else {
+//                    endStage();
+//                }
             } else if (stage == STAGE_PUT_DOWN_FLAPS) {
                 putDownFlaps();
             } else if (stage == STAGE_READ_COLOR) {
-//                climberServo.setPosition(climberServoFinalPos);
                 readColorSensor();//an average of 10 readings or is recorded from the light sensor facing the buttons
             } else if (stage == STAGE_MOVE_BUTTON_FLAP) {
                 if (!fail) {
@@ -154,8 +157,11 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
                 } else {
                     endStage();
                 }
+            } else if (stage == STAGE_APPROACH_BUTTON) {
+                approachDistance(25);
             } else if (stage == STAGE_RAM_BUTTON) {
-                ramButton();
+                goForth(2);
+//                endStage();
             } else if (stage == STAGE_DROP_CLIMBERS) {
                 dropClimbers();//arm controlled by servo moves to drop climbers
             } else if (stage == STAGE_LIFT_ARM) {
@@ -178,13 +184,13 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     protected void initServos() {
         if (System.currentTimeMillis() - startMoveTime < 300) {
             climberServo.setPosition(climberServoInitPos);
-//            rightHookServo.setPosition(rightHookInitPos);
-//            leftHookServo.setPosition(leftHookInitPos);
-//            rightFlapServo.setPosition(rightFlapServoInitPos);
-//            leftFlapServo.setPosition(leftFlapServoInitPos);
-//            boxSpin.setPosition(spinInitPos);
-//            boxLift.setPosition(liftInitPos);
-//            boxTilt.setPosition(tiltInitPos);
+            rightHookServo.setPosition(rightHookInitPos);
+            leftHookServo.setPosition(leftHookInitPos);
+            rightFlapServo.setPosition(rightFlapServoInitPos);
+            leftFlapServo.setPosition(leftFlapServoInitPos);
+            boxSpin.setPosition(spinInitPos);
+            boxLift.setPosition(liftInitPos);
+            boxTilt.setPosition(tiltInitPos);
             frontLightSensor.enableLed(true);
             backLightSensor.enableLed(true);
         } else {
@@ -224,10 +230,11 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
 //    }
 
     protected void goToOtherWall() {
-        if (System.currentTimeMillis() - startProgramTime > 15000) {
-            backUp(5);
-            fail = true;
-        } else if (frontLeftUltra.getUltrasonicLevel() > 20 && frontRightUltra.getUltrasonicLevel() > 20) {
+//        if (System.currentTimeMillis() - startProgramTime > 15000) {
+//            backUp(5);
+//            fail = true;
+//        } else
+        if (frontLeftUltra.getUltrasonicLevel() > 25 && frontRightUltra.getUltrasonicLevel() > 25) {//TODO this value
             seesWallLeft = 0;
             seesWallRight = 0;
             if (stoppedForObstacle) {
@@ -430,7 +437,7 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
     }
 
     protected void backUp(double distance) {
-        double distanceToGo = goDistanceBackward(DEFAULT_POWER, distance, startMoveTime);
+        double distanceToGo = goDistanceBackward(DEFAULT_POWER / 2.0, distance, startMoveTime);
         if (distanceToGo == 0) {
             endStage();
         }
@@ -444,15 +451,15 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
 
     protected abstract void moveCorrectButtonFlap();
 
-    protected void ramButton() {
-        if (frontLeftUltra.getUltrasonicLevel() > 18 && frontRightUltra.getUltrasonicLevel() > 18) {
+    protected void approachDistance(int distance) {
+        if (frontLeftUltra.getUltrasonicLevel() > distance && frontRightUltra.getUltrasonicLevel() > distance) {
             seesWallLeft = 0;
             seesWallRight = 0;
-            goForward(DEFAULT_POWER);
+            goForward(DEFAULT_POWER / 2.0);
         } else if (seesWallLeft < 11 && seesWallRight < 11) {
             seesWallLeft++;
             seesWallRight++;
-            goForward(DEFAULT_POWER);
+            goForward(DEFAULT_POWER / 2.0);
         } else {
             stopRobot();
             seesWallLeft = 0;
@@ -461,6 +468,12 @@ public abstract class CompetitionAutonomousOpMode extends AutonomousOpMode {
         }
     }
 
+    protected void goForth(double distance) {
+        double distanceToGo = goDistanceForward(DEFAULT_POWER / 2.0, distance, startMoveTime);
+        if (distanceToGo == 0) {
+            endStage();
+        }
+    }
 
     protected abstract void moveIntoFloorGoal();
 

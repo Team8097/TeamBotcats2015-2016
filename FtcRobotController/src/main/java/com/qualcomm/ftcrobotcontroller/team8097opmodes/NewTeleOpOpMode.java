@@ -46,6 +46,10 @@ public class NewTeleOpOpMode extends BaseOpMode {
     boolean servosRight = false;
     boolean servosLeft = false;
 
+    double liftPos = liftInitPos;
+    double spinPos = spinInitPos;
+    double tiltPos = tiltInitPos;
+
     int loop = 1;
     final int initialLoops = 10;
 
@@ -57,11 +61,11 @@ public class NewTeleOpOpMode extends BaseOpMode {
         motorBackLeft = hardwareMap.dcMotor.get("backLeft");
         motorExtend = hardwareMap.dcMotor.get("extend");
         motorCollection = hardwareMap.dcMotor.get("collect");
-//        climberServo = hardwareMap.servo.get("climbers");
-//        rightFlapServo = hardwareMap.servo.get("rightFlap");
-//        leftFlapServo = hardwareMap.servo.get("leftFlap");
-//        rightHookServo = hardwareMap.servo.get("rightHook");
-//        leftHookServo = hardwareMap.servo.get("leftHook");
+        climberServo = hardwareMap.servo.get("climbers");
+        rightFlapServo = hardwareMap.servo.get("rightFlap");
+        leftFlapServo = hardwareMap.servo.get("leftFlap");
+        rightHookServo = hardwareMap.servo.get("rightHook");
+        leftHookServo = hardwareMap.servo.get("leftHook");
 //        boxSpin = hardwareMap.servo.get("boxSpin");
 //        boxLift = hardwareMap.servo.get("boxLift");
 //        boxTilt = hardwareMap.servo.get("boxTilt");
@@ -71,11 +75,11 @@ public class NewTeleOpOpMode extends BaseOpMode {
     public void loop() {
         if (loop <= initialLoops) {
             activeGamepad = gamepad1;
-//            climberServo.setPosition(climberServoInitPos);
-//            rightHookServo.setPosition(rightHookInitPos);
-//            leftHookServo.setPosition(leftHookInitPos);
-//            rightFlapServo.setPosition(rightFlapServoInitPos);
-//            leftFlapServo.setPosition(leftFlapServoInitPos);
+            climberServo.setPosition(climberServoInitPos);
+            rightHookServo.setPosition(rightHookInitPos);
+            leftHookServo.setPosition(leftHookInitPos);
+            rightFlapServo.setPosition(rightFlapServoInitPos);
+            leftFlapServo.setPosition(leftFlapServoInitPos);
 //            boxSpin.setPosition(spinInitPos);
 //            boxLift.setPosition(liftInitPos);
 //            boxTilt.setPosition(tiltInitPos);
@@ -98,45 +102,83 @@ public class NewTeleOpOpMode extends BaseOpMode {
     }
 
     private void control() {
-//        if (gamepad1.x || gamepad2.x) {
-//            if (System.currentTimeMillis() - climberServoStart > 300) {
-//                if (climberServoOut) {
-//                    climberServo.setPosition(climberServoInitPos);
-//                    climberServoOut = false;
-//                } else {
-//                    climberServo.setPosition(climberServoFinalPos);
-//                    climberServoOut = true;
-//                }
-//                climberServoStart = System.currentTimeMillis();
-//            }
-//        }
+        if (gamepad1.y || gamepad2.y) {
+            if (System.currentTimeMillis() - climberServoStart > 300) {
+                if (climberServoOut) {
+                    climberServo.setPosition(climberServoInitPos);
+                    climberServoOut = false;
+                } else {
+                    climberServo.setPosition(climberServoFinalPos);
+                    climberServoOut = true;
+                }
+                climberServoStart = System.currentTimeMillis();
+            }
+        }
 
 
-//        if (gamepad1.b || gamepad2.b) {
-//            if (System.currentTimeMillis() - hookServoStart > 300) {
-//                if (hookDown) {
-//                    rightHookServo.setPosition(rightHookInitPos);
-//                    leftHookServo.setPosition(leftHookInitPos);
-//                    hookDown = false;
-//                } else {
-//                    rightHookServo.setPosition(rightHookDownPos);
-//                    leftHookServo.setPosition(leftHookDownPos);
-//                    hookDown = true;
-//                }
-//                hookServoStart = System.currentTimeMillis();
-//            }
-//        }
+        if (gamepad1.a || gamepad2.a) {
+            if (System.currentTimeMillis() - hookServoStart > 300) {
+                if (hookDown) {
+                    rightHookServo.setPosition(rightHookInitPos);
+                    leftHookServo.setPosition(leftHookInitPos);
+                    hookDown = false;
+                } else {
+                    rightHookServo.setPosition(rightHookDownPos);
+                    leftHookServo.setPosition(leftHookDownPos);
+                    hookDown = true;
+                }
+                hookServoStart = System.currentTimeMillis();
+            }
+        }
 
 
-//        if (gamepad1.dpad_up || gamepad2.dpad_up) {
-//            motorExtend.setPower(0.25);
-//        } else if (gamepad1.dpad_down || gamepad2.dpad_down) {
-//            motorExtend.setPower(-0.25);
-//        } else {
-//            motorExtend.setPower(0);
-//        }
+        if (gamepad1.dpad_up || gamepad2.dpad_up) {
+            motorExtend.setPower(0.3);
+        } else if (gamepad1.dpad_down || gamepad2.dpad_down) {
+            motorExtend.setPower(-0.3);
+        } else {
+            motorExtend.setPower(0);
+        }
 
+        if (gamepad1.dpad_right) {
+            if (spinPos + 0.01 <= 1) {
+                spinPos += 0.01;
+            }
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        } else if (gamepad1.dpad_left) {
+            if (spinPos - 0.01 >= 0) {
+                spinPos -= 0.01;
+            }
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
+        if (gamepad1.right_bumper) {
+            if (tiltPos + 0.01 <= 1) {
+                tiltPos += 0.01;
+            }
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        } else if (gamepad1.left_bumper) {
+            if (tiltPos - 0.01 >= 0) {
+                tiltPos -= 0.01;
+            }
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 //        if ((gamepad1.dpad_right || gamepad2.dpad_right) && !servosRight) {
 //            servosRight = true;
 //            startServoTime = System.currentTimeMillis();
@@ -149,12 +191,32 @@ public class NewTeleOpOpMode extends BaseOpMode {
 //        } else if (servosLeft) {
 //            servosLeft();
 //        }
-        if (gamepad1.a || gamepad2.a) {
-            motorCollection.setPower(-1);
-        } else if (gamepad1.y || gamepad2.y) {
-            motorCollection.setPower(1);
-        } else {
-            motorCollection.setPower(0);
+//        if (gamepad1.x || gamepad2.x) {
+//            motorCollection.setPower(-1);
+//        } else if (gamepad1.b || gamepad2.b) {
+//            motorCollection.setPower(1);
+//        } else {
+//            motorCollection.setPower(0);
+//        }
+
+        if (gamepad1.b || gamepad2.b) {
+            if (liftPos + 0.01 <= 1) {
+                liftPos += 0.01;
+            }
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        } else if (gamepad1.x || gamepad2.x) {
+            if (liftPos - 0.01 >= 0) {
+                liftPos -= 0.01;
+            }
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         if (Math.abs(gamepad1.left_stick_y) > Math.abs(gamepad2.left_stick_y)) {
             activeGamepad = gamepad1;
@@ -176,7 +238,9 @@ public class NewTeleOpOpMode extends BaseOpMode {
             double joystickInputX = activeGamepad.left_stick_x;
             goDirection(joystickInputX, joystickInputY);
         }
-
+        boxSpin.setPosition(spinPos);
+        boxLift.setPosition(liftPos);
+        boxTilt.setPosition(tiltPos);
     }
 
     protected void goDirection(double x, double y) {

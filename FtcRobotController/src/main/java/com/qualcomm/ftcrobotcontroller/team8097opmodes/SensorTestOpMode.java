@@ -55,9 +55,6 @@ public class SensorTestOpMode extends BaseOpMode {
         backLightSensor.enableLed(true);
         telemetry.addData("Back Light", backLightSensor.getLightDetected());
         telemetry.addData("frontLeftUltra", frontLeftUltra.getUltrasonicLevel());
-//        telemetry.addData("rightUltra", rightUltra.getUltrasonicLevel());
         telemetry.addData("frontRightUltra", frontRightUltra.getUltrasonicLevel());
-//        telemetry.addData("leftUltra", leftUltra.getUltrasonicLevel());
-//        telemetry.addData("frontOds", frontOds.getLightDetected());
     }
 }

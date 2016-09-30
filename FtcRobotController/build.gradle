@@ -5,6 +5,8 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 23
+        versionCode 1
+        versionName "1.6"
     }
     compileSdkVersion 'Google Inc.:Google APIs:19'
     buildToolsVersion '23.0.2'
@@ -19,7 +21,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.2.3'
+        classpath 'com.android.tools.build:gradle:2.1.2'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -42,11 +44,11 @@ allprojects {
 }
 
 dependencies {
-    compile(name:'RobotCore-release', ext:'aar')
-    compile(name:'Analytics-release', ext:'aar')
-    compile(name:'ModernRobotics-release', ext:'aar')
-    compile(name:'Hardware-release', ext:'aar')
-    compile(name:'FtcCommon-release', ext:'aar')
-    compile(name:'WirelessP2p-release', ext:'aar')
+    compile(name: 'RobotCore-release', ext: 'aar')
+    compile(name: 'Analytics-release', ext: 'aar')
+    compile(name: 'ModernRobotics-release', ext: 'aar')
+    compile(name: 'Hardware-release', ext: 'aar')
+    compile(name: 'FtcCommon-release', ext: 'aar')
+    compile(name: 'WirelessP2p-release', ext: 'aar')
     compile 'com.android.support:support-v4:23.1.1'
 }

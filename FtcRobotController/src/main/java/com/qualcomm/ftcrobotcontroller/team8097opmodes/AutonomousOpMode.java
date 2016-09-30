@@ -62,14 +62,14 @@ public class AutonomousOpMode extends BaseOpMode {
         motorBackLeft = hardwareMap.dcMotor.get("frontRight");
         motorExtend = hardwareMap.dcMotor.get("extend");
         motorCollection = hardwareMap.dcMotor.get("collect");
-//        climberServo = hardwareMap.servo.get("climbers");
-//        rightFlapServo = hardwareMap.servo.get("rightFlap");
-//        leftFlapServo = hardwareMap.servo.get("leftFlap");
-//        rightHookServo = hardwareMap.servo.get("rightHook");
-//        leftHookServo = hardwareMap.servo.get("leftHook");
-//        boxSpin = hardwareMap.servo.get("boxSpin");
-//        boxLift = hardwareMap.servo.get("boxLift");
-//        boxTilt = hardwareMap.servo.get("boxTilt");
+        climberServo = hardwareMap.servo.get("climbers");
+        rightFlapServo = hardwareMap.servo.get("rightFlap");
+        leftFlapServo = hardwareMap.servo.get("leftFlap");
+        rightHookServo = hardwareMap.servo.get("rightHook");
+        leftHookServo = hardwareMap.servo.get("leftHook");
+        boxSpin = hardwareMap.servo.get("boxSpin");
+        boxLift = hardwareMap.servo.get("boxLift");
+        boxTilt = hardwareMap.servo.get("boxTilt");
     }
 
     @Override
@@ -78,6 +78,11 @@ public class AutonomousOpMode extends BaseOpMode {
             loop++;
             startTime = System.currentTimeMillis();
         } else {
+            if (System.currentTimeMillis() - startTime < 500) {
+                goForward(DEFAULT_POWER);
+            } else {
+                stopRobot();
+            }
 //            logData("Front Right", String.valueOf(motorFrontRight.getCurrentPosition()));
 //            logData("Front Left", String.valueOf(motorFrontLeft.getCurrentPosition()));
 //            logData("Back Right", String.valueOf(motorBackRight.getCurrentPosition()));
